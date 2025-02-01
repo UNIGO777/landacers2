@@ -1,6 +1,6 @@
 import  Layout  from "../Layout.js"
-import  MetricCards  from "../../Components/Cards.js"
-import RecentPayments from "../../Components/RecentPayments.js"
+import  MetricCards  from "../../components/Cards.js"
+import RecentPayments from "../../components/RecentPayments.js"
 
 const Dashboard = () => {
   return (
