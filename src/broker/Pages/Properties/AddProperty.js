@@ -1,11 +1,11 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import Layout from "../Layout"
-import BasicDetails from "./components/PropertyFroms/BasicDetails"
-import LandDetails from "./components/PropertyFroms/LandDetils"
-import FarmhouseDetails from "./components/PropertyFroms/FarmHouseDetails"
-import PlotDetails from "./components/PropertyFroms/PlotDetails"
-import ImageUpload from "./components/PropertyFroms/ImageUpload"
+import Layout from "../../Layout"
+import BasicDetails from "./PropertyFroms/BasicDetails"
+import LandDetails from "./PropertyFroms/LandDetils"
+import FarmhouseDetails from "./PropertyFroms/FarmHouseDetails"
+import PlotDetails from "./PropertyFroms/PlotDetails"
+import ImageUpload from "./PropertyFroms/ImageUpload"
 
 export default function AddProperty() {
   const [activeStep, setActiveStep] = useState(0)
@@ -52,7 +52,7 @@ export default function AddProperty() {
 
   const navigate = useNavigate()
 
-  const steps = ["Basic Details", "Type-Specific Details", "Image Upload"]
+  const steps = ["Basic Details", "Type-Specific Details", "Images Upload"]
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1)
@@ -97,7 +97,6 @@ export default function AddProperty() {
   return (
     <Layout>
       <div className="container px-4 py-8 mx-auto">
-        <h1 className="mb-6 text-3xl font-bold">Add New Property</h1>
         <div className="mb-8">
           <ol className="flex items-center justify-center">
             {steps.map((label, index) => (

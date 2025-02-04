@@ -2,8 +2,8 @@ import { useState, useMemo, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import format from "date-fns/format"
 import isAfter from "date-fns/isAfter"
-import queriesData from "../../Data/QueriesData"
-import Layout from "../Layout"
+import queriesData from "../../data/QueriesData"
+import Layout from "../../Layout"
 
 const QueriesManagement = () => {
   const [searchTerm, setSearchTerm] = useState("")

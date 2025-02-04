@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { Link, useLocation } from "react-router-dom"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import { motion, AnimatePresence } from "framer-motion"
 import {
   FaHome,
@@ -11,13 +11,15 @@ import {
   FaBars,
   FaTimes,
   FaBell,
-  FaSearch,
-  FaChevronDown,
-  FaChevronUp,
   FaUser,
   FaSignOutAlt,
+  FaLock,
+  FaChevronUp,
+  FaSearch,
+  FaChevronDown
 } from "react-icons/fa"
 import Notifications from "../components/Notifications"
+import logo from '../media/LandsAcers_Horizontal_logo.png'
 
 const Layout = ({ children }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -25,6 +27,7 @@ const Layout = ({ children }) => {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false)
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false)
   const location = useLocation()
+  const navigate = useNavigate();
 
   const navigationItems = [
     { icon: FaHome, label: "Home", path: "/admin/home" },
@@ -48,17 +51,17 @@ const Layout = ({ children }) => {
       label: "Properties",
       path: "/admin/properties",
       subItems: [
-        { label: "Admin Properties", path: "/admin/properties/all" },
         { label: "Broker Properties", path: "/admin/brokers/properties/all" },
         { label: "User Properties", path: "/admin/users/properties/all" },
-        { label: "Add Property", path: "/admin/property/add" },
       ],
     },
     {
       icon: FaQuestionCircle,
-      label: "Queries",
-      path: "/admin/queries",
-      subItems: [{ label: "Manage Queries", path: "/admin/queries/manage" }],
+      label: "Subscription",
+      path: "/admin/subscription",
+      subItems: [{ label: "Manage Subscription", path: "/admin/subscription/manage" },
+        { label: "Edit Subscription", path: "/admin/subscription/edit" }
+      ],
     },
     { icon: FaMoneyBillWave, label: "Payments", path: "/admin/all/payments" },
   ]
@@ -177,9 +180,9 @@ const Layout = ({ children }) => {
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="flex h-16 items-center justify-center border-b bg-[#3B82F6]"
+          className="flex items-center justify-center h-16"
         >
-          <h1 className="text-xl font-bold text-white">LandsAcers</h1>
+          <img src={logo} alt="LandsAcers Logo" className="h-8 w-42"/>
         </motion.div>
         <nav className="h-[calc(100vh-4rem)] overflow-y-auto p-4 space-y-2 scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-blue-100">
           {renderNavigationItems(navigationItems)}
@@ -286,14 +289,16 @@ const Layout = ({ children }) => {
                     transition={{ duration: 0.2 }}
                     className="absolute right-0 w-48 mt-2 bg-white rounded-md shadow-lg"
                   >
-                    <Link
-                      to="/admin/profile"
-                      className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      onClick={() => setIsProfileMenuOpen(false)}
+                    <button
+                      onClick={() => {
+                        setIsProfileMenuOpen(false)
+                        navigate("/admin/change-password")
+                      }}
+                      className="flex items-center w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100"
                     >
-                      <FaUser className="w-4 h-4 mr-2" />
-                      Edit Profile
-                    </Link>
+                      <FaLock className="w-4 h-4 mr-2" />
+                      Change Password
+                    </button>
                     <Link
                       to="/logout"
                       className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
