@@ -12,16 +12,20 @@ const Card = ({ card }) => {
     }
     return stars.join('');
   };
-  console.log(card)
+
+ 
+  
   return (
-    <div  className="relative transition-transform duration-500  w-full overflow-hidden flex-shrink-0" >
-                  <img loding="lazy" src={card?.image} loading='lazy' alt={card?.title} className="h-[30vh] sm:min-h-[400px]  md:min-h-[350px] object-cover  w-full" />
+   
+    <div  className="relative transition-transform duration-500   w-full overflow-hidden flex-shrink-0" >
+                  <img loding="lazy" src={card?.image} loading='lazy' alt={card?.title} className="h-[30vh] sm:min-h-[400px] rounded-t-md  md:min-h-[350px] object-cover  w-full" />
                   <div className="absolute rounded-b-md w-full bg-black md:h-[50%] bottom-0 bg-opacity-50 flex flex-col justify-center  text-white p-4">
                       <h3 className="text-sm md:text-xl font-semibold">{card?.title}</h3>
                       <p className="text-sm md:text-lg">{card?.location}</p>
                       <p className="text-sm md:text-lg font-bold">{card?.details}</p>
-                      <p className="text-sm md:text-lg">₹{card?.price}</p>
-                      <button className="mt-3 bg-blue-500 text-white px-4 py-2 rounded-lg text-sm" onClick={()=> Navigate(`/property/${card?._id}`)}>View Details</button>
+                      <div className='flex '><p className="text-sm md:text-lg">₹{card?.price} ,</p> 
+                      <p className="text-sm md:text-lg ml-2">{card?.transactionType}</p></div>
+                      <button className="mt-3  bg-blue-500 text-white px-4 py-2 rounded-lg text-sm" onClick={()=> Navigate(`/property/${card?._id}`)}>View Details</button>
                   </div>
               </div>
     // <div className="md:w-[30%] w-[60%] md:h-80 bg-white shrink-0 rounded-lg shadow-lg cursor-pointer">
