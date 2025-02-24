@@ -19,7 +19,7 @@ const ChangePassword = () => {
     setLoading(true)
 
     try {
-      const response = await axios.post("https://landacers-backend.onrender.com/api/sellers/send-change-password-otp", {
+      const response = await axios.post(`${process.env.REACT_APP_backendUrl}/api/sellers/send-change-password-otp`, {
         phone,
       })
       if (response.data.success) {
@@ -38,7 +38,7 @@ const ChangePassword = () => {
     setLoading(true)
 
     try {
-      const response = await axios.post("https://landacers-backend.onrender.com/api/sellers/change-password", {
+      const response = await axios.post(`${process.env.REACT_APP_backendUrl}/api/sellers/change-password`, {
         phone,
         otp,
         newPassword,

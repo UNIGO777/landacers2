@@ -149,7 +149,7 @@ const AddPropertyPage = () => {
     setLoading(true)
 
     try {
-      const response = await axios.post("https://landacers-backend.onrender.com/api/properties/create", formData, {
+      const response = await axios.post(`${process.env.REACT_APP_backendUrl}/api/properties/create`, formData, {
         headers: {
           "Content-Type": "application/json",
         },

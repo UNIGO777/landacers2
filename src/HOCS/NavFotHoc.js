@@ -4,13 +4,13 @@ import Footer from '../components/Footer/Footer'; // Assuming Footer is a separa
 import SearchBox from '../components/SearchBox/SearchBox';
 
 
-const WithNavbarAndFooter = ({ WrappedComponent }) => {
+const WithNavbarAndFooter = ({ WrappedComponent , footer}) => {
     return (
         <div>
             <Navbar />
             
             <WrappedComponent />
-            <Footer />
+            {!footer && <Footer />}
         </div>
     );
 };

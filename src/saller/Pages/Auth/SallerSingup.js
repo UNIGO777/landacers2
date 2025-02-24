@@ -63,7 +63,7 @@ const SellerSignUpPage = () => {
     formDataToSend.append("profilePicture", profilePicture)
 
     try {
-      const response = await axios.post("https://landacers-backend.onrender.com/api/sellers/register", formDataToSend, {
+      const response = await axios.post(`${process.env.REACT_APP_backendUrl}/api/sellers/register`, formDataToSend, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -104,7 +104,7 @@ const SellerSignUpPage = () => {
 
     try {
       const response = await axios.post(
-        "https://landacers-backend.onrender.com/api/sellers/verify-registration",
+        `${process.env.REACT_APP_backendUrl}/api/sellers/verify-registration`,
         {
           phone: registrationData.phone,
           otp: otp,

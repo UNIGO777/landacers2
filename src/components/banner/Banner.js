@@ -5,6 +5,8 @@ import InputField from '../../Miner components/Input Feilds/Input';
 import Button from '../../Miner components/Buttons/button';
 import StateNames from '../../Assets/StaticData/StateName';
 import Cities from '../../Assets/DynamicData/CityFatch'
+import SearchBox from '../SearchBox/SearchBox';
+import HomeSearchBox from '../SearchBox/HomeSearchBox';
 
 
 // dont accept state manual inputs only accept option we gived
@@ -90,7 +92,7 @@ function Banner() {
     return (
       <div className='bg-balck md:mb-16'>
         <div
-            className={`relative min-h-[80vh] md:min-h-screen bg-cover bg-center flex items-center justify-center  transition-opacity duration-500 ${fade ? 'opacity-90' : 'opacity-100'}`}
+            className={`relative min-h-[50vh] md:min-h-[50vh] bg-cover bg-center flex items-center justify-center  transition-opacity duration-500 ${fade ? 'opacity-90' : 'opacity-100'}`}
             style={{ backgroundImage: `url(${images[currentImageIndex]})` }} 
         >
             {/* Semi-transparent overlay */}
@@ -98,12 +100,16 @@ function Banner() {
 
             <div className="relative z-10 text-center md:p-8 p-2 md:w-[80vw] lg:w-[60vw]">
                 <h1 className={`md:text-5xl mb-3 md:mb-6 text-2xl font-bold text-white`}>
-                    Discover Your Dream Land, Farmhouse, and Plots
+                    Discover Your Dream Properties Today with Us
                 </h1>
                 <p className='text-white text-sm md:text-lg mb-6'>
-                    Explore the perfect spaces for your next investment or getaway. Whether you're looking for serene farmland, a cozy farmhouse, or prime plots, we have the ideal options waiting for you.
+                    Explore premium agricultural, residential, and commercial properties tailored to your needs. Our expertise helps you find ideal investments or personal retreats across diverse landscapes.
                 </p>
-                <div className="flex-col md:flex-row md:gap-4 flex">
+
+                <HomeSearchBox/>            
+
+                
+                {/* <div className="flex-col md:flex-row md:gap-4 flex">
                     <div className="relative ">
                         <InputField
                             type="text"
@@ -161,9 +167,10 @@ function Banner() {
                 <Button onClick={() => {}} ButtonClassName={`bg-${theme}-primary w-[63vw] md:w-full mt-5 rounded-xl block`}>
                     Search
                 </Button>
-                </div>
+                </div> */}
             </div>
-        </div></div>
+        </div>
+        </div>
     )
 }
 

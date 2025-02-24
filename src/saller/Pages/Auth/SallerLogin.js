@@ -1,20 +1,17 @@
-"use client"
-
 import { useState } from "react"
 import { Building2, Lock, Mail, Phone } from "lucide-react"
-import { Link, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import axios from "axios"
-import { toast, ToastContainer } from "react-toastify"
+import { toast} from "react-toastify"
 import { motion, AnimatePresence } from "framer-motion"
-import "react-toastify/dist/ReactToastify.css"
 
-const SellerLogin = () => {
+
+const SallerLogin = () => {
   const navigate = useNavigate()
   const [showOtpForm, setShowOtpForm] = useState(false)
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    phone: "",
     otp: "",
   })
   const [loading, setLoading] = useState(false)
@@ -33,7 +30,7 @@ const SellerLogin = () => {
     setLoading(true)
 
     try {
-      const response = await axios.post("https://landacers-backend.onrender.com/api/sellers/login", {
+      const response = await axios.post(`${process.env.REACT_APP_backendUrl}/api/sellers/login`, {
         email: formData.email,
         password: formData.password,
       })
@@ -41,7 +38,6 @@ const SellerLogin = () => {
       if (response.data.success) {
         toast.success("OTP sent successfully!")
         setShowOtpForm(true)
-        setFormData((prev) => ({ ...prev, phone: response.data.phone }))
       } else {
         throw new Error(response.data.message || "Failed to send OTP")
       }
@@ -59,17 +55,17 @@ const SellerLogin = () => {
     setLoading(true)
 
     try {
-      const response = await axios.post("https://landacers-backend.onrender.com/api/sellers/verify-login", {
-        phone: formData.phone,
+      const response = await axios.post(`${process.env.REACT_APP_backendUrl}/api/seller/verify`, {
+        email: formData.email,
         otp: formData.otp,
       })
 
       if (response.data.success) {
         toast.success("Login successful!")
         if (response.data.token) {
-          localStorage.setItem("token", response.data.token)
+          localStorage.setItem("sellerToken", response.data.token)
         }
-        navigate("/saller/dashboard")
+        navigate("/seller/dashboard")
       } else {
         throw new Error(response.data.message || "Invalid OTP")
       }
@@ -89,6 +85,7 @@ const SellerLogin = () => {
       onSubmit={handleGetOTP}
       className="space-y-6"
     >
+      {/* Login form remains the same */}
       <div>
         <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-700">
           Email
@@ -127,12 +124,6 @@ const SellerLogin = () => {
         </div>
       </div>
 
-      <div className="flex justify-end">
-        <Link to="/forgot-password" className="text-sm text-blue-600 transition duration-200 hover:text-blue-500">
-          Forgot password?
-        </Link>
-      </div>
-
       <motion.button
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
@@ -167,6 +158,7 @@ const SellerLogin = () => {
       onSubmit={handleVerifyOTP}
       className="space-y-6"
     >
+      {/* OTP form remains the same */}
       <div>
         <label htmlFor="otp" className="block mb-2 text-sm font-medium text-gray-700">
           Enter OTP
@@ -230,20 +222,20 @@ const SellerLogin = () => {
             <Building2 className="w-10 h-10" />
             <span className="text-3xl font-bold">LandsAcers</span>
           </div>
-          <h1 className="mb-6 text-4xl font-bold leading-tight lg:text-5xl">Welcome back to LandsAcers</h1>
+          <h1 className="mb-6 text-4xl font-bold leading-tight lg:text-5xl">Seller Portal</h1>
           <p className="mb-8 text-xl text-blue-100">
-            Manage your properties, tenants, and transactions all in one place.
+            List and manage your properties, track sales, and connect with potential buyers.
           </p>
 
           <div className="p-6 bg-white/10 rounded-xl backdrop-blur-sm">
             <p className="mb-4 italic text-blue-50">
-              "This platform has revolutionized how we manage our properties. Everything is streamlined and efficient."
+              "Empowering sellers with intuitive tools for property management and sales growth."
             </p>
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 bg-blue-200 rounded-full" />
               <div>
-                <p className="font-medium">Sarah Johnson</p>
-                <p className="text-sm text-blue-200">Property Manager, NYC</p>
+                <p className="font-medium">Seller Support</p>
+                <p className="text-sm text-blue-200">LandsAcers Seller Network</p>
               </div>
             </div>
           </div>
@@ -254,7 +246,7 @@ const SellerLogin = () => {
       <div className="flex items-center justify-center p-8 bg-white lg:w-1/2 lg:p-12">
         <div className="w-full max-w-md">
           <h2 className="mb-6 text-3xl font-bold text-center text-gray-900">
-            {showOtpForm ? "Enter OTP" : "Sign in to your account"}
+            {showOtpForm ? "Enter OTP" : "Seller Login"}
           </h2>
 
           {error && (
@@ -268,19 +260,11 @@ const SellerLogin = () => {
           )}
 
           <AnimatePresence mode="wait">{showOtpForm ? renderOtpForm() : renderLoginForm()}</AnimatePresence>
-
-          <p className="mt-8 text-center text-gray-600">
-            Don&apos;t have an account?{" "}
-            <Link to="/saller/signup" className="font-medium text-blue-600 transition duration-200 hover:text-blue-500">
-              Sign up
-            </Link>
-          </p>
         </div>
       </div>
-      <ToastContainer />
+      
     </div>
   )
 }
 
-export default SellerLogin
-
+export default SallerLogin

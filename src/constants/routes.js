@@ -7,10 +7,10 @@ const ROUTES_NAME = {
   POST_A_PROPERTY: '/post-property',
   POST_A_PROJECT: '/post-project',
   POST_PROPERTY: '/post_a_property',
-  VIEW_PROPERTY: '/property/:id',
+  VIEW_PROPERTY: '/property-profile',
   VIEW_PROJECT: '/project/:id',
   VIEW_BROKER: '/broker/:id',
-
+  SEARCH: '/search',
   ADMIN_LOGIN : '/admin/login',
   ADMIN_HOME : '/admin/dashboard',
   ADMIN_ALL_PROPERTIES: '/admin/properties/all',
@@ -24,7 +24,7 @@ const ROUTES_NAME = {
   ADMIN_EDIT_SUBSCRIPTION : '/admin/subscription/edit',
   ADMIN_CHANGE_PASSWORD : '/admin/change-password',
   
-
+  SEARCH_RESULTS: '/search-results',
 
   SALLER_HOME : '/saller/dashboard',
   SALLER_LOGIN : '/saller/login',

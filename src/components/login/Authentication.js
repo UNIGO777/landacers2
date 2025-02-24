@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { X } from "lucide-react"
 import axios from "axios"
 import { toast, ToastContainer } from "react-toastify"
@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { useNavigate } from "react-router-dom"
 import "react-toastify/dist/ReactToastify.css"
 
-const LoginForm = ({ toggleForm }) => {
+const LoginForm = ({ toggleForm, setIsOpen }) => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -15,13 +15,26 @@ const LoginForm = ({ toggleForm }) => {
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
 
+  useEffect(()=>{
+    
+    const chakeLogin = ()=>{
+      const User = localStorage.getItem('token')
+      
+      if(User) {
+        setIsOpen(false)
+      }
+      
+    }
+    chakeLogin()
+  },[])
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     setError("")
     setLoading(true)
 
     try {
-      const response = await axios.post("https://landacers-backend.onrender.com/api/users/login", {
+      const response = await axios.post(`${process.env.REACT_APP_backendUrl}/api/users/login`, {
         email: formData.email,
         password: formData.password,
       })
@@ -30,9 +43,11 @@ const LoginForm = ({ toggleForm }) => {
         toast.success("Login successful!")
         // Store token or user data
         localStorage.setItem("token", response.data.token)
-        navigate("/dashboard") // Redirect to dashboard
+        localStorage.setItem("user", JSON.stringify(response.data.user))
+        setIsOpen(false)
       }
     } catch (error) {
+      console.log(error)
       setError(error.response?.data?.message || "An error occurred during login")
       toast.error("Login failed. Please try again.")
     } finally {
@@ -66,7 +81,7 @@ const LoginForm = ({ toggleForm }) => {
         </motion.div>
       </div>
 
-      <div className="flex flex-col justify-center w-full p-8 md:w-1/2">
+      <div className="flex flex-col justify-center w-full  p-8 md:w-1/2">
         <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.1 }}>
           <h2 className="mb-6 text-3xl font-bold text-gray-900">Login</h2>
           {error && (
@@ -144,7 +159,7 @@ const LoginForm = ({ toggleForm }) => {
   )
 }
 
-const SignUpForm = ({ toggleForm }) => {
+const SignUpForm = ({ toggleForm,setIsOpen }) => {
   const [showOtpForm, setShowOtpForm] = useState(false)
   const [formData, setFormData] = useState({
     firstName: "",
@@ -154,6 +169,17 @@ const SignUpForm = ({ toggleForm }) => {
     password: "",
     confirmPassword: "",
   })
+  useEffect(()=>{
+    const chakeLogin = ()=>{
+      const User = localStorage.getItem('token')
+      
+      if(User) {
+        setIsOpen(false)
+      }
+      
+    }
+    chakeLogin()
+  },[])
   const [otp, setOtp] = useState("")
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
@@ -172,7 +198,7 @@ const SignUpForm = ({ toggleForm }) => {
 
     try {
       const response = await axios.post(
-        "https://landacers-backend.onrender.com/api/users/register",
+        `${process.env.REACT_APP_backendUrl}/api/users/register`,
         {
           firstName: formData.firstName,
           lastName: formData.lastName,
@@ -219,7 +245,7 @@ const SignUpForm = ({ toggleForm }) => {
 
     try {
       const response = await axios.post(
-        "https://landacers-backend.onrender.com/api/users/register/verify-otp",
+        `${process.env.REACT_APP_backendUrl}/api/users/register/verify-otp`,
         {
           phoneNumber: registrationData.phoneNumber,
           otp: otp,
@@ -247,7 +273,7 @@ const SignUpForm = ({ toggleForm }) => {
   }
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex h-[600px]">
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex h-[700px] overflow-y-scroll">
       <div className="flex-col items-center justify-center hidden w-1/2 p-8 text-white md:flex bg-gradient-to-br from-blue-500 to-blue-600">
         <motion.div
           initial={{ y: 20, opacity: 0 }}
@@ -482,6 +508,10 @@ const Authentication = ({ isOpen, setIsOpen }) => {
     setSignUpForm(!signUpForm)
   }
 
+  
+
+  
+
   if (!isOpen) return null
 
   return (
@@ -505,13 +535,13 @@ const Authentication = ({ isOpen, setIsOpen }) => {
         </button>
         <AnimatePresence mode="wait">
           {signUpForm ? (
-            <SignUpForm key="signup" toggleForm={toggleForm} />
+            <SignUpForm key="signup" toggleForm={toggleForm}  setIsOpen={setIsOpen}/>
           ) : (
-            <LoginForm key="login" toggleForm={toggleForm} />
+            <LoginForm key="login" toggleForm={toggleForm} setIsOpen={setIsOpen}/>
           )}
         </AnimatePresence>
       </motion.div>
-      <ToastContainer position="bottom-right" />
+      
     </motion.div>
   )
 }

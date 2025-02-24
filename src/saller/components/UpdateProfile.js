@@ -25,7 +25,7 @@ const UpdateProfile = () => {
   const fetchUserData = async () => {
     try {
       const token = localStorage.getItem("token")
-      const response = await axios.get("https://landacers-backend.onrender.com/api/sellers/profile", {
+      const response = await axios.get(`${process.env.REACT_APP_backendUrl}/api/sellers/profile`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -73,7 +73,7 @@ const UpdateProfile = () => {
 
     try {
       const token = localStorage.getItem("token")
-      const response = await axios.put("https://landacers-backend.onrender.com/api/sellers/update", formDataToSend, {
+      const response = await axios.put(`${process.env.REACT_APP_backendUrl}/api/sellers/update`, formDataToSend, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${token}`,

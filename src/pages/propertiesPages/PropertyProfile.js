@@ -1,169 +1,262 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useSearchParams } from 'react-router-dom'
 import { cardsData, images } from '../../tempData/data';
 import MapImgae from '../../Assets/Images/image 3.png'
-import CardCarousel from '../../components/cardCarousel/CardCarousel';
-import Card from '../../components/card/Card';
-import SearchBox from '../../components/SearchBox/SearchBox';
+import { FiMapPin, FiHome, FiLayers, FiCheck, FiMail, FiPhone, FiUser, FiHeart, FiDroplet } from 'react-icons/fi';
+import PropertyCard from '../../components/card/Card';
 
 const PropertyProfile = () => {
-    const { id } = useParams(); // Assuming 'id' is the parameter you want to extract
-    const property = cardsData.find(card => card._id === id);
-    const [CurrentImage, SetCurrentImage] = useState(property?.image)
-    const [propertyImgIndex, setPropertyImgIndex] = useState(0)
-    const [propertyImgs, SetPropertyImgs] = useState([])
-
-    useEffect(() => {
-        if (property) {
-            SetPropertyImgs(images)
+    const [searchParams] = useSearchParams();
+    const id = searchParams.get('propertyId');
+    const [activeMediaIndex, setActiveMediaIndex] = useState(0);
+    
+    // Enhanced dummy property details
+    const dummyProperty = {
+        title: "Luxury 3BHK Apartment in Prime Location",
+        price: "₹2.5 Cr",
+        propertyType: "Apartment",
+        address: {
+            state: "Maharashtra",
+            district: "Mumbai Suburban",
+            city: "Mumbai",
+            locality: "Bandra West",
+            pincode: "400050"
+        },
+        size: "1800 sqft",
+        bedrooms: 3,
+        bathrooms: 3,
+        description: `This stunning 3 bedroom apartment offers luxurious living in the heart of Mumbai. Features include:
+        - Spacious living room with floor-to-ceiling windows
+        - Modular kitchen with premium appliances
+        - Master bedroom with walk-in closet
+        - 24/7 security and amenities pool, gym, and clubhouse`,
+        amenities: [
+            'Swimming Pool',
+            'Gym',
+            'Clubhouse',
+            '24/7 Security',
+            'Parking',
+            'Power Backup'
+        ],
+        postedDate: "2 days ago",
+        contact: {
+            name: "Rajesh Properties",
+            phone: "+91 98765 43210",
+            email: "contact@rajeshproperties.com"
+        },
+        media: {
+            video: "https://www.youtube.com/embed/sample-video-id",
+            images: images
         }
-    }, [property])
+    };
 
-    const imageChange = (index) => {
-        if (index !== undefined) {
-            SetCurrentImage(propertyImgs[index].src);
-            setPropertyImgIndex(index);
-        } else {
-            SetCurrentImage(property?.image);
-            setPropertyImgIndex(0);
-        }
-    }
+    const maskPhoneNumber = (phone) => {
+        return phone.replace(/(\d{2})\d{4}(\d{4})/, '$1****$2');
+    };
 
-    return (
-        <>
-        <div className='min-h-screen w-full py-5 md:py-10 md:px-5 lg:px-14 mt-10 text-[1.5rem] md:text-3xl'>
-            
-            <div className='p-3 md:p-10 lg:p-20'>
-                <h1 className="text-xl md:text-2xl font-semibold w-full">{property?.title}</h1>
-                <div className="bg-white grid grid-cols-1 md:grid-cols-2 rounded-lg p-5 md:p-10 gap-5 md:gap-10 w-full ">
-                    <div className="flex justify-center items-center ">
-                        <img src={CurrentImage} alt="Property" className="w-full max-h-[30vh] md:max-h-[70vh] object-cover min-h-[30vh] rounded-lg" />
-                    </div>
-                    <div className="md:p-4">
-                        <p className="text-sm md:text-xl text-gray-800 w-full flex justify-between"><strong>Price:</strong> ₹22.0 Cr</p>
-                        <p className="text-gray-600 mt-2 text-sm md:text-xl">{property?.description}</p>
-                        <div className="mt-4 flex flex-col gap-4">
-                            {property?.plotDetails && (
-                                <>
-                                    <p className='w-full flex justify-between text-sm md:text-xl'>Plot Area: <span className="font-light text-right">{property?.plotDetails.area}</span></p>
-                                    <p className='w-full flex justify-between text-sm md:text-xl'>Dimensions (L x B): <span className="font-light text-right">600 x 2.3</span></p>
-                                    <p className='w-full flex justify-between text-sm md:text-xl'>Any Construction Done:<span className="font-light text-right">{property?.plotDetails.constructionStatus ? 'Yes' : 'No'}</span></p>
-                                    <p className='w-full flex justify-between text-sm md:text-xl'>Boundary Wall: <span className="font-light text-right">{property?.plotDetails.boundaryWallStatus ? 'Yes' : 'No'}</span></p>
-                                    <p className='w-full flex justify-between text-sm md:text-xl'>Type Of Ownership:<span className="font-light text-right "> Power Of Attorney</span></p>
-                                    <p className='w-full flex justify-between text-sm md:text-xl'>Transaction Type:<span className="font-light text-right">Resale</span></p>
-                                    <p className='w-full flex justify-between text-sm md:text-xl'>Overlooking: <span className="font-light text-right">Garden/Park</span></p>
-                                </>
-                            )}
-                            {property?.farmhouseDetails && (
-                                <>
-                                    <p className='w-full flex justify-between text-sm md:text-xl'>Number of Bedrooms: <span className="font-light text-right">{property?.farmhouseDetails.numberOfBedrooms}</span></p>
-                                    <p className='w-full flex justify-between text-sm md:text-xl'>Number of Bathrooms: <span className="font-light text-right">{property?.farmhouseDetails.numberOfBathrooms}</span></p>
-                                    <p className='w-full flex justify-between text-sm md:text-xl'>Total Floors: <span className="font-light text-right">{property?.farmhouseDetails.totalFloors}</span></p>
-                                    <p className='w-full flex justify-between text-sm md:text-xl'>Furnished Status: <span className="font-light text-right">{property.farmhouseDetails.furnishedStatus}</span></p>
-                                    <p className='w-full flex justify-between text-sm md:text-xl'>Covered Area: <span className="font-light text-right">{property.farmhouseDetails.coveredArea} sq ft</span></p>
-                                    <p className='w-full flex justify-between text-sm md:text-xl'>Carpet Area: <span className="font-light text-right">{property.farmhouseDetails.carpetArea} sq ft</span></p>
-                                    <p className='w-full flex justify-between text-sm md:text-xl'>Plot Area: <span className="font-light text-right">{property.farmhouseDetails.plotArea} sq ft</span></p>
-                                    <p className='w-full flex justify-between text-sm md:text-xl'>Possession Status: <span className="font-light text-right">{property.farmhouseDetails.possessionStatus}</span></p>
-                                    <p className='w-full flex justify-between text-sm md:text-xl'>Price: <span className="font-light text-right">₹{property.farmhouseDetails.price}</span></p>
-                                    <p className='w-full flex justify-between text-sm md:text-xl'>Transaction Type: <span className="font-light text-right">{property.farmhouseDetails.transactionType}</span></p>
-                                </>
-                            )}
-                            {property.plotDetails && (
-                                <>
-                                    <p className='w-full flex justify-between text-sm md:text-xl'>Price: <span className="font-light text-right">₹{property.plotDetails.price}</span></p>
-                                    <p className='w-full flex justify-between text-sm md:text-xl'>Number of Open Sides: <span className="font-light text-right">{property.plotDetails.numberOfOpenSides}</span></p>
-                                    <p className='w-full flex justify-between text-sm md:text-xl'>Width of Road Facing: <span className="font-light text-right">{property.plotDetails.widthOfRoadFacing} ft</span></p>
-                                    <p className='w-full flex justify-between text-sm md:text-xl'>Gated Colony: <span className="font-light text-right">{property.plotDetails.gatedColonyStatus ? 'Yes' : 'No'}</span></p>
-                                    {property.plotDetails.constructionStatus && (
-                                        <p className='w-full flex justify-between text-sm md:text-xl'>Any Construction Done: <span className="font-light text-right">Yes</span></p>
-                                    )}
-                                    {property.plotDetails.boundaryWallStatus && (
-                                        <p className='w-full flex justify-between text-sm md:text-xl'>Boundary Wall: <span className="font-light text-right">Yes</span></p>
-                                    )}
-                                </>
-                            )}
-                        </div>
-                    </div>
-                </div>
-                <div className="mt-6 flex flex-wrap overflow-x-scroll justify-between border-t-2 border-b-2 py-4 md:py-8 md:p-3">
-                    {
-                        propertyImgs.map((item, index) => {
-                            return (index === propertyImgIndex ?
-                                <div key={index} className='p-2 border rounded-md cursor-pointer'>
-                                    <img src={item.src} className='w-[60px] h-[50px] md:w-[70px] md:h-[60px] rounded-md' />
-                                </div> :
-                                <div key={index} className='p-2 rounded-md cursor-pointer hover:scale-[0.9] transition-all' onClick={() => imageChange(index)} >
-                                    <img src={item.src} className='w-[60px] h-[50px] md:w-[70px] md:h-[60px] rounded-md' />
-                                </div>)
-                        })
-                    }
-                </div>
-                <div className="mt-6 flex flex-col md:flex-row justify-between border-b-2 pb-8 p-3">
-                    <button className="bg-[#3498db] text-sm md:text-xl text-white py-2 px-5 md:px-7 rounded-full mb-4 md:mb-0">Contact Agent</button>
-                    <button className="bg-gray-300 text-gray-800 py-2 text-sm md:text-xl px-5 md:px-7 rounded-full">Get Phone no.</button>
-                </div>
-                <br />
-                <div className='px-5'>
-                    <h2 className="text-xl md:text-2xl font-bold">More Details</h2>
-                    <div className="mt-6 flex flex-col gap-4 md:px-5">
-                        <p className='w-full flex justify-between text-sm md:text-xl'>Price Breakup: <span className="font-light text-right ">₹{property?.plotDetails?.price} | {property.quarterlyFee}</span></p>
-                        <p className='w-full flex justify-between text-sm md:text-xl'>Address: <span className="font-light text-right ">{property?.location.locality}, {property?.location.city}, {property?.location.district}, {property?.location.state} - {property?.location.pincode}</span></p>
-                        <p className='w-full flex justify-between text-sm md:text-xl'>Furnishing: <span className="font-light text-right ">Furnished</span></p>
-                        <p className='w-full flex justify-between text-sm md:text-xl'>Flooring: <span className="font-light text-right ">Ceramic Tiles</span></p>
-                        <p className='w-full flex justify-between text-sm md:text-xl'>Type of Ownership: <span className="font-light text-right ">Co-operative Society</span></p>
-                        <p className='w-full flex justify-between text-sm md:text-xl'>Overlooking: <span className="font-light text-right ">Garden/Park</span></p>
-                    </div>
-                </div>
-                <div className="mt-6 flex justify-end border-b-2 border-t-2 py-4 md:py-8 p-3">
-                    <button className="bg-[#3498db] text-sm md:text-xl text-white py-2 px-5 md:px-7 rounded-full">Contact Agent</button>
-                </div>
-
-                <div className="mt-10 px-5 border-b-2 pb-20">
-                    <h2 className="text-xl md:text-2xl font-bold">Property Location</h2>
-                    <div className="relative mt-6 px-5">
-                        <img
-                            src={MapImgae}
-                            alt="Property Location Map"
-                            className="w-full h-[40vh] md:h-[60vh] rounded-lg shadow-md"
+    return(
+        <div className="container mx-auto px-4 py-8">
+            {/* Media Section */}
+            <div className="space-y-4">
+                {/* Video Player */}
+                {dummyProperty.media.video && (
+                    <div className="relative h-96 w-full rounded-2xl overflow-hidden">
+                        <iframe
+                            className="w-full h-full object-cover"
+                            src={dummyProperty.media.video}
+                            title="Property video"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
                         />
-                        <div className="absolute top-1/2 w-[50vw] text-center left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white border border-red-500 rounded-lg p-5">
-                            <span className="text-red-500 font-semibold">Explore nearby Landmarks on map</span>
-                        </div>
                     </div>
-                </div>
-                <div className="mt-10 px-5 border-b-2 pb-10">
-                    <h2 className="text-xl md:text-2xl font-bold">Agent Details</h2>
-                    <div className="relative mt-6 md:px-5">
-                        <div className="flex flex-col md:flex-row justify-between items-center">
-                            <div className="flex flex-col gap-4 w-full  md:p-10">
-                                <p className='w-full flex justify-between text-sm md:text-xl '>Broker Name: <span className="font-light">{property?.brokerDetails?.name}</span></p>
-                                <p className='w-full flex justify-between text-sm md:text-xl'>Contact: <span className="font-light">{property?.brokerDetails?.contact}</span></p>
-                                <p className='w-full flex justify-between text-sm md:text-xl'>Phone: <span className="font-light">{property?.brokerDetails?.phone}</span></p>
-                                <p className='w-full flex justify-between text-sm md:text-xl '><span className='text-red-500'>Properties:</span> <span className="font-light texxt-black">{property?.brokerDetails?.properties && property?.brokerDetails.properties}</span></p>
-                                <p className='w-full justify-between text-sm md:text-xl '>Description: <span className="font-light text-gray-500 ml-3">Experienced real estate broker with over 10 years in the industry, specializing in residential properties. Known for exceptional customer service and a deep understanding of the local market.</span></p>
-                                <div className="mt-6 flex justify-between border-t-2 py-4 md:py-8 ">
-                                    <button className="bg-[#3498db] text-sm md:text-xl text-white py-2 px-5 md:px-7 rounded-full hover:scale-[0.9] transition-all">View Profile</button>
-                                    <button className="bg-gray-300 text-gray-800 py-2 text-sm md:text-xl px-5 md:px-7 rounded-full">Get Phone no.</button>
-                                </div>
-                            </div>
-                            <div className="flex-shrink-0 -mt-20">
-                                <img src={property?.brokerDetails?.profilePicture || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2IYhSn8Y9S9_HF3tVaYOepJBcrYcd809pBA&s"} alt="Broker Profile" className="w-32 h-32 md:w-50 md:h-50 rounded-full border" />
-                            </div>
-                        </div>
+                )}
+                
+                {/* Image Carousel */}
+                <div className="space-y-2">
+                    <div className="h-96 w-full rounded-2xl overflow-hidden">
+                        <img 
+                            src={dummyProperty.media.images[activeMediaIndex]} 
+                            alt="Property" 
+                            className="w-full h-full object-cover"
+                        />
                     </div>
-                </div>
-                <div className="mt-10 px-5  pb-10">
-                    <h2 className="text-xl md:text-2xl font-bold">See Similar with your intrest</h2>
-                <div className="mt-10  pb-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-                   {
-                    Array.isArray(cardsData) && cardsData.map((card, index) => {
-                        return <Card key={index} card={{image: card.image, title: card.title, price: card.plotDetails ? card.plotDetails.price : card.farmhouseDetails.price, location: `${card.location.locality}, ${card.location.city}`, }} />
-                    })
-                   }
-                </div>
+                    <div className="flex gap-2 overflow-x-auto pb-2">
+                        {dummyProperty.media.images.map((img, index) => (
+                            <img
+                                key={index}
+                                src={img}
+                                alt={`Thumbnail ${index}`}
+                                className={`h-20 w-32 cursor-pointer object-cover rounded-lg ${
+                                    activeMediaIndex === index ? 'ring-2 ring-primary' : ''
+                                }`}
+                                onClick={() => setActiveMediaIndex(index)}
+                            />
+                        ))}
+                    </div>
                 </div>
             </div>
-        </div></>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+                {/* Main Details Section */}
+                <div className="md:col-span-2 space-y-8">
+                    <div className="border-b pb-6">
+                        <div className="flex items-center justify-between">
+                            <h1 className="text-3xl font-bold text-gray-800">{dummyProperty.title}</h1>
+                            <span className="bg-primary/10 text-primary px-4 py-2 rounded-full text-lg">
+                                {dummyProperty.price}
+                            </span>
+                        </div>
+                        
+                        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="space-y-3">
+                                <div className="flex items-center text-gray-600">
+                                    <FiHome className="w-5 h-5 mr-2 text-primary" />
+                                    <span><strong>Type:</strong> {dummyProperty.propertyType}</span>
+                                </div>
+                                <div className="flex items-center text-gray-600">
+                                    <FiMapPin className="w-5 h-5 mr-2 text-primary" />
+                                    <span>{`${dummyProperty.address.locality}, ${dummyProperty.address.city}, ${dummyProperty.address.state} - ${dummyProperty.address.pincode}`}</span>
+                                </div>
+                            </div>
+                            <div className="space-y-3">
+                                <div className="flex items-center text-gray-600">
+                                    <FiLayers className="w-5 h-5 mr-2 text-primary" />
+                                    <span>{dummyProperty.size}</span>
+                                </div>
+                                <div className="flex gap-6">
+                                    <div className="flex items-center text-gray-600">
+                                        <span className="bg-gray-100 px-3 py-1 rounded-lg">🛏 {dummyProperty.bedrooms}</span>
+                                    </div>
+                                    <div className="flex items-center text-gray-600">
+                                        <span className="bg-gray-100 px-3 py-1 rounded-lg">🚿 {dummyProperty.bathrooms}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Description Section */}
+                    <div className="space-y-8">
+                        <div className="space-y-4">
+                            <h2 className="text-2xl font-semibold text-gray-800">Property Details</h2>
+                            <div className="prose max-w-none text-gray-600">
+                                {dummyProperty.description.split('\n').map((line, index) => (
+                                    <div key={index} className="flex items-start">
+                                        <FiCheck className="w-4 h-4 text-primary mt-1 mr-2 flex-shrink-0" />
+                                        <p className="whitespace-pre-line">{line.replace('- ', '')}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Amenities Section */}
+                        <div className="space-y-4">
+                            <h2 className="text-2xl font-semibold text-gray-800">Amenities</h2>
+                            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                {dummyProperty.amenities.map((amenity, index) => (
+                                    <div key={index} className="flex items-center bg-gray-50 p-3 rounded-lg">
+                                        <FiCheck className="w-4 h-4 text-primary mr-2" />
+                                        <span className="text-gray-700">{amenity}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Seller Details and Contact Section */}
+                <div className="space-y-8">
+                    <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+                        <h2 className="text-2xl font-semibold mb-6 text-gray-800">Seller Details</h2>
+                        <div className="space-y-4">
+                            <div className="flex items-center bg-gray-50 p-4 rounded-lg">
+                                <FiUser className="w-6 h-6 text-primary mr-3" />
+                                <div>
+                                    <h3 className="font-semibold">{dummyProperty.contact.name}</h3>
+                                    <p className="text-sm text-gray-600">Verified Seller</p>
+                                </div>
+                            </div>
+                            <div className="flex items-center bg-gray-50 p-4 rounded-lg">
+                                <FiPhone className="w-6 h-6 text-primary mr-3" />
+                                <span className="font-medium">
+                                    {maskPhoneNumber(dummyProperty.contact.phone)}
+                                </span>
+                            </div>
+                            <div className="flex items-center bg-gray-50 p-4 rounded-lg">
+                                <FiMail className="w-6 h-6 text-primary mr-3" />
+                                <span className="font-medium">{dummyProperty.contact.email}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="bg-gradient-to-b from-primary/5 to-white p-6 rounded-xl shadow-lg border border-gray-100">
+                        <h2 className="text-2xl font-semibold mb-6 text-gray-800">Contact Seller</h2>
+                        <form className="space-y-6">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Your Name</label>
+                                <div className="relative">
+                                    <FiUser className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                                    <input type="text" placeholder="John Doe" className="w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" />
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                                <div className="relative">
+                                    <FiMail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                                    <input type="email" placeholder="john@example.com" className="w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" />
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Message</label>
+                                <textarea placeholder="Write your message..." className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent h-32" />
+                            </div>
+                            
+                            <div className="flex items-center">
+                                <input type="checkbox" className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded" />
+                                <span className="ml-2 text-sm text-gray-600">
+                                    I agree to the <a href="#" className="text-primary hover:underline">terms and conditions</a>
+                                </span>
+                            </div>
+                            
+                            <button className="w-full bg-primary text-white py-3 px-6 rounded-lg font-medium hover:bg-primary-dark transition-colors duration-300">
+                                Send Message
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            {/* Location Section */}
+            <div className="mt-16">
+                <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-2xl font-semibold text-gray-800">Location</h2>
+                    <button className="flex items-center text-primary hover:text-primary-dark">
+                        <FiMapPin className="mr-2" />
+                        Open in Maps
+                    </button>
+                </div>
+                <div className="overflow-hidden rounded-2xl shadow-xl border border-gray-200 hover:shadow-2xl transition-shadow duration-300">
+                    <img src={MapImgae} alt="Property location" className="w-full h-96 object-cover" />
+                </div>
+            </div>
+
+            {/* Similar Properties Section */}
+            <div className="mt-16">
+                <div className="flex justify-between items-center pb-4 mb-8">
+                    <h2 className="text-2xl font-semibold text-gray-800">Similar Properties</h2>
+                    <button className="text-primary hover:text-primary-dark font-medium">
+                        View All →
+                    </button>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    {cardsData.slice(0, 3).map((property) => (
+                        <PropertyCard key={property._id} property={property} />
+                    ))}
+                </div>
+            </div>
+        </div>
     )
 }
 

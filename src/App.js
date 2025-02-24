@@ -33,6 +33,9 @@ import AllSallerProperties from "./saller/Pages/Properties/AllProperty";
 
 import ROUTES_NAME from "./constants/routes";
 import './Assets/Global.css';
+import { ToastContainer } from "react-toastify";
+import SearchPage from "./pages/SearchPage/SearchPage";
+import SearchResults from "./pages/Search_Results/SearchResults";
 
 function App() {
   return (
@@ -41,9 +44,13 @@ function App() {
         <Routes>
           <Route path={ROUTES_NAME.HOME} element={<WithNavbarAndFooter WrappedComponent={HomePage} />} />
           <Route path={ROUTES_NAME.PROPERTIES} element={<WithNavbarAndFooter WrappedComponent={PropertiesPage} />} />
+          <Route path={ROUTES_NAME.SEARCH_RESULTS} element={<SearchResults/>}/>
+          <Route path={ROUTES_NAME.SEARCH} element={<SearchPage/>} />
           <Route path={ROUTES_NAME.ABOUT} element={<WithNavbarAndFooter WrappedComponent={AboutPage} />} />
           <Route path={ROUTES_NAME.CONTACT} element={<WithNavbarAndFooter WrappedComponent={ContactPage} />} />
           <Route path={ROUTES_NAME.VIEW_PROPERTY} element={<WithNavbarAndFooter WrappedComponent={PropertyProfile} />} />
+
+          
           <Route path={ROUTES_NAME.ADMIN_LOGIN} element={<AdminLogin />} />
           <Route path={ROUTES_NAME.ADMIN_HOME} element={<AdminDashboard />} />
           <Route path={ROUTES_NAME.ADMIN_ALL_PROPERTIES} element={<AdminProperties />} />
@@ -66,7 +73,9 @@ function App() {
           <Route path={ROUTES_NAME.SALLER_MANAGE_QUERIES} element={<QueriesManagement />} />
           <Route path={ROUTES_NAME.SALLER_ALLPROPERTIES} element={<AllSallerProperties />} />
         </Routes>
+        <ToastContainer position="bottom-right" />
       </BrowserRouter>
+
     </ThemeProvider>
   );
 }
