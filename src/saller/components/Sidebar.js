@@ -6,10 +6,10 @@ const Sidebar = () => {
   const location = useLocation()
 
   const navigation = [
-    { name: "Add Property", icon: FiPlusSquare, path: "/property/property/add" },
-    { name: "All Properties", icon: FiGrid, path: "/brokers/properties-all" },
-    { name: "Queries", icon: FiFolder, path: "/broker/queries/manage" },
-    { name: "Manage Subscription", icon: FiDollarSign, path: "/broker/subscription" },
+    { name: "Add Property", icon: FiPlusSquare, path: "/saller/property/add" },
+    { name: "All Properties", icon: FiGrid, path: "/saller/properties" },
+    { name: "Queries", icon: FiFolder, path: "/saller/queries/manage" },
+    { name: "Manage Subscription", icon: FiDollarSign, path: "/saller/subscription" },
   ]
 
   return (

@@ -10,8 +10,9 @@ const ROUTES_NAME = {
   VIEW_PROPERTY: '/property/:id',
   VIEW_PROJECT: '/project/:id',
   VIEW_BROKER: '/broker/:id',
+
   ADMIN_LOGIN : '/admin/login',
-  ADMIN_HOME : '/admin/home',
+  ADMIN_HOME : '/admin/dashboard',
   ADMIN_ALL_PROPERTIES: '/admin/properties/all',
   BROKER_ALL_PROPERTIES: '/admin/brokers/properties/all',
   USER_ALL_PROPERTIES: '/admin/users/properties/all',
@@ -25,12 +26,14 @@ const ROUTES_NAME = {
   
 
 
-  BROKER_HOME : '/broker/home',
-  BROKER_LOGIN : '/broker/login',
-  BROKER_SIGNUP : '/broker/signup',
-  BROKER_PROPERTY_ADD: '/property/property/add',
-  BROKER_MANAGE_QUERIES: '/broker/queries/manage',
-  BROKER_ALLPROPERTIES: '/brokers/properties-all',
+  SALLER_HOME : '/saller/dashboard',
+  SALLER_LOGIN : '/saller/login',
+  SALLER_SIGNUP : '/saller/signup',
+  SALLER_UPDATE_PROFILE : '/saller/update-profile',
+  SALLER_CHANGE_PASSWORD : '/saller/change-password',
+  SALLER_PROPERTY_ADD: '/saller/property/add',
+  SALLER_MANAGE_QUERIES: '/saller/queries/manage',
+  SALLER_ALLPROPERTIES: '/saller/properties',
 };
 
 export default ROUTES_NAME;

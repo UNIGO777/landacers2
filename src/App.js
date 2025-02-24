@@ -22,12 +22,14 @@ import ManageSubscription from "./admin/Pages/Subscription/ManageSubs";
 import EditSubscriptionForm from "./admin/Pages/Subscription/EditSubs";
 import ChangePassword from "./admin/Pages/ChangePassword";
 
-import BrokerDashboard from "./broker/Pages/Dashoard/Dashboard";
-import BrokerLogin from "./broker/Pages/Auth/BrokerLogin";
-import BrokerSignUpPage from "./broker/Pages/Auth/BrokerSingup";
-import AddProperty from "./broker/Pages/Properties/AddProperty";
-import QueriesManagement from "./broker/Pages/Queries/ManageQueries";
-import AllBrokerProperties from "./broker/Pages/Properties/AllProperty";
+import SallerDashboard from "./saller/Pages/Dashoard/Dashboard";
+import SallerLogin from "./saller/Pages/Auth/SallerLogin";
+import SallerSignUpPage from "./saller/Pages/Auth/SallerSingup";
+import SallerChangePassword from "./saller/components/ChangePassword";
+import SallerUpdateProfile from "./saller/components/UpdateProfile";
+import AddProperty from "./saller/Pages/Properties/AddProperty";
+import QueriesManagement from "./saller/Pages/Queries/ManageQueries";
+import AllSallerProperties from "./saller/Pages/Properties/AllProperty";
 
 import ROUTES_NAME from "./constants/routes";
 import './Assets/Global.css';
@@ -55,12 +57,14 @@ function App() {
           <Route path={ROUTES_NAME.ADMIN_MANAGE_SUBSCRIPTION} element={<ManageSubscription />} />
           <Route path={ROUTES_NAME.ADMIN_CHANGE_PASSWORD} element={<ChangePassword />} />
 
-          <Route path={ROUTES_NAME.BROKER_HOME} element={<BrokerDashboard />} />
-          <Route path={ROUTES_NAME.BROKER_LOGIN} element={<BrokerLogin />} />
-          <Route path={ROUTES_NAME.BROKER_SIGNUP} element={<BrokerSignUpPage />} />
-          <Route path={ROUTES_NAME.BROKER_PROPERTY_ADD} element={<AddProperty />} />
-          <Route path={ROUTES_NAME.BROKER_MANAGE_QUERIES} element={<QueriesManagement />} />
-          <Route path={ROUTES_NAME.BROKER_ALLPROPERTIES} element={<AllBrokerProperties />} />
+          <Route path={ROUTES_NAME.SALLER_HOME} element={<SallerDashboard />} />
+          <Route path={ROUTES_NAME.SALLER_LOGIN} element={<SallerLogin />} />
+          <Route path={ROUTES_NAME.SALLER_SIGNUP} element={<SallerSignUpPage />} />
+          <Route path={ROUTES_NAME.SALLER_UPDATE_PROFILE} element={<SallerUpdateProfile />} />
+          <Route path={ROUTES_NAME.SALLER_CHANGE_PASSWORD} element={<SallerChangePassword />} />
+          <Route path={ROUTES_NAME.SALLER_PROPERTY_ADD} element={<AddProperty />} />
+          <Route path={ROUTES_NAME.SALLER_MANAGE_QUERIES} element={<QueriesManagement />} />
+          <Route path={ROUTES_NAME.SALLER_ALLPROPERTIES} element={<AllSallerProperties />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

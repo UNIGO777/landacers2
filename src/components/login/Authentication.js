@@ -1,361 +1,520 @@
-import React, { useState } from 'react'
-import Popup from '../Popup/Popup'
-import axios from 'axios';
+import { useState } from "react"
+import { X } from "lucide-react"
+import axios from "axios"
+import { toast, ToastContainer } from "react-toastify"
+import { motion, AnimatePresence } from "framer-motion"
+import { useNavigate } from "react-router-dom"
+import "react-toastify/dist/ReactToastify.css"
 
+const LoginForm = ({ toggleForm }) => {
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  })
+  const [error, setError] = useState("")
+  const [loading, setLoading] = useState(false)
+  const navigate = useNavigate()
 
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setError("")
+    setLoading(true)
 
-const LoginForm = ({ togleForm}) => {
-    const [formData, setFormData] = React.useState({
-        email: '',
-        password: ''
-    });
+    try {
+      const response = await axios.post("https://landacers-backend.onrender.com/api/users/login", {
+        email: formData.email,
+        password: formData.password,
+      })
 
-    const handleChange = (e) => {
-        const { id, value } = e.target;
-        setFormData(prevState => ({
-            ...prevState,
-            [id]: value
-        }));
-    };
+      if (response.data) {
+        toast.success("Login successful!")
+        // Store token or user data
+        localStorage.setItem("token", response.data.token)
+        navigate("/dashboard") // Redirect to dashboard
+      }
+    } catch (error) {
+      setError(error.response?.data?.message || "An error occurred during login")
+      toast.error("Login failed. Please try again.")
+    } finally {
+      setLoading(false)
+    }
+  }
 
-    const handleSubmit = async(e) => {
-        e.preventDefault();
-        // Handle login logic here
-        try {
-            const response = await axios.post('/api/auth/login', {
-                email: formData.email,
-                password: formData.password
-            });
+  return (
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex h-[600px]">
+      <div className="flex-col items-center justify-center hidden w-1/2 p-8 text-white md:flex bg-gradient-to-br from-blue-500 to-blue-600">
+        <motion.div
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          className="text-center"
+        >
+          <h1 className="mb-4 text-4xl font-bold">
+            Welcome Back
+            <br />
+            To LandAcers!
+          </h1>
+          <p className="mb-8 text-lg text-blue-100">
+            We are so excited to have you here. Login to access exclusive offers, rewards, and discounts.
+          </p>
+          <button
+            className="px-8 py-3 text-white transition-all bg-transparent border-2 border-white rounded-lg hover:bg-white hover:text-blue-600 hover:scale-105"
+            onClick={toggleForm}
+          >
+            Don't have an account? Sign up.
+          </button>
+        </motion.div>
+      </div>
 
-            if (response.data) {
-                // Handle successful login
-                console.log('Login successful:', response.data);
-                // You can add logic here to:
-                // - Store auth token
-                // - Redirect user
-                // - Update app state
-            }
-        } catch (error) {
-            console.error('Login failed:', error.response?.data || error.message);
-            // Handle login error
-            // You can add logic here to show error messages to user
-        }
-    };
-    return (
-        <div className="flex min-h-full">
-            {/* Left Panel */}
-            <div className="flex-col items-center justify-center hidden w-1/2 p-12 text-center text-white bg-blue-500 md:flex">
-                <h1 className="w-1/2 mb-4 text-3xl font-bold">Welcome Back To LandAcers!</h1>
-                <p className="mb-8">
-                    We are so excited to have you here. Login to access 
-                    exclusive offers, rewards, and discounts.
-                </p>
-                <button 
-                    className="px-6 py-2 text-white bg-blue-400 rounded-lg hover:bg-blue-600"
-                    onClick={() => togleForm()}
-                >
-                    Don't have an account? Sign up.
-                </button>
+      <div className="flex flex-col justify-center w-full p-8 md:w-1/2">
+        <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.1 }}>
+          <h2 className="mb-6 text-3xl font-bold text-gray-900">Login</h2>
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="p-4 mb-6 text-sm text-red-700 bg-red-100 rounded-lg"
+            >
+              {error}
+            </motion.div>
+          )}
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-700">
+                Email Address
+              </label>
+              <input
+                type="email"
+                id="email"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                placeholder="support@bytewebster.com"
+                className="w-full px-4 text-gray-700 transition-all border border-gray-200 h-14 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                required
+              />
             </div>
-
-            {/* Right Panel - Login Form */}
-            <div className="flex flex-col justify-center p-12 md:w-1/2">
-                <div className="mb-8 text-center md:hidden">
-                    <h1 className="mb-2 text-2xl font-bold">Welcome Back To LandAcers!</h1>
-                    
-                    
-                </div>
-                <h2 className="text-2xl font-semibold mb-8">Login</h2>
-                <form onSubmit={handleSubmit} className="space-y-4">
-                    <div>
-                        <input
-                            type="email"
-                            id="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            placeholder="support@bytewebster.com"
-                            className="w-full p-3 rounded-lg bg-gray-100"
-                        />
-                    </div>
-                    <div>
-                        <input
-                            type="password"
-                            id="password"
-                            value={formData.password}
-                            onChange={handleChange}
-                            placeholder="••••••••"
-                            className="w-full p-3 rounded-lg bg-gray-100"
-                        />
-                    </div>
-                    <button
-                        type="submit"
-                        className="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-700"
-                    >
-                        Login
-                    </button>
-                    <button 
-                        className="w-full md:hidden text-sm bg-gray-100 text-gray-700 py-3 rounded-lg hover:bg-gray-200 mt-2"
-                        onClick={() => togleForm()}
-                    >
-                        Don't have an account? Sign up.
-                    </button>
-                    {/* <div className="text-center mt-4">
-                        <p className="text-gray-600 mb-4">or login with</p>
-                        <div className="flex justify-center space-x-4">
-                            <button type="button" className="p-2 rounded-full bg-gray-100">
-                                <img loding="lazy" src="/facebook-icon.svg" alt="Facebook" className="w-6 h-6" />
-                            </button>
-                            <button type="button" className="p-2 rounded-full bg-gray-100">
-                                <img loding="lazy" src="/google-icon.svg" alt="Google" className="w-6 h-6" />
-                            </button>
-                            <button type="button" className="p-2 rounded-full bg-gray-100">
-                                <img loding="lazy" src="/linkedin-icon.svg" alt="LinkedIn" className="w-6 h-6" />
-                            </button>
-                        </div>
-                    </div> */}
-                </form>
+            <div>
+              <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-700">
+                Password
+              </label>
+              <input
+                type="password"
+                id="password"
+                value={formData.password}
+                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                placeholder="••••••••"
+                className="w-full px-4 text-gray-700 transition-all border border-gray-200 h-14 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                required
+              />
             </div>
-        </div>
-    )
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              type="submit"
+              disabled={loading}
+              className="w-full text-white transition-all h-14 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl hover:shadow-lg disabled:opacity-50"
+            >
+              {loading ? (
+                <span className="flex items-center justify-center">
+                  <svg className="w-5 h-5 mr-3 animate-spin" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    />
+                  </svg>
+                  Logging in...
+                </span>
+              ) : (
+                "Login"
+              )}
+            </motion.button>
+          </form>
+          <button
+            type="button"
+            className="w-full mt-4 text-sm text-gray-700 transition-all bg-gray-100 h-14 rounded-xl md:hidden hover:bg-gray-200"
+            onClick={toggleForm}
+          >
+            Don't have an account? Sign up.
+          </button>
+        </motion.div>
+      </div>
+    </motion.div>
+  )
 }
 
-const SignUpForm = ({ toggleForm}) => {
-    const [formData, setFormData] = React.useState({
-        fullName: '',
-        email: '',
-        phone: '',
-        password: '',
-        confirmPassword: ''
-    });
+const SignUpForm = ({ toggleForm }) => {
+  const [showOtpForm, setShowOtpForm] = useState(false)
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phoneNumber: "",
+    password: "",
+    confirmPassword: "",
+  })
+  const [otp, setOtp] = useState("")
+  const [error, setError] = useState("")
+  const [loading, setLoading] = useState(false)
+  const navigate = useNavigate()
 
-    const handleChange = (e) => {
-        const { id, value } = e.target;
-        setFormData(prevState => ({
-            ...prevState,
-            [id]: value
-        }));
-    };
+  const handleRegistrationSubmit = async (e) => {
+    e.preventDefault()
+    setError("")
+    setLoading(true)
 
-    const handleSubmit = async(e) => {
-        e.preventDefault();
-        // Validation checks
-        if (!formData.fullName.trim()) {
-            alert('Please enter your full name');
-            return;
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match")
+      setLoading(false)
+      return
+    }
+
+    try {
+      const response = await axios.post(
+        "https://landacers-backend.onrender.com/api/users/register",
+        {
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          phoneNumber: formData.phoneNumber,
+          password: formData.password,
+        },
+        {
+          timeout: 10000, // 10 second timeout
+        },
+      )
+
+      if (response.data) {
+        // Store registration data in localStorage for OTP verification
+        localStorage.setItem(
+          "registrationData",
+          JSON.stringify({
+            phoneNumber: formData.phoneNumber,
+            timestamp: new Date().getTime(),
+          }),
+        )
+        toast.success(`OTP sent to your mobile number: ${formData.phoneNumber}`)
+        setShowOtpForm(true)
+      }
+    } catch (error) {
+      setError(error.response?.data?.message || "Registration failed. Please try again.")
+      toast.error("Registration failed. Please try again.")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleOtpSubmit = async (e) => {
+    e.preventDefault()
+    setError("")
+    setLoading(true)
+
+    const registrationData = JSON.parse(localStorage.getItem("registrationData"))
+    if (!registrationData || !registrationData.phoneNumber) {
+      setError("Registration session expired. Please register again.")
+      setShowOtpForm(false)
+      return
+    }
+
+    try {
+      const response = await axios.post(
+        "https://landacers-backend.onrender.com/api/users/register/verify-otp",
+        {
+          phoneNumber: registrationData.phoneNumber,
+          otp: otp,
+        },
+        {
+          timeout: 10000,
+        },
+      )
+
+      if (response.data.success) {
+        toast.success("Registration successful!")
+        localStorage.removeItem("registrationData") // Clean up
+        // Store token if provided
+        if (response.data.token) {
+          localStorage.setItem("token", response.data.token)
         }
+        navigate("/") // Redirect to dashboard
+      }
+    } catch (error) {
+      setError(error.response?.data?.message || "Invalid OTP")
+      toast.error("OTP verification failed. Please try again.")
+    } finally {
+      setLoading(false)
+    }
+  }
 
-        if (!formData.email.trim()) {
-            alert('Please enter your email');
-            return;
-        }
+  return (
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex h-[600px]">
+      <div className="flex-col items-center justify-center hidden w-1/2 p-8 text-white md:flex bg-gradient-to-br from-blue-500 to-blue-600">
+        <motion.div
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          className="text-center"
+        >
+          <h1 className="mb-4 text-4xl font-bold">
+            Join LandAcers
+            <br />
+            Today!
+          </h1>
+          <p className="mb-8 text-lg text-blue-100">
+            Create an account to unlock exclusive property listings, save your favorites, and get personalized
+            recommendations.
+          </p>
+          <button
+            className="px-8 py-3 text-white transition-all bg-transparent border-2 border-white rounded-lg hover:bg-white hover:text-blue-600 hover:scale-105"
+            onClick={toggleForm}
+          >
+            Already have an account? Login.
+          </button>
+        </motion.div>
+      </div>
 
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(formData.email)) {
-            alert('Please enter a valid email address');
-            return;
-        }
+      <div className="flex flex-col justify-center w-full p-8 md:w-1/2">
+        <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.1 }}>
+          <h2 className="mb-4 text-3xl font-bold text-gray-900">{showOtpForm ? "Verify OTP" : "Create Account"}</h2>
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="p-4 mb-6 text-sm text-red-700 bg-red-100 rounded-lg"
+            >
+              {error}
+            </motion.div>
+          )}
 
-        if (!formData.phone.trim()) {
-            alert('Please enter your phone number');
-            return;
-        }
-
-        const phoneRegex = /^\d{10}$/;
-        if (!phoneRegex.test(formData.phone)) {
-            alert('Please enter a valid 10-digit phone number');
-            return;
-        }
-
-        if (!formData.password) {
-            alert('Please enter a password');
-            return;
-        }
-
-        if (formData.password.length < 6) {
-            alert('Password must be at least 6 characters long');
-            return;
-        }
-
-        if (formData.password !== formData.confirmPassword) {
-            alert('Passwords do not match');
-            return;
-        }
-
-        try {
-            const response = await axios.post('/api/auth/signup', {
-                fullName: formData.fullName,
-                email: formData.email,
-                phone: formData.phone,
-                password: formData.password
-            });
-
-            if (response.data.success) {
-                alert('Account created successfully! Please login.');
-                toggleForm();
-            } else {
-                alert(response.data.message || 'Registration failed. Please try again.');
-            }
-        } catch (error) {
-            console.error('Signup error:', error);
-            alert(error.response?.data?.message || 'An error occurred during registration');
-        }
-    };
-
-    return (
-        <div className="flex min-h-full">
-            {/* Left Panel */}
-            <div className="flex-col items-center justify-center hidden w-1/2 p-12 text-center text-white bg-blue-500 md:flex">
-                <h1 className="w-1/2 mb-4 text-3xl font-bold">Join LandAcers Today!</h1>
-                <p className="mb-8">
-                    Create an account to unlock exclusive property listings,
-                    save your favorites, and get personalized recommendations.
-                </p>
-                <button 
-                    className="px-6 py-2 text-white bg-blue-400 rounded-lg hover:bg-blue-600"
-                    onClick={() => toggleForm()}
-                >
-                    Already have an account? Login.
-                </button>
-            </div>
-
-            {/* Right Panel - Signup Form */}
-            <div className="flex flex-col justify-center p-12 md:w-1/2">
-                <div className="mb-8 text-center md:hidden">
-                    <h1 className="mb-2 text-2xl font-bold">Join LandAcers Today!</h1>
+          <AnimatePresence mode="wait">
+            {!showOtpForm ? (
+              <motion.form
+                key="registration"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                onSubmit={handleRegistrationSubmit}
+                className="space-y-3"
+              >
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div>
+                    <label htmlFor="firstName" className="block mb-2 text-sm font-medium text-gray-700">
+                      First Name
+                    </label>
+                    <input
+                      type="text"
+                      id="firstName"
+                      value={formData.firstName}
+                      onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                      className="w-full h-12 px-3 text-gray-700 transition-all border border-gray-200 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="lastName" className="block mb-2 text-sm font-medium text-gray-700">
+                      Last Name
+                    </label>
+                    <input
+                      type="text"
+                      id="lastName"
+                      value={formData.lastName}
+                      onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                      className="w-full h-12 px-3 text-gray-700 transition-all border border-gray-200 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      required
+                    />
+                  </div>
                 </div>
-                <h2 className="mb-8 text-2xl font-semibold">Sign Up</h2>
-                <form onSubmit={handleSubmit} className="space-y-4">
-                    <div>
-                        <input
-                            type="text"
-                            id="fullName"
-                            value={formData.fullName}
-                            onChange={handleChange}
-                            placeholder="Full Name"
-                            className="w-full p-3 bg-gray-100 rounded-lg"
+
+                <div>
+                  <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-700">
+                    Email Address
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    className="w-full h-12 px-3 text-gray-700 transition-all border border-gray-200 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="phoneNumber" className="block mb-2 text-sm font-medium text-gray-700">
+                    Phone Number
+                  </label>
+                  <input
+                    type="tel"
+                    id="phoneNumber"
+                    value={formData.phoneNumber}
+                    onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
+                    className="w-full h-12 px-3 text-gray-700 transition-all border border-gray-200 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    required
+                    pattern="[0-9]{10}"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-700">
+                    Create Password
+                  </label>
+                  <input
+                    type="password"
+                    id="password"
+                    value={formData.password}
+                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                    className="w-full h-12 px-3 text-gray-700 transition-all border border-gray-200 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="confirmPassword" className="block mb-2 text-sm font-medium text-gray-700">
+                    Confirm Password
+                  </label>
+                  <input
+                    type="password"
+                    id="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                    className="w-full h-12 px-3 text-gray-700 transition-all border border-gray-200 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    required
+                  />
+                </div>
+
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  type="submit"
+                  disabled={loading}
+                  className="w-full h-12 text-white transition-all bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl hover:shadow-lg disabled:opacity-50"
+                >
+                  {loading ? (
+                    <span className="flex items-center justify-center">
+                      <svg className="w-5 h-5 mr-3 animate-spin" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                         />
-                    </div>
-                    <div>
-                        <input
-                            type="email"
-                            id="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            placeholder="Email Address"
-                            className="w-full p-3 bg-gray-100 rounded-lg"
-                        />
-                    </div>
-                    <div>
-                        <input
-                            type="tel"
-                            id="phone"
-                            value={formData.phone}
-                            onChange={(e) => {
-                                const value = e.target.value.replace(/\D/g, '');
-                                if (value.length <= 10 && value.length >= 10) {
-                                    handleChange({
-                                        target: {
-                                            id: 'phone',
-                                            value: value
-                                        }
-                                    });
-                                } else if (value.length < 10) {
-                                    handleChange({
-                                        target: {
-                                            id: 'phone',
-                                            value: value
-                                        }
-                                    });
-                                }
-                            }}
-                            placeholder="Phone Number "
-                            className="w-full p-3 bg-gray-100 rounded-lg"
-                            maxLength="12"
-                            pattern="[0-9]{10,12}"
-                        />
-                    </div>
-                    <div>
-                        <input
-                            type="password"
-                            id="password"
-                            value={formData.password}
-                            onChange={handleChange}
-                            placeholder="Create Password"
-                            className="w-full p-3 bg-gray-100 rounded-lg"
-                        />
-                    </div>
-                    <div>
-                        <input
-                            type="password"
-                            id="confirmPassword"
-                            value={formData.confirmPassword}
-                            onChange={handleChange}
-                            placeholder="Confirm Password"
-                            className="w-full p-3 bg-gray-100 rounded-lg"
-                        />
-                    </div>
-                    <button
-                        type="submit"
-                        className="w-full py-3 text-white bg-blue-500 rounded-lg hover:bg-blue-700"
-                    >
-                        Sign Up
-                    </button>
-                    <button 
-                        className="w-full py-3 mt-2 text-sm text-gray-700 bg-gray-100 rounded-lg md:hidden hover:bg-gray-200"
-                        onClick={() => toggleForm()}
-                    >
-                        Already have an account? Login.
-                    </button>
-                </form>
-            </div>
-        </div>
-    )
+                      </svg>
+                      Sending OTP...
+                    </span>
+                  ) : (
+                    "Get OTP"
+                  )}
+                </motion.button>
+              </motion.form>
+            ) : (
+              <motion.form
+                key="otp"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                onSubmit={handleOtpSubmit}
+                className="space-y-6"
+              >
+                <div>
+                  <label htmlFor="otp" className="block mb-2 text-sm font-medium text-gray-700">
+                    Enter 6-digit OTP
+                  </label>
+                  <input
+                    type="text"
+                    id="otp"
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value)}
+                    className="w-full px-4 text-2xl tracking-wider text-center text-gray-700 transition-all border border-gray-200 h-14 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    required
+                    maxLength={6}
+                    pattern="[0-9]{6}"
+                    placeholder="••••••"
+                  />
+                  <p className="mt-2 text-sm text-center text-gray-500">OTP sent to your mobile number</p>
+                </div>
+
+                <div className="space-y-4">
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    type="submit"
+                    disabled={loading}
+                    className="w-full text-white transition-all h-14 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl hover:shadow-lg disabled:opacity-50"
+                  >
+                    {loading ? (
+                      <span className="flex items-center justify-center">
+                        <svg className="w-5 h-5 mr-3 animate-spin" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          />
+                        </svg>
+                        Verifying...
+                      </span>
+                    ) : (
+                      "Verify OTP"
+                    )}
+                  </motion.button>
+
+                  <button
+                    type="button"
+                    onClick={() => setShowOtpForm(false)}
+                    className="w-full text-gray-700 transition-all bg-gray-100 h-14 rounded-xl hover:bg-gray-200"
+                  >
+                    Back to Registration
+                  </button>
+                </div>
+              </motion.form>
+            )}
+          </AnimatePresence>
+        </motion.div>
+      </div>
+    </motion.div>
+  )
 }
-
-
-
 
 const Authentication = ({ isOpen, setIsOpen }) => {
-    const [signUpForm, setSignUpForm] = useState(false)
-    const toggleForm = ()=>{
-        setSignUpForm(!signUpForm)
-    }
-    const handleClose = () => {
-        document.body.style.overflow = 'auto';
-        document.documentElement.style.overflow = 'auto';
-        document.body.style.position = 'static';
-        document.body.style.width = 'auto';
-        setIsOpen(false)
-    }
+  const [signUpForm, setSignUpForm] = useState(false)
 
-    return (
-        <>
-            <Popup isOpen={isOpen} onClose={handleClose}>
-                {signUpForm ? <SignUpForm  toggleForm={toggleForm}/>: <LoginForm togleForm={toggleForm}/>}
-            </Popup>
-        </>
-    )
+  const toggleForm = () => {
+    setSignUpForm(!signUpForm)
+  }
+
+  if (!isOpen) return null
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm"
+    >
+      <motion.div
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.9, opacity: 0 }}
+        className="relative w-full max-w-5xl mx-4 overflow-hidden bg-white shadow-2xl rounded-2xl"
+      >
+        <button
+          onClick={() => setIsOpen(false)}
+          className="absolute z-10 p-2 text-gray-500 transition-colors rounded-full right-4 top-4 hover:text-gray-700 hover:bg-gray-100"
+        >
+          <X className="w-6 h-6" />
+        </button>
+        <AnimatePresence mode="wait">
+          {signUpForm ? (
+            <SignUpForm key="signup" toggleForm={toggleForm} />
+          ) : (
+            <LoginForm key="login" toggleForm={toggleForm} />
+          )}
+        </AnimatePresence>
+      </motion.div>
+      <ToastContainer position="bottom-right" />
+    </motion.div>
+  )
 }
 
 export default Authentication
-
-// import React, { useState } from 'react';
-// import LoginModal from './login';
-// import SignUpModal from './singup';
-
-// export default function AuthModal({ isOpen, onClose, initialView = 'login' }) {
-//   const [view, setView] = useState(initialView);
-
-//   const toggleView = () => {
-//     setView(view === 'login' ? 'signup' : 'login');
-//   };
-
-//   if (!isOpen) return null;
-
-//   return view === 'login' ? (
-//     <LoginModal isOpen={isOpen} onClose={onClose} onToggleForm={toggleView} />
-//   ) : (
-//     <SignUpModal isOpen={isOpen} onClose={onClose} onToggleForm={toggleView} />
-//   );
-// }
 
