@@ -1,147 +1,191 @@
 import Layout from "../../Layout"
-import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from "recharts"
+import { Line, LineChart, ResponsiveContainer, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts"
+import { useState, useEffect } from "react"
+import sellerAnalytics from "../../Requests/FatchAnalatics"
+import DashboadLoader from '../../components/loaders/Dashbordloader'
 
-const data = [
-  { month: "Jan", amount: 700 },
-  { month: "Feb", amount: 800 },
-  { month: "Mar", amount: 700 },
-  { month: "Apr", amount: 900 },
-  { month: "May", amount: 800 },
-  { month: "Jun", amount: 1000 },
-  { month: "Jul", amount: 900 },
-  { month: "Aug", amount: 800 },
-  { month: "Sep", amount: 900 },
-  { month: "Oct", amount: 800 },
-  { month: "Nov", amount: 700 },
-  { month: "Dec", amount: 600 },
-]
-
-const MetricCard = ({ icon, title, value, subtext, trend }) => (
-  <div className="p-6 bg-white border border-gray-200 rounded-lg">
+const MetricCard = ({ icon, title, value, subtext, trend, color = "blue" }) => (
+  <div className="group p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-100">
     <div className="flex items-center gap-4 mb-4">
-      <div className="p-2 rounded-lg bg-blue-50">{icon}</div>
-      <h3 className="text-sm font-medium text-gray-500">{title}</h3>
+      <div className={`p-3 rounded-xl bg-${color}-100 text-${color}-600`}>
+        {icon}
+      </div>
+      <div>
+        <h3 className="text-sm font-medium text-gray-500">{title}</h3>
+        <div className="flex items-baseline gap-2">
+          <span className="text-2xl font-bold text-gray-900">{value}</span>
+          {trend && (
+            <span className={`text-sm flex items-center ${trend > 0 ? "text-green-500" : "text-red-500"}`}>
+              {trend > 0 ? (
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clipRule="evenodd"/>
+                </svg>
+              ) : (
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M14.707 10.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 12.586V5a1 1 0 012 0v7.586l2.293-2.293a1 1 0 011.414 0z" clipRule="evenodd"/>
+                </svg>
+              )}
+              {trend}%
+            </span>
+          )}
+        </div>
+      </div>
     </div>
-    <div className="flex items-baseline gap-2">
-      <span className="text-2xl font-semibold text-gray-900">{value}</span>
-      {trend && (
-        <span className={`text-sm ${trend > 0 ? "text-green-500" : "text-red-500"}`}>
-          {trend > 0 ? "+" : ""}
-          {trend}%
-        </span>
-      )}
-    </div>
-    {subtext && <p className="mt-1 text-sm text-gray-500">{subtext}</p>}
+    {subtext && <p className="text-xs font-medium text-gray-400">{subtext}</p>}
   </div>
 )
 
 const BrokerHome = () => {
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState("")
+  const [analyticsData, setAnalyticsData] = useState(null)
+  const [quaryData, setQuaryData] = useState(null)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await sellerAnalytics
+        setAnalyticsData(data)
+        setQuaryData(data.data)
+      } catch (err) {
+        setError(err.message)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchData()
+  }, [])
+
+  if (loading) {
+    return (
+      <>
+        <DashboadLoader />
+      </>
+    )
+  }
+
+  if (error) {
+    return (
+      <>
+        <div className="p-6 text-red-500 text-center">{error}</div>
+      </>
+    )
+  }
+
   return (
-    <Layout>
-      <div className="mx-auto max-w-7xl">
+    <>
+      <div className="mx-auto overflow-y-auto max-w-7xl px-4 sm:px-6 lg:px-0">
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-          <p className="mt-2 text-sm text-gray-600">
-            Our data-driven approach enables precise navigation, offering detailed analyses of property sales and rental
-            demand fluctuations.
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Dashboard Overview</h1>
+          <p className="text-gray-500 font-medium">
+            Comprehensive insights into your property performance and business metrics
           </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 mb-8 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-5 mb-8 md:grid-cols-2 lg:grid-cols-4">
           <MetricCard
             icon={
-              <svg className="w-5 h-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
             }
-            title="Total income"
-            value="$1,579,000.95"
-            subtext="Last week"
-            trend={10}
+            title="Total Queries"
+            value={analyticsData.totalQueries}
+            subtext="Total customer inquiries"
+            color="blue"
           />
           <MetricCard
             icon={
-              <svg className="w-5 h-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"
-                />
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
               </svg>
             }
-            title="Balance"
-            value="$500.00"
-            subtext="Last month"
+            title="Total Projects Posted"
+            value={analyticsData.totalProjectsPosted}
+            subtext="Commercial listings"
+            color="purple"
           />
           <MetricCard
             icon={
-              <svg className="w-5 h-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                />
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                />
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
               </svg>
             }
-            title="Total views"
-            value="12000"
-            subtext="Last week"
-            trend={10}
+            title="Total Properties Posted"
+            value={analyticsData.totalPropertiesPosted}
+            subtext="Residential listings"
+            color="green"
           />
           <MetricCard
             icon={
-              <svg className="w-5 h-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
             }
-            title="Sold out"
-            value="30"
-            subtext="Total properties"
+            title="Sold Out Properties"
+            value={analyticsData.soldOutProperties}
+            subtext="Successful transactions"
+            color="red"
           />
         </div>
 
-        <div className="p-6 mb-8 bg-white border border-gray-200 rounded-lg">
+        <div className="bg-white rounded-xl shadow-sm p-6 mb-8 border border-gray-100">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-medium text-gray-900">Analytics</h2>
-            <select className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-              <option>Week</option>
-              <option>Month</option>
-              <option>Year</option>
-            </select>
+            <div>
+              <h2 className="text-xl font-semibold text-gray-900">Property Performance</h2>
+              <p className="text-sm text-gray-500">Monthly listing analytics</p>
+            </div>
+            {new Date().getFullYear()} (Current Year Data)
+            
           </div>
-          <div className="h-[300px]">
+          <div className="h-[400px]">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={data}>
-                <XAxis dataKey="month" />
-                <YAxis />
-                <Tooltip />
-                <Area type="monotone" dataKey="amount" stroke="#3B82F6" fill="#3B82F6" fillOpacity={0.1} />
-              </AreaChart>
+              <LineChart data={quaryData} margin={{ top: 10, right: 30, left: 20, bottom: 10 }}>
+                <defs>
+                  <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#1e40af" stopOpacity={0.2}/>
+                    <stop offset="95%" stopColor="#1e40af" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                <XAxis 
+                  dataKey="month" 
+                  axisLine={false} 
+                  tickLine={false}
+                  tick={{ fill: '#64748b', fontSize: 12 }}
+                />
+                <YAxis 
+                  axisLine={false} 
+                  tickLine={false}
+                  tick={{ fill: '#64748b', fontSize: 12 }}
+                />
+                <Tooltip 
+                  contentStyle={{
+                    background: '#ffffff',
+                    border: '1px solid #e2e8f0',
+                    borderRadius: '8px',
+                    boxShadow: '0 4px 6px rgba(0,0,0,0.05)'
+                  }}
+                  itemStyle={{ color: '#1e40af', fontWeight: 500 }}
+                />
+                <Line 
+                  type="monotone" 
+                  dataKey="QueriesReceived" 
+                  stroke="#1e40af" 
+                  strokeWidth={2}
+                  dot={false}
+                  activeDot={false}
+                  strokeOpacity={1}
+                  fillOpacity={1}
+                  fill="url(#colorUv)"
+                />
+              </LineChart>
             </ResponsiveContainer>
           </div>
         </div>
       </div>
-    </Layout>
+    </>
   )
 }
 
 export default BrokerHome
-

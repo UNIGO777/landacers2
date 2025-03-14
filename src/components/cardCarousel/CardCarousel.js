@@ -57,6 +57,7 @@ const CardCarousel = ({ title, className, children }) => {
       <div className="mt-10 p-2 md:p-10 relative">
         <Slider {...settings}>
           {children}
+          {children}
         </Slider>
       </div>
     </div>

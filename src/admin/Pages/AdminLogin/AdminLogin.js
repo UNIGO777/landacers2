@@ -35,7 +35,7 @@ const AdminLogin = () => {
         password: formData.password,
       })
 
-      if (response.data.success) {
+      if (response.data) {
         toast.success("OTP sent successfully!")
         setShowOtpForm(true)
       } else {
@@ -60,7 +60,7 @@ const AdminLogin = () => {
         otp: formData.otp,
       })
 
-      if (response.data.success) {
+      if (response.data) {
         toast.success("Login successful!")
         if (response.data.token) {
           localStorage.setItem("adminToken", response.data.token)

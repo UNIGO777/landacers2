@@ -1,12 +1,11 @@
-"use client"
-
 import { useState } from "react"
-import { Building2 } from "lucide-react"
+import { Building2, User, Mail, Phone, Lock, Image, Shield, Badge, MapPin, Building } from "lucide-react"
 import { Link, useNavigate } from "react-router-dom"
 import axios from "axios"
 import { toast, ToastContainer } from "react-toastify"
 import { motion, AnimatePresence } from "framer-motion"
 import "react-toastify/dist/ReactToastify.css"
+
 
 const SellerSignUpPage = () => {
   const navigate = useNavigate()
@@ -26,6 +25,21 @@ const SellerSignUpPage = () => {
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
 
+  const validatePassword = (password) => {
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+    return regex.test(password)
+  }
+
+  const validateEmail = (email) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return regex.test(email)
+  }
+
+  const validatePhone = (phone) => {
+    const regex = /^\d{10}$/
+    return regex.test(phone)
+  }
+
   const handleChange = (e) => {
     setFormData((prev) => ({
       ...prev,
@@ -41,6 +55,24 @@ const SellerSignUpPage = () => {
     e.preventDefault()
     setError("")
     setLoading(true)
+
+    if (!validateEmail(formData.email)) {
+      setError("Please enter a valid email address")
+      setLoading(false)
+      return
+    }
+
+    if (!validatePhone(formData.phone)) {
+      setError("Please enter a valid 10-digit phone number")
+      setLoading(false)
+      return
+    }
+
+    if (!validatePassword(formData.password)) {
+      setError("Password must be at least 8 characters with uppercase, lowercase, number, and special character")
+      setLoading(false)
+      return
+    }
 
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match")
@@ -67,7 +99,7 @@ const SellerSignUpPage = () => {
         headers: {
           "Content-Type": "multipart/form-data",
         },
-        timeout: 10000, // 10 second timeout
+        timeout: 10000,
       })
 
       if (response.data) {
@@ -138,123 +170,181 @@ const SellerSignUpPage = () => {
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -20 }}
       onSubmit={handleGetOTP}
-      className="space-y-6"
+      className="space-y-4"
     >
-      <div>
-        <label className="block mb-2 text-sm font-medium">Seller Type</label>
-        <select
-          name="sellerType"
-          value={formData.sellerType}
-          onChange={handleChange}
-          className="w-full p-4 border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          required
-        >
-          <option value="Individual">Individual</option>
-          <option value="Agent">Agent</option>
-          <option value="Builder">Builder</option>
-        </select>
-      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <div className="flex items-center gap-2 mb-2">
+            <Badge className="w-4 h-4 text-gray-600" />
+            <label className="text-sm font-medium">Seller Type</label>
+          </div>
+          <div className="relative">
+            <Badge className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <select
+              name="sellerType"
+              value={formData.sellerType}
+              onChange={handleChange}
+              className="w-full p-4 pl-10 border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            >
+              <option value="Individual">Individual</option>
+              <option value="Agent">Agent</option>
+              <option value="Builder">Builder</option>
+            </select>
+          </div>
+        </div>
 
-      <div>
-        <label className="block mb-2 text-sm font-medium">Full Name</label>
-        <input
-          type="text"
-          name="name"
-          value={formData.name}
-          onChange={handleChange}
-          className="w-full p-4 border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Enter your name"
-          required
-        />
-      </div>
+        <div>
+          <div className="flex items-center gap-2 mb-2">
+            <User className="w-4 h-4 text-gray-600" />
+            <label className="text-sm font-medium">Full Name</label>
+          </div>
+          <div className="relative">
+            <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <input
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              className="w-full p-4 pl-10 border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter your name"
+              required
+            />
+          </div>
+        </div>
 
-      <div>
-        <label className="block mb-2 text-sm font-medium">Email</label>
-        <input
-          type="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-          className="w-full p-4 border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Enter your email"
-          required
-        />
-      </div>
+        <div>
+          <div className="flex items-center gap-2 mb-2">
+            <Mail className="w-4 h-4 text-gray-600" />
+            <label className="text-sm font-medium">Email</label>
+          </div>
+          <div className="relative">
+            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              className="w-full p-4 pl-10 border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter your email"
+              required
+            />
+          </div>
+        </div>
 
-      <div>
-        <label className="block mb-2 text-sm font-medium">Phone Number</label>
-        <input
-          type="tel"
-          name="phone"
-          value={formData.phone}
-          onChange={handleChange}
-          className="w-full p-4 border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Enter phone number"
-          pattern="[0-9]{10}"
-          required
-        />
-      </div>
+        <div>
+          <div className="flex items-center gap-2 mb-2">
+            <Phone className="w-4 h-4 text-gray-600" />
+            <label className="text-sm font-medium">Phone Number</label>
+          </div>
+          <div className="relative">
+            <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <input
+              type="tel"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              className="w-full p-4 pl-10 border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter phone number"
+              pattern="[0-9]{10}"
+              onKeyPress={(e) => !/[0-9]/.test(e.key) && e.preventDefault()}
+              maxLength="10"
+              required
+            />
+          </div>
+        </div>
 
-      <div>
-        <label className="block mb-2 text-sm font-medium">Company Name</label>
-        <input
-          type="text"
-          name="companyName"
-          value={formData.companyName}
-          onChange={handleChange}
-          className="w-full p-4 border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Enter company name"
-          required
-        />
-      </div>
+        <div>
+          <div className="flex items-center gap-2 mb-2">
+            <Building className="w-4 h-4 text-gray-600" />
+            <label className="text-sm font-medium">Company Name</label>
+          </div>
+          <div className="relative">
+            <Building className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <input
+              type="text"
+              name="companyName"
+              value={formData.companyName}
+              onChange={handleChange}
+              className="w-full p-4 pl-10 border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter company name"
+              required
+            />
+          </div>
+        </div>
 
-      <div>
-        <label className="block mb-2 text-sm font-medium">Address (Optional)</label>
-        <input
-          type="text"
-          name="address"
-          value={formData.address}
-          onChange={handleChange}
-          className="w-full p-4 border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Enter your address"
-        />
-      </div>
+        <div className="md:col-span-2">
+          <div className="flex items-center gap-2 mb-2">
+            <MapPin className="w-4 h-4 text-gray-600" />
+            <label className="text-sm font-medium">Address (Optional)</label>
+          </div>
+          <div className="relative">
+            <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <input
+              type="text"
+              name="address"
+              value={formData.address}
+              onChange={handleChange}
+              className="w-full p-4 pl-10 border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter your address"
+            />
+          </div>
+        </div>
 
-      <div>
-        <label className="block mb-2 text-sm font-medium">Password</label>
-        <input
-          type="password"
-          name="password"
-          value={formData.password}
-          onChange={handleChange}
-          className="w-full p-4 border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Create password"
-          required
-        />
-      </div>
+        <div>
+          <div className="flex items-center gap-2 mb-2">
+            <Lock className="w-4 h-4 text-gray-600" />
+            <label className="text-sm font-medium">Password</label>
+          </div>
+          <div className="relative">
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <input
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              className="w-full p-4 pl-10 border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Create password"
+              required
+            />
+          </div>
+        </div>
 
-      <div>
-        <label className="block mb-2 text-sm font-medium">Confirm Password</label>
-        <input
-          type="password"
-          name="confirmPassword"
-          value={formData.confirmPassword}
-          onChange={handleChange}
-          className="w-full p-4 border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Confirm password"
-          required
-        />
-      </div>
+        <div>
+          <div className="flex items-center gap-2 mb-2">
+            <Lock className="w-4 h-4 text-gray-600" />
+            <label className="text-sm font-medium">Confirm Password</label>
+          </div>
+          <div className="relative">
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <input
+              type="password"
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              className="w-full p-4 pl-10 border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Confirm password"
+              required
+            />
+          </div>
+        </div>
 
-      <div>
-        <label className="block mb-2 text-sm font-medium">Profile Picture</label>
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleFileChange}
-          className="w-full p-4 border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          required
-        />
+        <div className="md:col-span-2">
+          <div className="flex items-center gap-2 mb-2">
+            <Image className="w-4 h-4 text-gray-600" />
+            <label className="text-sm font-medium">Profile Picture</label>
+          </div>
+          <div className="relative">
+            <Image className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="w-full p-4 pl-10 border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+        </div>
       </div>
 
       <motion.button
@@ -289,20 +379,26 @@ const SellerSignUpPage = () => {
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -20 }}
       onSubmit={handleVerifyOTP}
-      className="space-y-6"
+      className="space-y-6 "
     >
       <div>
-        <label className="block mb-2 text-sm font-medium">Enter OTP</label>
-        <input
-          type="text"
-          value={otp}
-          onChange={(e) => setOtp(e.target.value)}
-          className="w-full p-4 text-2xl tracking-wider text-center border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="••••••"
-          maxLength={6}
-          pattern="[0-9]{6}"
-          required
-        />
+        <div className="flex items-center gap-2 mb-2">
+          <Shield className="w-4 h-4 text-gray-600" />
+          <label className="text-sm font-medium">Enter OTP</label>
+        </div>
+        <div className="relative">
+          <Shield className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+          <input
+            type="text"
+            value={otp}
+            onChange={(e) => setOtp(e.target.value)}
+            className="w-full p-4 pl-10 text-2xl tracking-wider text-center border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="••••••"
+            maxLength={6}
+            pattern="[0-9]{6}"
+            required
+          />
+        </div>
       </div>
 
       <div className="space-y-4">
@@ -341,59 +437,57 @@ const SellerSignUpPage = () => {
   )
 
   return (
-    <div className="flex h-screen">
-      {/* Left Panel */}
-      <div className="hidden md:flex w-1/2 bg-[#4285F4] p-16 flex-col">
-        <div className="flex items-center gap-3 mb-16">
+    <div className="flex flex-col md:flex-row">
+      <div className="flex flex-col w-full md:w-1/2 bg-[#4285F4] p-8 lg:p-12">
+        <div className="flex items-center gap-3 mb-8 md:mb-16">
           <Building2 className="w-8 h-8 text-white" />
           <span className="text-2xl font-bold text-white">LandsAcers</span>
         </div>
 
         <div className="flex-grow">
-          <h1 className="mb-6 text-5xl font-bold text-white">
+          <h1 className="mb-4 text-3xl font-bold text-white md:text-5xl">
             Welcome back to
             <br />
             LandsAcers
           </h1>
-          <p className="mb-12 text-xl text-white/90">
+          <p className="mb-8 text-base text-white/90 md:text-xl md:mb-12">
             Manage your properties, tenants, and
             <br />
             transactions all in one place.
           </p>
 
-          <div className="p-8 bg-white/10 backdrop-blur-sm rounded-xl">
-            <p className="mb-6 italic text-white/90">
+          <div className="p-4 hidden md:block bg-white/10 backdrop-blur-sm rounded-xl">
+            <p className="mb-4 text-sm italic text-white/90 md:text-base md:mb-6">
               "This platform has revolutionized how we manage our properties. Everything is streamlined and efficient."
             </p>
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-full bg-white/20"></div>
+              <div className="w-8 h-8 rounded-full bg-white/20 md:w-12 md:h-12"></div>
               <div>
-                <p className="font-medium text-white">Sarah Johnson</p>
-                <p className="text-white/70">Property Manager, NYC</p>
+                <p className="text-sm font-medium text-white md:text-base">Sarah Johnson</p>
+                <p className="text-xs text-white/70 md:text-sm">Property Manager, NYC</p>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Right Panel */}
-      <div className="w-full p-8 overflow-y-auto bg-white md:w-1/2 md:px-16 md:py-12">
-        <div className="max-w-xl mx-auto">
-          <h2 className="mb-8 text-3xl font-bold">{showOtpForm ? "Enter OTP" : "Create your account"}</h2>
+      <div className="w-full p-4 overflow-y-auto bg-white md:w-1/2 md:px-8 md:py-12">
+        <div className="max-w-xl h-screen flex flex-col justify-center mx-auto">
+          <h2 className="mb-4 text-2xl font-bold md:text-3xl">{showOtpForm ? "Enter OTP" : "Create your account"}</h2>
 
+          <AnimatePresence mode="wait">{showOtpForm ? renderOtpForm() : renderBasicDetailsForm()}</AnimatePresence>
+          
           {error && (
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="p-4 mb-6 text-sm text-red-700 bg-red-100 rounded-lg"
+              className="p-4 mb-4 mt-4 text-sm text-red-700 bg-red-100 rounded-lg md:mb-6"
             >
               {error}
             </motion.div>
           )}
 
-          <AnimatePresence mode="wait">{showOtpForm ? renderOtpForm() : renderBasicDetailsForm()}</AnimatePresence>
-
-          <p className="mt-6 text-center text-gray-600">
+          <p className="mt-4 text-center text-gray-600 md:mt-6">
             Already have an account?{" "}
             <Link to="/saller/login" className="text-[#4285F4] hover:underline">
               Sign in
@@ -407,4 +501,3 @@ const SellerSignUpPage = () => {
 }
 
 export default SellerSignUpPage
-

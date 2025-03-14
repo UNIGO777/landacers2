@@ -16,9 +16,9 @@ const ROUTES_NAME = {
   ADMIN_ALL_PROPERTIES: '/admin/properties/all',
   BROKER_ALL_PROPERTIES: '/admin/brokers/properties/all',
   USER_ALL_PROPERTIES: '/admin/users/properties/all',
-  ADMIN_MANAGE_BROKERS: '/admin/brokers/manage',
+  ADMIN_MANAGE_SALLERS: '/admin/sallers/manage',
   ADMIN_MANAGE_USERS: '/admin/users/manage',
-  ADMIN_BROKERS_REQUESTS: '/admin/brokers/requests',
+  ADMIN_SALLERS_REQUESTS: '/admin/brokers/requests',
   ADMIN_ALL_PAYMENTS: '/admin/all/payments',
   ADMIN_MANAGE_SUBSCRIPTION : '/admin/subscription/manage',
   ADMIN_EDIT_SUBSCRIPTION : '/admin/subscription/edit',
@@ -34,6 +34,8 @@ const ROUTES_NAME = {
   SALLER_PROPERTY_ADD: '/saller/property/add',
   SALLER_MANAGE_QUERIES: '/saller/queries/manage',
   SALLER_ALLPROPERTIES: '/saller/properties',
+  SALLER_ADD_PROJECT: '/saller/project/add',
+  SALLER_ALL_PROJECTS: '/saller/projects',
 };
 
 export default ROUTES_NAME;

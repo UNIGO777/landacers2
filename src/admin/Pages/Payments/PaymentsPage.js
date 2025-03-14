@@ -1,5 +1,7 @@
 import React, { useState } from "react"
 import Layout from "../Layout"
+import ComingSoon from "../../../components/ComingSoon"
+import { FaMoneyBillWave } from "react-icons/fa"
 
 const mockPayments = [
   {
@@ -70,6 +72,16 @@ const PaymentPage = () => {
           <option value="refunded">Refunded</option>
         </select>
       </div>
+      
+      {/* Replacing the table with ComingSoon component */}
+      <ComingSoon 
+        title="Payment Management Coming Soon" 
+        message="We're currently developing our payment tracking and management system. Stay tuned for updates!" 
+        icon={FaMoneyBillWave}
+      />
+      
+      {/* Original table code is commented out below for reference */}
+      {/*
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white">
           <thead>
@@ -116,6 +128,7 @@ const PaymentPage = () => {
           </tbody>
         </table>
       </div>
+      */}
     </div>
     </Layout>
   )
