@@ -20,19 +20,19 @@ function HomePage() {
 
   
   React.useEffect(() => {
-    axios.get(`${process.env.REACT_APP_backendUrl}/api/feature?itemType=Property`)
+    axios.get(`${process.env.REACT_APP_backendUrl}/api/feature-items?itemType=Property`)
       .then(res => setFeaturedProperties(res.data.data))
       .catch(err => console.error('Error fetching featured properties:', err));
 
-      axios.get(`${process.env.REACT_APP_backendUrl}/api/feature?itemType=Project&upcomming=true`)
+      axios.get(`${process.env.REACT_APP_backendUrl}/api/feature-items?itemType=Project&upcomming=true`)
       .then(res => setUpcommingProjects(res.data.data))
       .catch(err => console.error('Error fetching upcomming featured properties:', err));
 
-      axios.get(`${process.env.REACT_APP_backendUrl}/api/feature?itemType=Project`)
+      axios.get(`${process.env.REACT_APP_backendUrl}/api/feature-items?itemType=Project`)
       .then(res => setFeaturedProjects(res.data.data))
       .catch(err => console.error('Error fetching upcomming featured properties:', err));
   }, []);
-  console.log(Featuredproperties[0]?.itemId?.pricingDetails, "ksajdhfk")
+ 
 
   return (
     <>
