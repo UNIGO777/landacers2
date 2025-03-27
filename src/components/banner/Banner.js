@@ -20,9 +20,7 @@ function Banner() {
         { value: 'farmhouse', label: 'Farmhouse' }
     ];
 
-    const handleSelectChange = (event) => {
-        console.log(event.target.value); // Handle the selected value as needed
-    };
+    
 
     const images = [
       "https://images.unsplash.com/photo-1595247191348-fd605f104467?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
@@ -90,9 +88,9 @@ function Banner() {
     };
 
     return (
-      <div className='bg-balck md:mb-16'>
+      <div className='bg-balck  z-50'>
         <div
-            className={`relative min-h-[50vh] md:min-h-[50vh] bg-cover bg-center flex items-center justify-center  transition-opacity duration-500 ${fade ? 'opacity-90' : 'opacity-100'}`}
+            className={`relative min-h-[60vh] md:min-h-[60vh] bg-cover bg-center flex items-center justify-center  transition-opacity duration-500 ${fade ? 'opacity-100' : 'opacity-100'}`}
             style={{ backgroundImage: `url(${images[currentImageIndex]})` }} 
         >
             {/* Semi-transparent overlay */}

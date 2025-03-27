@@ -42,7 +42,7 @@ const LoginModal = ({ isOpen, onClose, onToggleForm }) => {
       <div className="flex flex-col w-full max-w-4xl overflow-hidden bg-white rounded-lg md:flex-row">
         {/* Left Panel */}
         <div className="bg-[#4285F4] p-8 text-white text-center flex flex-col items-center justify-center md:w-1/2">
-          <h1 className="mb-4 text-3xl font-bold">Welcome Back To LandAcers!</h1>
+          <h1 className="mb-4 text-3xl font-bold">Welcome Back To LandAcre!</h1>
           <p className="max-w-sm mb-8">
             We are so excited to have you here. Login to access exclusive offers, rewards, and discounts.
           </p>

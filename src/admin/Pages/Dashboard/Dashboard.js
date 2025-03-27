@@ -84,7 +84,7 @@ const Dashboard = () => {
           <div>
             <h2 className="text-3xl font-bold tracking-tight text-gray-900">Dashboard</h2>
             <p className="mt-2 text-sm text-gray-600">
-              Welcome to LandsAcers dashboard. Here's an overview of your recent activity.
+              Welcome to Land Acre dashboard. Here's an overview of your recent activity.
             </p>
           </div>
           <div className="flex items-center mt-4 space-x-4 md:mt-0">

@@ -9,16 +9,17 @@ import { IoClose } from "react-icons/io5"
 import Authentication from "../login/Authentication"
 import { FaUserCircle, FaHeadphones, FaChevronDown, FaPhone, FaWhatsapp } from "react-icons/fa"
 import SearchBox from "../SearchBox/SearchBox"
+import WebsiteLogo from "../../media/LandsAcers Icon LOGO.png"
 import { motion, AnimatePresence } from "framer-motion"
 
-const Navbar = ({searchbar}) => {
+const Navbar = ({loginOpen, setLoginOpen}) => {
   
-  const [isLoggedIn, setIsLoggedIn]= useState(false)
+  
   const [navOpen, setNavOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { theme } = useTheme();
   const location = useLocation();
-  const [loginOpen, setLoginOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn]= useState(false)
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [subMenuOpen, setSubMenuOpen] = useState({});
   const [contactBoxDropdown, setContactBoxdropdown] = useState(false);
@@ -35,6 +36,14 @@ const Navbar = ({searchbar}) => {
     setNavOpen(false);
     document.body.style.overflow = 'hidden'; // Prevent scrolling
     setLoginOpen(true);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
+    setIsLoggedIn(false);
+    setUserData(null);
+    window.location.href = ROUTES_NAME.HOME;
   };
 
   useEffect(() => {
@@ -93,13 +102,15 @@ const Navbar = ({searchbar}) => {
     >
       <div className="flex items-center justify-between px-4 py-3 mx-auto max-w-7xl md:py-4">
         {/* Logo */}
-        <div className={`text-2xl font-bold ${isHomePage ? (scrolled ? `text-${theme}-primary` : "text-white") : `text-${theme}-text`}`}>
-          <Link to={ROUTES_NAME.HOME}>Land Acers</Link>
+        <div className={`text-2xl font-bold ${isHomePage ? (scrolled ? `text-[#3a78ff]` : "text-white") : `text-${theme}-text`}`}>
+          <Link to={ROUTES_NAME.HOME} className="flex items-center gap-2">
+            <img src={WebsiteLogo} className="w-10"/><span className="text-xl">Land Acre</span>
+          </Link>
         </div>
 
         {/* Desktop Links */}
         <div className="items-center space-x-3 flex">
-          <Link to={ROUTES_NAME.POST_PROPERTY} className={`md:inline-flex hidden items-center px-4 py-2 text-sm font-medium text-white bg-${theme}-primary bg-pr hover:bg-opacity-80 rounded-lg `}>
+          <Link to={ROUTES_NAME.SALLER_LOGIN} className={`md:inline-flex hidden items-center px-4 py-2 text-sm font-medium text-white bg-[#3a78ff] bg-pr hover:bg-opacity-80 rounded-lg `}>
             Post Your Property
           </Link>
 
@@ -181,10 +192,8 @@ const Navbar = ({searchbar}) => {
                       <Link to={ROUTES_NAME.PROFILE} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onClick={() => setProfileDropdownOpen(false)}>
                         My Profile
                       </Link>
-                      <Link to={ROUTES_NAME.SETTINGS} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onClick={() => setProfileDropdownOpen(false)}>
-                        Settings
-                      </Link>
-                      <button className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onClick={openLogin}>
+                    
+                      <button className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onClick={handleLogout}>
                         Logout
                       </button>
                     </div>}
@@ -209,7 +218,7 @@ const Navbar = ({searchbar}) => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 0.5 }}
                 exit={{ opacity: 0 }}
-                className="fixed inset-0 z-40 bg-black"
+                className="fixed inset-0 z-40 -left-10 bg-black"
                 onClick={() => setNavOpen(false)}
               />
             )}
@@ -232,99 +241,23 @@ const Navbar = ({searchbar}) => {
 
                 <div className="p-6 relative h-full">
                   <Link
-                    className="text-blue-500 hover:text-blue-700 font-medium text-lg"
+                    className="text-blue-700 font-medium text-lg"
                     onClick={() => openLogin()}
                   >
                     {userData ? userData?.firstName + " " + userData?.lastName : "Login / Register"}
                   </Link>
                   <br />
-                  <button
-                    className=" w-full text-blue-500 px-4 py-2 mt-4 rounded-lg border-2 border-blue-500 hover:bg-blue-600 hover:text-white transition"
+                  <Link to={ROUTES_NAME.SALLER_LOGIN}><button
+                    className=" w-full text-blue-700 px-4 py-2 mt-4 rounded-lg border-2 border-blue-700 hover:bg-blue-600 hover:text-white transition"
                     onClick={() => { }}
                   >
                     Post Property
-                  </button>
+                  </button></Link>
 
                   <div className="mt-6">
                     <h3 className="text-lg font-semibold text-gray-800 mb-4">Explore our Services</h3>
 
-                    <ul className="space-y-4">
-                      <li>
-                        <button
-                          className="flex text-black justify-between items-center w-full text-left"
-                          onClick={() => toggleSubMenu("buyers")}
-                        >
-                          For Buyers
-                          <span>{subMenuOpen.buyers ? "-" : "+"}</span>
-                        </button>
-                        <AnimatePresence>
-                          {subMenuOpen.buyers && (
-                            <motion.ul
-                              initial={{ height: 0, opacity: 0 }}
-                              animate={{ height: "auto", opacity: 1 }}
-                              exit={{ height: 0, opacity: 0 }}
-                              className="ml-4 mt-2 space-y-2"
-                            >
-                              <li>
-                                <Link to={ROUTES_NAME.LANDS} className="text-gray-600 hover:text-blue-500 transition">
-                                  Buy Property
-                                </Link>
-                              </li>
-                              <li>
-                                <Link to={ROUTES_NAME.PLOTS} className="text-gray-600 hover:text-blue-500 transition">
-                                  Rent Property
-                                </Link>
-                              </li>
-                              <li>
-                                <Link to={ROUTES_NAME.FARMHOUSES} className="text-gray-600 hover:text-blue-500 transition">
-                                  Search for PG
-                                </Link>
-                              </li>
-                            </motion.ul>
-                          )}
-                        </AnimatePresence>
-                      </li>
-
-                      <li>
-                        <button
-                          className="flex text-black justify-between items-center w-full text-left"
-                          onClick={() => toggleSubMenu("tenants")}
-                        >
-                          Are you Agent/Builder
-                          <span>{subMenuOpen.tenants ? "-" : "+"}</span>
-                        </button>
-                        <AnimatePresence>
-                          {subMenuOpen.tenants && (
-                            <motion.ul
-                              initial={{ height: 0, opacity: 0 }}
-                              animate={{ height: "auto", opacity: 1 }}
-                              exit={{ height: 0, opacity: 0 }}
-                              className="ml-4 mt-2 space-y-2"
-                            >
-                              <li>
-                                <Link to="#" className="text-gray-600 hover:text-blue-500 transition">
-                                  Register As Agent
-                                </Link>
-                              </li>
-                              <li>
-                                <Link to="#" className="text-gray-600 hover:text-blue-500 transition">
-                                  Register As Builder
-                                </Link>
-                              </li>
-                              <li>
-                                <Link to="#" className="text-gray-600 hover:text-blue-500 transition">
-                                  Login As Agent
-                                </Link>
-                              </li>
-                              <li>
-                                <Link to="#" className="text-gray-600 hover:text-blue-500 transition">
-                                  Login As Builder
-                                </Link>
-                              </li>
-                            </motion.ul>
-                          )}
-                        </AnimatePresence>
-                      </li>
+                    <ul className="space-y-4"> 
 
                       <li>
                         <Link
@@ -335,11 +268,38 @@ const Navbar = ({searchbar}) => {
                           About Us
                         </Link>
                       </li>
+                      <li>
+                        <Link
+                          to={ROUTES_NAME.PROPERTY_VALUATION}
+                          className="text-gray-600 hover:text-blue-500 transition"
+                          onClick={() => setNavOpen(false)}
+                        >
+                          Property Valuation
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          to={ROUTES_NAME.PROPERTY_MANAGEMENT}
+                          className="text-gray-600 hover:text-blue-500 transition"
+                          onClick={() => setNavOpen(false)}
+                        >
+                          Property Management
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          to={ROUTES_NAME.LEGEL_ASSISTANCE}
+                          className="text-gray-600 hover:text-blue-500 transition"
+                          onClick={() => setNavOpen(false)}
+                        >
+                          Legal Assistance
+                        </Link>
+                      </li>
                     </ul>
                   </div>
 
                   <div className="mt-6 absolute bottom-5">
-                    <p className="text-sm text-blue-500 underline mt-2">
+                    <p className="text-sm text-blue-700 underline mt-2">
                       <Link to={`tel:+91${contact}`}>Contact us on: +91 {contact}</Link>
                     </p>
                   </div>

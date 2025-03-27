@@ -20,7 +20,7 @@ import {
   FaSpinner,
 } from "react-icons/fa"
 import Notifications from "../components/Notifications"
-import logo from '../media/LandsAcers_Horizontal_logo.png'
+import logo from '../../media/LandsAcers Icon LOGO.png'
 import { Building, Building2, Home, HomeIcon, Image, MessageSquare, SubscriptIcon, UserCog, Users, Users2, Wallet } from "lucide-react"
 import ADMIN_API_ROUTES from "../AdminRequestPath"
 
@@ -213,13 +213,16 @@ const Layout = ({ children }) => {
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="flex items-center px-5 justify-start h-16"
+          className="flex items-center px-5 gap-3 text-blue-500 font-semibold justify-start h-16"
         >
-          <img src={logo} alt="LandsAcers Logo" className="h-8 w-42" />
+          <img src={logo} alt="Land Acre Logo" className="h-8 w-42" />Land Acre
         </motion.div>
         <nav className="h-[calc(100vh-4rem)] overflow-y-auto p-4 space-y-2 scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-blue-100">
           {renderNavigationItems(navigationItems)}
         </nav>
+        <div className="text-center bg-white fixed bottom-0 w-full  p-4 text-gray-500 text-sm mt-4">
+            Developed by <a href="https://naman-web.netlify.app/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800">Naman Jain</a> form <a href="https://nxt-gen-digitals.vercel.app/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800">NxtGenDigitals</a>
+      </div>
       </motion.aside>
 
       {/* Mobile Menu */}
@@ -364,7 +367,7 @@ const Layout = ({ children }) => {
           transition={{ delay: 0.5 }}
           className="px-8 py-4 text-sm text-center text-gray-500 bg-white border-t"
         >
-          © 2023 LandsAcers. All rights reserved.
+          © 2023 Land Acre. All rights reserved.
         </motion.footer>
       </div>
 
@@ -635,6 +638,10 @@ const Layout = ({ children }) => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <div className="text-center md:hidden bg-white fixed bottom-0 w-full  p-4 text-gray-500 text-sm mt-4">
+            Developed by <a href="https://naman-web.netlify.app/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800">Naman Jain</a> form <a href="https://nxt-gen-digitals.vercel.app/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800">NxtGenDigitals</a>
+      </div>
     </div>
   )
 }

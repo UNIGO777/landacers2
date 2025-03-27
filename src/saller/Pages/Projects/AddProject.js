@@ -311,7 +311,7 @@ const AddProject = () => {
         setShowMassage(true)
         setMessage('Project added successfully!')
         setType('success')
-        setRedirectUrl('/projects')
+        setRedirectUrl('/saller/projects')
       }
     } catch (error) {
       setShowMassage(true)

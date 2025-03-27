@@ -17,12 +17,16 @@ import {
   FaChevronRight,
   FaTrash,
   FaCheck,
-  FaEnvelope
+  FaEnvelope,
+  FaEdit
 } from "react-icons/fa"
-  import Layout from "../../Layout"
+import Layout from "../../Layout"
 import { getTypeIcon } from "../../data/PropertiesData"
 import { propertyTypes } from "../../JsonData/propertyfeilds"
 import { Link, useNavigate } from "react-router-dom"
+import { toast } from "react-toastify"
+import Popup from "../../../components/Popup/Popup"
+import EditProperty from "./EditProperty"
 
 const AllProperties = () => {
   const navigate = useNavigate()
@@ -36,6 +40,8 @@ const AllProperties = () => {
     transactionType: "",
     page: 1
   })
+  const [showEditPopup, setShowEditPopup] = useState(false);
+  const [propertyToEdit, setPropertyToEdit] = useState(null);
   const ITEMS_PER_PAGE = 20
 
   useEffect(() => {
@@ -138,6 +144,43 @@ const AllProperties = () => {
       }
     }
   }
+
+  const handleEditProperty = (property) => {
+    setPropertyToEdit(property);
+    setShowEditPopup(true);
+  };
+
+  const handleEditSuccess = () => {
+    // Refresh the properties list after successful edit
+    const fetchProperties = async () => {
+      setLoading(true);
+      try {
+        let url = `${process.env.REACT_APP_backendUrl}/api/properties/propertiesbyseller?page=${filters.page}&status=${filters.status || 'active'}`;
+        if (filters.type) {
+          url += `&type=${filters.type}`;
+        }
+        if (filters.transactionType) {
+          url += `&transactionType=${filters.transactionType}`;
+        }
+
+        const response = await axios.get(url, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('sellerToken')}`
+          }
+        });
+        setProperties(response.data.data);
+        setTotalCount(response.data.pagination.totalProperties);
+      } catch (error) {
+        console.error("Error fetching properties:", error);
+      }
+      setLoading(false);
+    };
+
+    fetchProperties();
+    setShowEditPopup(false);
+    setPropertyToEdit(null);
+    toast.success("Property updated successfully and submitted for admin review");
+  };
 
   return (
     <>
@@ -259,6 +302,14 @@ const AllProperties = () => {
                         >
                           <FaEye className="inline mr-1" /> View
                         </button>
+                        {(property.status === 'active' || property.status === 'requested') && (
+                          <button
+                            onClick={() => handleEditProperty(property)}
+                            className="px-2 md:px-3 py-1 text-xs md:text-sm font-medium text-white bg-green-500 rounded-md hover:bg-green-600 transition-colors"
+                          >
+                            <FaEdit className="inline mr-1" /> Edit
+                          </button>
+                        )}
                       </div>
                     </td>
                   </tr>
@@ -312,7 +363,7 @@ const AllProperties = () => {
                         onClick={() => handlePageChange(i + 1)}
                         className={`relative inline-flex items-center px-4 py-2 text-sm font-medium border ${
                           filters.page === i + 1
-                            ? 'z-10 bg-blue-50 border-blue-500 text-blue-600'
+                            ? 'z-10 bg-blue-500 border-blue-500 text-blue-600'
                             : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
                         }`}
                       >
@@ -463,6 +514,17 @@ const AllProperties = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Edit Property Popup */}
+      <Popup isOpen={showEditPopup} onClose={() => setShowEditPopup(false)}>
+        {propertyToEdit && (
+          <EditProperty 
+            property={propertyToEdit} 
+            onClose={() => setShowEditPopup(false)} 
+            onSuccess={handleEditSuccess}
+          />
+        )}
+      </Popup>
     </>
   )
 }

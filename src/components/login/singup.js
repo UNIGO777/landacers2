@@ -81,7 +81,7 @@ const SignUpModal = ({ isOpen, onClose, onToggleForm }) => {
       <div className="flex flex-col w-full max-w-4xl overflow-hidden bg-white rounded-lg md:flex-row">
         {/* Left Panel */}
         <div className="bg-[#4285F4] p-8 text-white text-center flex flex-col items-center justify-center md:w-1/2">
-          <h1 className="mb-4 text-3xl font-bold">Join LandAcers Today!</h1>
+          <h1 className="mb-4 text-3xl font-bold">Join LandAcre Today!</h1>
           <p className="max-w-sm mb-8">
             Create an account to unlock exclusive property listings, save your favorites, and get personalized
             recommendations.

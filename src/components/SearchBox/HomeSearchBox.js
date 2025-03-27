@@ -1,18 +1,15 @@
-import { useEffect, useState } from "react";
-import { FaSearch, FaMicrophone } from "react-icons/fa";
-import { MdMyLocation } from "react-icons/md";
-import InputField from "../../Miner components/Input Feilds/Input";
+import { useEffect, useState, useRef, useMemo, useCallback } from "react";
+import { FaSearch, FaMapMarkerAlt, FaChevronDown, FaChevronUp, FaHome, FaBuilding, FaBed, FaMapMarked } from "react-icons/fa";
+import { HiOfficeBuilding } from "react-icons/hi";
+import { BiSolidLandscape } from "react-icons/bi";
+import { BsBuildings } from "react-icons/bs";
 import StateNames from '../../Assets/StaticData/StateName';
 import Cities from '../../Assets/DynamicData/CityFatch'
 import Select from "../../Miner components/Input Feilds/Select";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { toast } from "react-toastify";
-
-
-
-
-
+import { motion, AnimatePresence } from "framer-motion";
+import { IoClose } from "react-icons/io5";
 
 const PropertySearch = () => {
     const Navigate = useNavigate();
@@ -23,82 +20,124 @@ const PropertySearch = () => {
     const [cityInput, setCityInput] = useState('');
     const [filteredCities, setFilteredCities] = useState([]);
     const [isCityDisabled, setIsCityDisabled] = useState(true);
-    const [filter,setFilter] = useState('')
+    const [filter, setFilter] = useState('');
+    const [searchQuery, setSearchQuery] = useState('');
+    const [isSearchBoxOpen, setIsSearchBoxOpen] = useState(false);
+    const [isExpanded, setIsExpanded] = useState(false);
+    const [isCommercial, setIsCommercial] = useState(false);
+    const [commercialLandType, setCommercialLandType] = useState('');
+    const searchBoxRef = useRef(null);
 
-
-    const handleSearchFilterChange = (event) => {
+    const handleSearchFilterChange = useCallback((event) => {
         setFilter(event.target.value);
-    };
+    }, []);
 
-    const searchTabs = [
-      { label: "Buy", options: [
-        { value: 'FlatApartment', label: 'Flat/Apartment' },
-        { value: 'IndependentHouseVilla', label: 'Independent House/Villa' },
-        { value: 'IndependentBuilderFloor', label: 'Independent/Builder Floor' },
-        { value: 'PlotLand', label: 'Plot/Land' },
-        { value: 'RKStudioApartment', label: '1 RK/Studio Apartment' },
-        { value: 'ServicedApartment', label: 'Serviced Apartment' },
-        { value: 'Farmhouse', label: 'Farmhouse' },
-        { value: 'others', label: 'Others' }
-      ] },
-      { label: "Rent", options: [
-        { value: 'FlatApartment', label: 'Flat/Apartment' },
-        { value: 'IndependentHouseVilla', label: 'Independent House/Villa' },
-        { value: 'IndependentBuilderFloor', label: 'Independent/Builder Floor' },
-        { value: 'PlotLand', label: 'Plot/Land' },
-        { value: 'RKStudioApartment', label: '1 RK/Studio Apartment' },
-        { value: 'ServicedApartment', label: 'Serviced Apartment' },
-        { value: 'Farmhouse', label: 'Farmhouse' },
-        { value: 'others', label: 'Others' }
-      ] },
-      { label: "PG", options: [
-        { value: 'PG', label: 'PG' },
-      ] },
-      { label: "Commercial", options: [
-        { value: 'Office', label: 'Office' },
-        { value: 'Retail', label: 'Retail' },
-        { value: 'CommercialPlotLand', label: 'Commercial Plot/Land' },
-        { value: 'Storage', label: 'Storage' },
-        { value: 'Industry', label: 'Industry' },
-        { value: 'Hospitality', label: 'Hospitality' },
-        { value: 'others', label: 'Others' }
-      ] },
-      { label: "Plots/Land", options: [
-        { value: 'Plot/Land', label: 'Plot/Land' },
-        { value: 'Comercial Plot/Land', label: 'Comercial Plot/Land' }
-      ] },
-      { label: "Projects", options: [
-        { value: 'Residential', label: 'Residential Projects' },
-        { value: 'Commercial', label: 'Commercial Projects' },
-        { value: 'Mixed-use', label: 'Mixed use' }
-      ] }
-    ];
+    const handleSearchQueryChange = useCallback((event) => {
+        setSearchQuery(event.target.value);
+    }, []);
 
-    useEffect(()=>{
+    const toggleSearchBox = useCallback(() => {
+        setIsSearchBoxOpen(prev => {
+            const newState = !prev;
+            document.body.style.overflow = newState ? 'hidden' : 'auto';
+            return newState;
+        });
+    }, []);
+
+    // Ensure body scroll is reset when component unmounts
+    useEffect(() => {
+        return () => {
+            document.body.style.overflow = 'auto';
+        };
+    }, []);
+
+    // Commercial property type mapping
+    const commercialPropertyTypes = useMemo(() => ({
+        'Land': [
+            { value: 'Commercial Land', label: 'Commercial Land' },
+            { value: 'Agricultural / Farm Land', label: 'Agricultural / Farm Land' },
+            { value: 'Industrial Land', label: 'Industrial Land' }
+        ],
+        'Plot': [
+            { value: 'Commercial Plot', label: 'Commercial Plot' },
+            { value: 'Industrial Plot', label: 'Industrial Plot' }
+        ]
+    }), []);
+
+    const searchTabs = useMemo(() => [
+        {
+            label: "Buy", options: [
+                { value: 'FlatApartment', label: 'Flat/Apartment' },
+                { value: 'IndependentHouseVilla', label: 'Independent House/Villa' },
+                { value: 'IndependentBuilderFloor', label: 'Independent/Builder Floor' },
+                { value: 'RKStudioApartment', label: '1 RK/Studio Apartment' },
+                { value: 'ServicedApartment', label: 'Serviced Apartment' },
+                { value: 'Farmhouse', label: 'Farmhouse' },
+                { value: 'Office', label: 'Office' },
+                { value: 'Retail', label: 'Retail' },
+                { value: 'Storage', label: 'Storage' },
+                { value: 'Industry', label: 'Industry' },
+                { value: 'Hospitality', label: 'Hospitality' },
+                { value: 'Land', label: 'Land' },
+                { value: 'Plot', label: 'Plot' },
+                { value: 'others', label: 'Others' }
+            ]
+        },
+        {
+            label: "Rent", options: [
+                { value: 'FlatApartment', label: 'Flat/Apartment' },
+                { value: 'IndependentHouseVilla', label: 'Independent House/Villa' },
+                { value: 'IndependentBuilderFloor', label: 'Independent/Builder Floor' },
+                { value: 'RKStudioApartment', label: '1 RK/Studio Apartment' },
+                { value: 'ServicedApartment', label: 'Serviced Apartment' },
+                { value: 'Office', label: 'Office' },
+                { value: 'Retail', label: 'Retail' },
+                { value: 'Storage', label: 'Storage' },
+                { value: 'Industry', label: 'Industry' },
+                { value: 'others', label: 'Others' }
+            ]
+        },
+        {
+            label: "PG", options: [
+                { value: 'PG', label: 'PG' },
+               
+            ]
+        },
+        {
+            label: "Projects", options: [
+                { value: 'Residential', label: 'Residential Projects' },
+                { value: 'Commercial', label: 'Commercial Projects' },
+                { value: 'Mixed-use', label: 'Mixed use' }
+            ]
+        }
+    ], []);
+
+    useEffect(() => {
         setFilter(searchTabs.find(tab => tab.label === activatedSearchTab).options[0].value)
-    },[activatedSearchTab])
+    }, [activatedSearchTab, searchTabs])
 
-    const handleStateInputChange = (event) => {
+    const handleStateInputChange = useCallback((event) => {
         const inputValue = event.target.value;
         setStateInput(inputValue);
         if (inputValue) {
-            const filtered = StateNames.filter(state => 
+            const filtered = StateNames.filter(state =>
                 state.toLowerCase().includes(inputValue.toLowerCase())
             );
             setFilteredStates(filtered);
         } else {
             setFilteredStates([]);
         }
-    };
+    }, []);
 
-    const handleSearch = () => {
+    const handleSearch = useCallback(() => {
         if (!activatedSearchTab || !stateInput || !cityInput || !filter) {
             toast.error('Please fill all required fields', { position: "bottom-right" });
             return;
         }
-
+        
+        // Validate state and city selections
         const isValidState = StateNames.includes(stateInput);
-        const isValidCity = filteredCitiesForFilter.some(city => 
+        const isValidCity = filteredCitiesForFilter.some(city =>
             city.state === stateInput && city.name === cityInput
         );
 
@@ -107,155 +146,489 @@ const PropertySearch = () => {
             return;
         }
 
+        // Validate commercial land type if commercial is selected and property type is Land or Plot
+        if (isCommercial && (filter === 'Land' || filter === 'Plot') && !commercialLandType) {
+            toast.error(`Please select a Commercial ${filter} Type`);
+            return;
+        }
+
         const params = activatedSearchTab === "Projects" ? {
             projectType: filter,
             page: 1,
             city: cityInput,
-            state: stateInput
+            state: stateInput,
+            searchQuery: searchQuery.trim(),
         } : {
             propertyType: filter,
             transactionType: activatedSearchTab,
             page: 1,
             city: cityInput,
-            state: stateInput
+            state: stateInput,
+            locality: '', // Optional: Add if you want to support locality search
+            searchQuery: searchQuery.trim(),
         };
-
-        console.log(params)
-
+        
+        // Handle commercial property settings
+        if(isCommercial === true){
+            params.isCommercial = true;
+            
+            // Add commercial land type if applicable
+            if (filter === 'Land' || filter === 'Plot') {
+                params.commercialLandType = commercialLandType;
+            }
+        }
         Navigate(`/search-results?${new URLSearchParams(params).toString()}`);
+    }, [activatedSearchTab, stateInput, cityInput, filter, filteredCitiesForFilter, searchQuery, Navigate, isCommercial, commercialLandType]);
 
-        // const apiUrl = activatedSearchTab === "Projects" ?
-        //     `${process.env.REACT_APP_backendUrl}/api/projects/search` :
-        //     `${process.env.REACT_APP_backendUrl}/api/properties/search`;
-
-        // axios.get(apiUrl, { params: new URLSearchParams(params) })
-        //     .then(response => {
-        //         const results = activatedSearchTab === "Projects" ? 
-        //             response.data.projects : 
-        //             response.data.data;
-                
-        //         if (results) {
-        //             navigate(`/search-results?${new URLSearchParams(params).toString()}`, {
-        //                 state: { response: results }
-        //             });
-        //         }
-        //     })
-        //     .catch(error => {
-        //         toast.error(`Error searching ${activatedSearchTab.toLowerCase()}`);
-        //     });
-    };
-
-    const handleStateSelect = async (state) => {
+    const handleStateSelect = useCallback(async (state) => {
         setStateInput(state);
         setFilteredStates([]);
         setIsCityDisabled(false);
-        setFilteredCities(Cities.filter(city => city.state === state));
-        setFilteredCitiesForFilter(Cities.filter(city => city.state === state));
-    };
+        const filteredCities = Cities.filter(city => city.state === state);
+        setFilteredCities(filteredCities);
+        setFilteredCitiesForFilter(filteredCities);
+    }, []);
 
-    const handleCityInputChange = (event) => {
+    const handleCityInputChange = useCallback((event) => {
         const inputValue = event.target.value;
         setCityInput(inputValue);
         if (inputValue) {
-            const filtered = filteredCitiesForFilter.filter(city => 
+            const filtered = filteredCitiesForFilter.filter(city =>
                 city.name.toLowerCase().includes(inputValue.toLowerCase())
             );
             setFilteredCities(filtered);
         } else {
             setFilteredCities([]);
         }
-    };
+    }, [filteredCitiesForFilter]);
 
-    const handleCitySelect = (city) => {
+    const handleCitySelect = useCallback((city) => {
         setCityInput(city);
         setFilteredCities([]);
+    }, []);
+
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (searchBoxRef.current && !searchBoxRef.current.contains(event.target)) {
+                setIsExpanded(false);
+            }
+        }
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    // Get icon for each tab
+    const getTabIcon = useCallback((label) => {
+        switch (label) {
+            case 'Buy': return <FaHome className="mr-2" />;
+            case 'Rent': return <FaBuilding className="mr-2" />;
+            case 'PG': return <FaBed className="mr-2" />;
+            case 'Commercial': return <HiOfficeBuilding className="mr-2" />;
+            case 'Land': return <BiSolidLandscape className="mr-2" />;
+            case 'Plot': return <FaMapMarked className="mr-2" />;
+            case 'Projects': return <BsBuildings className="mr-2" />;
+            default: return <FaHome className="mr-2" />;
+        }
+    }, []);
+
+    // Animation variants - optimized for performance
+    const containerVariants = {
+        hidden: { opacity: 0, y: 20 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: {
+                duration: 0.3,
+                ease: "easeOut",
+                when: "beforeChildren",
+                staggerChildren: 0.03
+            }
+        },
+        exit: {
+            opacity: 0,
+            y: 0,
+            transition: {
+                duration: 0.3,
+                ease: "easeOut"
+            }
+        }
+    };
+
+    const itemVariants = {
+        hidden: { opacity: 0, y: 10 },
+        visible: { 
+            opacity: 1, 
+            y: 0,
+            transition: {
+                duration: 0.1,
+                ease: "easeOut"
+            }
+        }
+    };
+
+    const dropdownVariants = {
+        hidden: { opacity: 0, scaleY: 0, transformOrigin: "top" },
+        visible: {
+            opacity: 1,
+            scaleY: 1,
+            transition: { 
+                duration: 0.15,
+                ease: "easeOut" 
+            }
+        },
+        exit: {
+            opacity: 0,
+            scaleY: 0,
+            transition: { 
+                duration: 0.25,
+                ease: "easeOut" 
+            }
+        }
+    };
+
+    const searchBoxVariants = {
+        closed: {
+            height: "60px",
+            borderRadius: "9999px",
+            scale: 0.98,
+            opacity: 1,
+            transition: {
+                duration: 0.35,
+                ease: "easeInOut"
+            }
+        },
+        open: {
+            height: "auto",
+            borderRadius: "1rem",
+            scale: 1,
+            opacity: 1,
+            transition: { 
+                duration: 0.35,
+                ease: "easeInOut",
+                when: "beforeChildren"
+            }
+        }
+    };
+
+    // Optimized overlay animation
+    const overlayVariants = {
+        hidden: { opacity: 0 },
+        visible: { 
+            opacity: 1,
+            transition: { duration: 0.25 }
+        },
+        exit: { 
+            opacity: 0,
+            transition: { duration: 0.4, ease: "easeOut" }
+        }
+    };
+
+    // Optimized dropdown animation
+    const dropdownListVariants = {
+        hidden: { opacity: 0, y: -5, transformOrigin: "top" },
+        visible: { 
+            opacity: 1, 
+            y: 0,
+            transition: { 
+                duration: 0.15,
+                ease: "easeOut" 
+            }
+        },
+        exit: { 
+            opacity: 0, 
+            y: 0,
+            transition: { 
+                duration: 0.25,
+                ease: "easeOut" 
+            }
+        }
     };
 
     return (
         <>
-            <div className="hidden md:flex flex-col absolute  items-center  rounded-lg p-2 shadow-lg w-full max-w-3xl bg-white">
-                <div className="hidden md:grid grid-cols-6 w-full h-10 items-center">
-                    {searchTabs.map((item, key) => (
-                        <div 
-                            className={`cursor-pointer h-full flex items-center justify-center ${activatedSearchTab === item.label ? 'border-b-2 border-blue-700' : ''}`} 
-                            key={key} 
-                            onClick={() => setActivatedSearchTab(item.label)}
-                        >
-                            {item.label}
-                        </div>
-                    ))}
-                </div>
-                <div className="flex w-full items-center border-t ">
-                    <div className="px-3 py-2 border-r outline-none text-gray-700">
-                        <Select onChange={handleSearchFilterChange} options={searchTabs.find(tab => tab.label === activatedSearchTab)?.options} />
-                    </div>
-                    <div className="flex items-center justify-between flex-grow px-3">
-                        <div className="relative w-1/2 -top-2">
-                            <div className=" w-full">
-                                <input
-                                    type="text"
-                                    placeholder="State"
-                                    name='State'
-                                    value={stateInput}
-                                    onChange={handleStateInputChange}
-                                    className="inputImg md:w-full mt-4 px-4 py-2 outline-none"
-                                />
-                            </div>
-                            {filteredStates.length > 0 && (
-                                <ul className="absolute bg-white border border-gray-300 left-1/2 -translate-x-1/2 rounded-md mt-1 w-[63vw] md:w-full max-h-40 overflow-y-auto z-20">
-                                    {filteredStates.map((state, index) => (
-                                        <li
-                                            key={index}
-                                            className="p-2 cursor-pointer hover:bg-gray-200"
-                                            onClick={() => handleStateSelect(state)}
-                                        >
-                                            {state}
-                                        </li>
-                                    ))}
-                                </ul>
-                            )}
-                        </div>
-                        <div className="relative w-1/2 -top-2 ml-5">
-                            <div className=" w-full">
-                                <input
-                                    name='City'
-                                    type="text"
-                                    placeholder="City"
-                                    value={cityInput}
-                                    onChange={handleCityInputChange}
-                                    className="inputImg w-[63vw] md:w-full mt-4 px-4 py-2 outline-none border-b"
-                                    disabled={isCityDisabled}
-                                />
-                            </div>
-                            {filteredCities.length > 0 && (
-                                <ul className="absolute bg-white border border-gray-300 left-1/2 -translate-x-1/2 rounded-md mt-1 w-[63vw] md:w-full max-h-40 overflow-y-auto z-20">
-                                    {filteredCities.map((city, index) => (
-                                        <li
-                                            key={index}
-                                            className="p-2 cursor-pointer hover:bg-gray-200"
-                                            onClick={() => handleCitySelect(city.name)}
-                                        >
-                                            {city.name}
-                                        </li>
-                                    ))}
-                                </ul>
-                            )}
-                        </div>
-                        <button className="bg-blue-600 text-white px-4 py-2 rounded-lg ml-2" onClick={handleSearch}>
-                            Search
-                        </button>
-                    </div>
-                </div>
-            </div>
+            {/* Overlay when search box is open */}
+            <AnimatePresence mode="wait">
+                {isSearchBoxOpen && (
+                    <motion.div
+                        initial="hidden"
+                        animate="visible"
+                        exit="exit"
+                        variants={overlayVariants}
+                        className="fixed inset-0 bg-black bg-opacity-50 z-[999]"
+                        onClick={toggleSearchBox}
+                        style={{ willChange: "opacity" }}
+                    />
+                )}
+            </AnimatePresence>
 
-            <div className="flex w-full md:hidden justify-center">
-                <input
-                    type="text"
-                    placeholder="Search properties..."
-                    className="inputImg mt-4 px-4 py-2 rounded-full outline-none text-white"
-                    onClick={() => Navigate('/search')}
-                />
-            </div>
+            <motion.div
+                ref={searchBoxRef}
+                className={` relative max-w-5xl mx-auto  transform -translate-x-1/2 ${isSearchBoxOpen ? 'z-[999] fixed top-1/2 -translate-y-1/2 px-4 md:px-0' : 'z-50 translate-y-1/2'}`}
+                initial="hidden"
+                animate="visible"
+                variants={containerVariants}
+                style={{ willChange: "transform, opacity" }}
+                layoutId="searchBoxContainer"
+            >
+                {/* Responsive Search Box */}
+                <motion.div
+                    className={`bg-gradient-to-r absolute left-[10%] w-[80%]   from-white to-blue-50 shadow-xl border border-blue-100/50 overflow-hidden ${isSearchBoxOpen && ' -top-32 md:-top-20' }`}
+                    variants={searchBoxVariants}
+                    initial="closed"
+                    animate={isSearchBoxOpen ? "open" : "closed"}
+                    style={{ willChange: "height, border-radius" }}
+                    layoutId="searchBox"
+                >
+                    {/* Simple Search Bar when closed */}
+                    {!isSearchBoxOpen && (
+                        <div className="flex items-center justify-between  px-4 h-[60px] cursor-pointer" onClick={toggleSearchBox}>
+                            <div className="flex items-center">
+                                <FaSearch className="text-blue-500 mr-2" />
+                                <span className="text-gray-600">Search for properties...</span>
+                            </div>
+                            <div className="flex items-center">
+                                <span className="text-xs text-gray-500 mr-2 hidden sm:inline">Press to search</span>
+                                <FaChevronDown className="text-gray-400 w-4 h-4" />
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Expanded Search Box when open */}
+                    {isSearchBoxOpen && (
+                        <div className="p-5 ">
+                            {/* Close button */}
+                            <div className="flex justify-end mb-2">
+                                <button 
+                                    onClick={toggleSearchBox}
+                                    className="p-1 rounded-full hover:bg-gray-100 transition-colors"
+                                    aria-label="Close search"
+                                >
+                                    <IoClose className="w-6 h-6 text-gray-500" />
+                                </button>
+                            </div>
+                            
+                            {/* Search Tabs */}
+                            <motion.div 
+                                className="flex flex-wrap gap-2 mb-6"
+                                initial="hidden"
+                                animate="visible"
+                                variants={{
+                                    visible: { transition: { staggerChildren: 0.05 } }
+                                }}
+                            >
+                                {searchTabs.map((tab) => (
+                                    <motion.button
+                                        key={tab.label}
+                                        variants={itemVariants}
+                                        className={`flex items-center px-4 py-2 rounded-full text-sm font-medium transition-colors ${activatedSearchTab === tab.label ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                                        onClick={() => setActivatedSearchTab(tab.label)}
+                                    >
+                                        {getTabIcon(tab.label)}
+                                        {tab.label}
+                                    </motion.button>
+                                ))}
+                            </motion.div>
+
+                            {/* Property Type Dropdown */}
+                            <motion.div 
+                                className="mb-6"
+                                variants={itemVariants}
+                            >
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Property Type</label>
+                                <div className="relative">
+                                    <button
+                                        type="button"
+                                        className="w-full flex items-center justify-between px-4 py-3 bg-white border border-gray-300 rounded-lg shadow-sm text-left focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                        onClick={() => setIsExpanded(!isExpanded)}
+                                    >
+                                        <span className="block truncate">
+                                            {searchTabs.find(tab => tab.label === activatedSearchTab)?.options.find(opt => opt.value === filter)?.label || 'Select property type'}
+                                        </span>
+                                        {isExpanded ? <FaChevronUp className="w-4 h-4 text-gray-500" /> : <FaChevronDown className="w-4 h-4 text-gray-500" />}
+                                    </button>
+
+                                    <AnimatePresence>
+                                        {isExpanded && (
+                                            <motion.div
+                                                variants={dropdownVariants}
+                                                initial="hidden"
+                                                animate="visible"
+                                                exit="exit"
+                                                className="absolute z-10 mt-1 w-full bg-white shadow-lg rounded-lg border border-gray-200 overflow-auto max-h-60"
+                                            >
+                                                <div className="py-1">
+                                                    {searchTabs.find(tab => tab.label === activatedSearchTab)?.options.map((option) => (
+                                                        <button
+                                                            key={option.value}
+                                                            className={`w-full text-left px-4 py-2 text-sm hover:bg-blue-50 ${filter === option.value ? 'bg-blue-50 text-blue-700 font-medium' : 'text-gray-700'}`}
+                                                            onClick={() => {
+                                                                setFilter(option.value);
+                                                                setIsExpanded(false);
+                                                            }}
+                                                        >
+                                                            {option.label}
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+                                </div>
+                            </motion.div>
+
+                            {/* Location Inputs */}
+                            <motion.div 
+                                className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6"
+                                variants={itemVariants}
+                            >
+                                {/* State Input */}
+                                <div className="relative">
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">State</label>
+                                    <div className="relative">
+                                        <FaMapMarkerAlt className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                                        <input
+                                            type="text"
+                                            placeholder="Enter state"
+                                            value={stateInput}
+                                            onChange={handleStateInputChange}
+                                            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                        />
+                                    </div>
+                                    {filteredStates.length > 0 && (
+                                        <motion.div 
+                                            variants={dropdownListVariants}
+                                            initial="hidden"
+                                            animate="visible"
+                                            exit="exit"
+                                            className="absolute z-10 mt-1 w-full bg-white shadow-lg rounded-lg border border-gray-200 overflow-auto max-h-60"
+                                        >
+                                            {filteredStates.map((state) => (
+                                                <button
+                                                    key={state}
+                                                    className="w-full text-left px-4 py-2 text-sm hover:bg-blue-50 text-gray-700"
+                                                    onClick={() => handleStateSelect(state)}
+                                                >
+                                                    {state}
+                                                </button>
+                                            ))}
+                                        </motion.div>
+                                    )}
+                                </div>
+
+                                {/* City Input */}
+                                <div className="relative">
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">City</label>
+                                    <div className="relative">
+                                        <FaMapMarkerAlt className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                                        <input
+                                            type="text"
+                                            placeholder="Enter city"
+                                            value={cityInput}
+                                            onChange={handleCityInputChange}
+                                            disabled={isCityDisabled}
+                                            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:text-gray-500"
+                                        />
+                                    </div>
+                                    {filteredCities.length > 0 && (
+                                        <motion.div 
+                                            variants={dropdownListVariants}
+                                            initial="hidden"
+                                            animate="visible"
+                                            exit="exit"
+                                            className="absolute z-10 mt-1 w-full bg-white shadow-lg rounded-lg border border-gray-200 overflow-auto max-h-60"
+                                        >
+                                            {filteredCities.map((city) => (
+                                                <button
+                                                    key={city.name}
+                                                    className="w-full text-left px-4 py-2 text-sm hover:bg-blue-50 text-gray-700"
+                                                    onClick={() => handleCitySelect(city.name)}
+                                                >
+                                                    {city.name}
+                                                </button>
+                                            ))}
+                                        </motion.div>
+                                    )}
+                                </div>
+                            </motion.div>
+
+                            {/* Commercial Property Options */}
+                            <motion.div 
+                                className="mb-6"
+                                variants={itemVariants}
+                            >
+                                <div className="flex items-center mb-3">
+                                    <input
+                                        type="checkbox"
+                                        id="isCommercial"
+                                        checked={isCommercial}
+                                        onChange={(e) => {
+                                            const isChecked = e.target.checked;
+                                            setIsCommercial(isChecked);
+                                            if (!isChecked) {
+                                                setCommercialLandType('');
+                                            }
+                                        }}
+                                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                                    />
+                                    <label htmlFor="isCommercial" className="ml-2 block text-sm text-gray-700">
+                                        Only Commercial
+                                    </label>
+                                </div>
+                                
+                                {/* Commercial Land Type Selection */}
+                                {isCommercial && (filter === 'Land' || filter === 'Plot') && (
+                                    <div className="mt-2">
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                            Commercial {filter} Type
+                                        </label>
+                                        <select
+                                            value={commercialLandType}
+                                            onChange={(e) => setCommercialLandType(e.target.value)}
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                        >
+                                            <option value="">Select {filter} Type</option>
+                                            {commercialPropertyTypes[filter]?.map(option => (
+                                                <option key={option.value} value={option.value}>
+                                                    {option.label}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                )}
+                            </motion.div>
+
+                            {/* Search Query Input */}
+                            <motion.div 
+                                className="mb-6"
+                                variants={itemVariants}
+                            >
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Keywords (Optional)</label>
+                                <div className="relative">
+                                    <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                                    <input
+                                        type="text"
+                                        placeholder="Search by keywords, property name, etc."
+                                        value={searchQuery}
+                                        onChange={handleSearchQueryChange}
+                                        className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    />
+                                </div>
+                            </motion.div>
+
+                            {/* Search Button */}
+                            <motion.button
+                                variants={itemVariants}
+                                className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors shadow-md hover:shadow-lg flex items-center justify-center"
+                                onClick={handleSearch}
+                            >
+                                <FaSearch className="mr-2" />
+                                Search Properties
+                            </motion.button>
+                        </div>
+                    )}
+                </motion.div>
+            </motion.div>
         </>
     );
 };

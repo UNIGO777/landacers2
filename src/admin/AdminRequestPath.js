@@ -18,9 +18,9 @@ const ADMIN_API_ROUTES = {
     GET_WEBSITE_FEEDBACK: (page = 1) => {
         const queryParams = new URLSearchParams();
         queryParams.append('page', page);
-        return `/api/feedback/landacers?${queryParams.toString()}`;
+        return `/api/feedback/LandAcre?${queryParams.toString()}`;
     },
-    UPDATE_FEEDBACK_STATUS: (feedbackId) => `/api/feedback/landacers/${feedbackId}`,
+    UPDATE_FEEDBACK_STATUS: (feedbackId) => `/api/feedback/LandAcre/${feedbackId}`,
 
     // Seller management
     BLOCK_SELLER: (sellerId) => `/api/admin/block/seller/${sellerId}`,
@@ -92,7 +92,7 @@ const ADMIN_API_ROUTES = {
         return `/api/admin/search/projects?${queryParams.toString()}`;
     },
     // Feedback management
-    DELETE_FEEDBACK: (feedbackId) => `/api/feedback/landacers/${feedbackId}`,
+    DELETE_FEEDBACK: (feedbackId) => `/api/feedback/LandAcre/${feedbackId}`,
 
     // Password management
     CHANGE_PASSWORD: '/api/users/changePassword',

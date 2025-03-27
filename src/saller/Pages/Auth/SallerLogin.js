@@ -131,7 +131,7 @@ const SallerLogin = () => {
         email: formData.email,
         password: formData.password,
       })
-      console.log(response.data)
+      
       if (response.data) {
         toast.success("OTP sent successfully!")
 
@@ -343,7 +343,7 @@ const SallerLogin = () => {
         <div className="max-w-md mx-auto">
           <div className="flex items-center gap-2 mb-12">
             <Building2 className="w-10 h-10" />
-            <span className="text-3xl font-bold">LandsAcers</span>
+            <span className="text-3xl font-bold">Land Acre</span>
           </div>
           <h1 className="mb-6 text-4xl font-bold leading-tight lg:text-5xl">Seller Portal</h1>
           <p className=" mb-8 text-xl text-blue-100">
@@ -358,7 +358,7 @@ const SallerLogin = () => {
               <div className="w-12 h-12 bg-blue-200 rounded-full" />
               <div>
                 <p className="font-medium">Seller Support</p>
-                <p className="text-sm text-blue-200">LandsAcers Seller Network</p>
+                <p className="text-sm text-blue-200">Land Acre Seller Network</p>
               </div>
             </div>
           </div>

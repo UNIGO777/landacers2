@@ -15,7 +15,7 @@ const queriesData = [
     // ... (rest of the data)
   ]
   
-  console.log("queriesData loaded:", queriesData.length)
+  
   
   export default queriesData;
   

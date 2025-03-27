@@ -1,0 +1,224 @@
+const updateProperty = async (req, res) => {
+    try {
+        // Find the property to update
+        const propertyId = req.params.id;
+        const property = await Property.findById(propertyId);
+        
+        if (!property) {
+            return res.status(404).json({ error: 'Property not found' });
+        }
+        
+        // Verify seller ownership
+        if (req.user._id.toString() !== property.sellerId.toString()) {
+            return res.status(403).json({ error: 'Unauthorized to update this property' });
+        }
+        
+        // Check if property is in a valid state for updates
+        if (property.status === 'blocked' || property.status === 'sold') {
+            return res.status(400).json({ 
+                error: `Cannot update property with status: ${property.status}` 
+            });
+        }
+
+        // Update location details if provided
+        if (req.body.city || req.body.locality || req.body.state || req.body.subLocality || req.body.apartmentSociety || req.body.houseNo) {
+            await Location.findByIdAndUpdate(property.locationSchemaId, {
+                state: req.body.state || property.locationSchemaId.state,
+                city: req.body.city || property.locationSchemaId.city,
+                locality: req.body.locality || property.locationSchemaId.locality,
+                subLocality: req.body.subLocality || property.locationSchemaId.subLocality,
+                apartmentSociety: req.body.apartmentSociety || property.locationSchemaId.apartmentSociety,
+                houseNo: req.body.houseNo || property.locationSchemaId.houseNo
+            });
+        }
+
+        // Update pricing details if provided
+        if (req.body.rent || req.body.salePrice || req.body.pgPrice || req.body.securityDeposit || req.body.foodIncluded) {
+            await Pricing.findByIdAndUpdate(property.pricingDetails, {
+                rent: req.body.rent,
+                salePrice: req.body.salePrice,
+                pgPrice: req.body.pgPrice,
+                securityDeposit: req.body.securityDeposit,
+                foodIncluded: req.body.foodIncluded
+            });
+        }
+
+        // Update amenities if provided
+        if (req.body.amenities) {
+            await Amenities.findByIdAndUpdate(
+                property.amenitiesSchemaId.refId,
+                JSON.parse(req.body.amenities)
+            );
+        }
+
+        // Update property details based on property type
+        if (req.body.propertyType) {
+            const propertyDetailModel = (() => {
+                switch (property.propertyDetailSchemaId.refType) {
+                    case 'FlatApartment': return FlatApartment;
+                    case 'IndependentHouseVilla': return HouseVilla;
+                    case 'IndependentBuilderFloor': return independentBuilderFloor;
+                    case 'Land': return land;
+                    case 'Plot': return plot;
+                    case 'StudioApartment': return StudioApartment;
+                    case 'ServicedApartment': return servicedApartment;
+                    case 'Farmhouse': return Farmhouse;
+                    case 'Office': return office;
+                    case 'RetailShop': return RetailShop;
+                    case 'Storage': return storage;
+                    case 'Industry': return industry;
+                    case 'Hospitality': return hospitality;
+                    case 'OthersProperties': return othersProperties;
+                    default: return null;
+                }
+            })();
+
+            if (propertyDetailModel) {
+                // Get current property details
+                const currentDetails = await propertyDetailModel.findById(property.propertyDetailSchemaId.refId);
+                
+                // Prepare update object based on property type
+                let updateObj = {};
+                
+                // Common fields for most property types
+                if (req.body.bedrooms) updateObj.bedrooms = req.body.bedrooms;
+                if (req.body.bathrooms) updateObj.bathrooms = req.body.bathrooms;
+                if (req.body.balconies) updateObj.balconies = req.body.balconies;
+                if (req.body.furnishing) updateObj.furnishing = req.body.furnishing;
+                if (req.body.furnishingItems) updateObj.furnishingItems = req.body.furnishingItems;
+                if (req.body.reservedParking) updateObj.reservedParking = req.body.reservedParking;
+                if (req.body.availabilityStatus) updateObj.availabilityStatus = req.body.availabilityStatus;
+                if (req.body.propertyAge) updateObj.propertyAge = req.body.propertyAge;
+                if (req.body.totalFloors) updateObj.totalFloors = req.body.totalFloors;
+                
+                // Area details updates
+                const areaUpdates = {};
+                if (req.body.carpetArea) areaUpdates.carpetArea = req.body.carpetArea;
+                if (req.body.builtUpArea) areaUpdates.builtUpArea = req.body.builtUpArea;
+                if (req.body.superBuiltUpArea) areaUpdates.superBuiltUpArea = req.body.superBuiltUpArea;
+                if (req.body.plotArea) areaUpdates.plotArea = req.body.plotArea;
+                if (req.body.areaUnitForCarpet) areaUpdates.areaUnitForCarpet = req.body.areaUnitForCarpet;
+                if (req.body.areaUnitForBuiltUp) areaUpdates.areaUnitForBuiltUp = req.body.areaUnitForBuiltUp;
+                if (req.body.areaUnitForSuperBuiltUp) areaUpdates.areaUnitForSuperBuiltUp = req.body.areaUnitForSuperBuiltUp;
+                if (req.body.areaUnitForPlot) areaUpdates.areaUnitForPlot = req.body.areaUnitForPlot;
+                
+                if (Object.keys(areaUpdates).length > 0) {
+                    updateObj.areaDetails = { ...currentDetails.areaDetails, ...areaUpdates };
+                }
+                
+                // Type-specific fields
+                switch (property.propertyDetailSchemaId.refType) {
+                    case 'FlatApartment':
+                        if (req.body.floorNumber) updateObj.floorNumber = req.body.floorNumber;
+                        break;
+                    case 'IndependentBuilderFloor':
+                        if (req.body.floorType) updateObj.floorType = req.body.floorType;
+                        if (req.body.propertyOnFloor) updateObj.propertyOnFloor = req.body.propertyOnFloor;
+                        break;
+                    case 'Land':
+                    case 'Plot':
+                        if (req.body.boundaryWall) updateObj.boundaryWall = req.body.boundaryWall;
+                        if (req.body.openSides) updateObj.openSides = req.body.openSides;
+                        if (req.body.constructionDone) updateObj.constructionDone = req.body.constructionDone;
+                        if (req.body.possessionDate) updateObj.possessionDate = new Date(req.body.possessionDate);
+                        if (req.body.lengthOfPlot) updateObj.lengthOfPlot = req.body.lengthOfPlot;
+                        if (req.body.breadthOfPlot) updateObj.breadthOfPlot = req.body.breadthOfPlot;
+                        if (req.body.floorsAllowed) updateObj.floorsAllowed = req.body.floorsAllowed;
+                        break;
+                }
+                
+                // Update property details
+                await propertyDetailModel.findByIdAndUpdate(
+                    property.propertyDetailSchemaId.refId,
+                    updateObj
+                );
+            }
+        }
+
+        // Update main property document
+        const updateData = {};
+        if (req.body.propertyTitle) updateData.propertyTitle = req.body.propertyTitle;
+        if (req.body.description) updateData.description = req.body.description;
+        if (req.body.facingDirection) updateData.facingDirection = req.body.facingDirection;
+        if (req.body.availableFrom) updateData.availableFrom = new Date(req.body.availableFrom);
+        if (req.body.willingToRentOut) updateData.willingToRentOut = req.body.willingToRentOut;
+        if (req.body.availableFor) updateData.availableFor = req.body.availableFor;
+        if (req.body.suitableFor) updateData.suitableFor = req.body.suitableFor;
+        
+        // Handle media updates if files are provided
+        if (req.files) {
+            const mediaUpdates = {};
+            
+            if (req.files.photos && req.files.photos.length > 0) {
+                mediaUpdates.photos = req.files.photos.map(file => file.path.split('/').pop());
+            }
+            
+            if (req.files.video && req.files.video.length > 0) {
+                mediaUpdates.video = req.files.video[0].path.split('/').pop();
+            }
+            
+            if (Object.keys(mediaUpdates).length > 0) {
+                updateData.propertyMedia = mediaUpdates;
+            }
+        }
+        
+        // Update property status to 'requested' for admin review
+        updateData.status = 'requested';
+        
+        const updatedProperty = await Property.findByIdAndUpdate(
+            propertyId,
+            updateData,
+            { new: true }
+        );
+
+        // Get seller details
+        const seller = await Seller.findById(req.user._id);
+        const Admin = await User.findOne({ role: 'admin' });
+
+        // Create notification for seller
+        await createNotification({
+            userType: 'Seller',
+            userId: req.user._id,
+            message: `Your property ${updatedProperty.propertyTitle} (${updatedProperty._id}) has been updated and submitted for admin review`
+        });
+
+        // Create notification for admin
+        await createNotification({
+            userId: Admin._id,
+            userType: 'User',
+            message: `Property update from ${seller.sellerDetails.name} - ${updatedProperty.propertyTitle} (${updatedProperty._id}) requires review`
+        });
+
+        // Send email to seller
+        await sendEmail(
+            seller.sellerDetails.email,
+            "Property update confirmation",
+            () => userPropertyUpdateTemplate(seller.sellerDetails.name, {
+                title: updatedProperty.propertyTitle,
+                type: updatedProperty.propertyType,
+                description: updatedProperty.description,
+                _id: updatedProperty._id
+            })
+        );
+
+        // Send email to admin
+        await sendEmail(
+            process.env.ADMIN_EMAIL,
+            "Property update notification",
+            () => adminPropertyUpdateNotificationTemplate({
+                title: updatedProperty.propertyTitle,
+                type: updatedProperty.propertyType,
+                description: updatedProperty.description,
+                _id: updatedProperty._id
+            })
+        );
+
+        res.status(200).json({
+            message: 'Property updated successfully and submitted for admin review',
+            data: updatedProperty
+        });
+    } catch (error) {
+        console.error('Error updating property:', error);
+        res.status(500).json({ error: error.message });
+    }
+};

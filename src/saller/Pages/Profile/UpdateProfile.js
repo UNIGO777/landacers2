@@ -25,7 +25,9 @@ const UpdateProfile = ({ sellerDetails }) => {
   // Update form data when sellerDetails becomes available
   useEffect(() => {
     if (sellerDetails) {
+      
       sellerDetails?.then(data => {
+
         setFormData(prevData => ({
           ...prevData,
           name: data.name,
@@ -36,6 +38,7 @@ const UpdateProfile = ({ sellerDetails }) => {
         }));
         // Set seller details
         setSellerDetail(data);
+        
 
         // Set profile image if exists
         if (data.profilePicture) {

@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
 import sellerNotificationsPromise from "../Requests/FatchSellerNotifications"
 import markAllNotificationsRead from "../Requests/MarkNotificationReaded"
-import logo from '../media/LandsAcers_Horizontal_logo.png'
+import logo from '../media/LandsAcers Icon LOGO.png'
 import { AnimatePresence, motion } from "framer-motion" 
 
 const navItems = [
@@ -120,7 +120,7 @@ const Header = ({ isMenuOpen, setIsMenuOpen, sellerDetails }) => {
             >
               <FiMenu className="h-6 w-6" />
             </button>
-            <img src={logo} alt="LandsAcers Logo" className="md:hidden h-8 ml-3" />
+            <div className="flex justify-center items-center gap-2 font-bold md:hidden"><img src={logo} alt="Land Acre Logo" className=" h-8 ml-3" />Land Acre</div>
           </div>
 
           {/* Desktop Search */}

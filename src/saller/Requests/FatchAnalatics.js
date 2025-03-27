@@ -25,12 +25,13 @@ const fetchSellerAnalytics = async (year) => {
     )
 
     const response = await analyticsPromise
-    console.log(response)
+   
     analyticsPromise = response
     return response.data
     
   } catch (error) {
     localStorage.removeItem('sellerToken'); // Remove token on error
+    
     if (error.response) {
       toast.error(error.response.data.message || 'Failed to fetch analytics');
     } else if (error.request) {

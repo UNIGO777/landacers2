@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { Link } from 'react-router-dom';
 const ServiceBaner = ({ Title, SubTitle, description, link, image, buttonDescription, demantionChange }) => {
     
 
@@ -20,7 +20,7 @@ const ServiceBaner = ({ Title, SubTitle, description, link, image, buttonDescrip
                     <div className='text-left flex flex-col px-6  md:p-16  justify-center'>
                     <h2 className="text-lg md:text-2xl mb-3 md:mb-6 font-bold ">{SubTitle}</h2>
                     <p className="mb-2 text-gray-500">{description}</p>
-                    {buttonDescription && <a href={link}><button className="bg-blue-500 mt-4 text-white w-fit py-3 px-5 rounded">{buttonDescription}</button></a>}
+                    {buttonDescription && <Link to={link}><button className="bg-blue-500 mt-4 text-white w-fit py-3 px-5 rounded">{buttonDescription}</button></Link>}
                     </div>
                 </div>
             </div>

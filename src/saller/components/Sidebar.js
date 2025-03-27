@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom"
 import { PlusSquare, Home, Grid, Folder, DollarSign, FolderPlus, Layers } from "lucide-react"
-import logo from '../media/LandsAcers_Horizontal_logo.png'
+import logo from '../media/LandsAcers Icon LOGO.png'
 import { motion, AnimatePresence } from "framer-motion"
 import { useEffect, useState } from "react"
 
@@ -100,13 +100,13 @@ const Sidebar = ({ isOpen = false , setIsMenuOpen, isbuilder}) => {
             <div className="flex flex-col flex-grow">
               <motion.div 
                 whileHover={{ scale: 1.03 }}
-                className="flex p-6 pb-4 border-b border-gray-200 items-center justify-center"
+                className="flex p-6 pb-4 text-blue-500 border-b border-gray-200 text-xl font-semibold gap-3 items-center justify-start"
               >
                 <img 
                   src={logo} 
-                  alt="LandsAcers Logo" 
-                  className="h-10 w-48 opacity-90 hover:opacity-100 transition-opacity"
-                />
+                  alt="Land Acre Logo" 
+                  className="h-10 w-12 opacity-90 hover:opacity-100 transition-opacity"
+                /> Land Acre
               </motion.div>
               
               <nav className="flex-1 px-3 py-6 space-y-1">
@@ -161,7 +161,7 @@ const Sidebar = ({ isOpen = false , setIsMenuOpen, isbuilder}) => {
               >
                 <div className="text-xs text-gray-500 text-center font-medium border-t border-gray-200 pt-4">
                   <div className="hover:text-gray-700 transition-colors cursor-default">
-                    © {new Date().getFullYear()} LandsAcers
+                    © {new Date().getFullYear()} Land Acre
                   </div>
                   <motion.div 
                     whileHover={{ scale: 1.1 }}

@@ -44,7 +44,7 @@ const fetchSellerNotifications = async () => {
       toast.error(error.message || 'Error setting up request');
     }
     // Navigate to seller login
-    console.log(window.location.pathname)
+    
     if (window.location.pathname.includes("saller") && window.location.pathname !== ROUTES_NAME.SALLER_LOGIN) {
       window.location.href = ROUTES_NAME.SALLER_LOGIN; // Adjust the path as necessary
     }

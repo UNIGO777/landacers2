@@ -1,16 +1,21 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import CardLoader from '../loaders/CardLoader';
+import { useNavigate } from 'react-router-dom';
+import { Route } from 'lucide-react';
+import ROUTES_NAME from '../../constants/routes';
 
 const FullScreenCarosel = ({Title,description,data,className}) => {
   
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const imageRef = useRef(null);
-
+  const navigate = useNavigate();
   const handleNext = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % data?.length);
   };
+
+  console.log(data,"data")
 
   const handlePrev = () => {
     setCurrentIndex((prevIndex) => (prevIndex - 1 + data?.length) % data?.length);
@@ -29,7 +34,7 @@ const FullScreenCarosel = ({Title,description,data,className}) => {
   }, [currentIndex]);
 
   
-  console.log(data)
+  
   return (
     <div className={` my-4 md:my-8 px-4  ${className}`}>
       <h2 className="text-xl md:text-2xl font-bold mb-4">{Title}</h2>
@@ -44,7 +49,7 @@ const FullScreenCarosel = ({Title,description,data,className}) => {
                       <p className="text-lg">{project?.itemId?.location?.city + ', ' + project?.itemId?.location?.state }</p>
                       <p className="text-lg font-bold">{project.details}</p>
                       <p className="text-lg">{project.price}</p>
-                      <button className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg">View Number</button>
+                      <button className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg" onClick={()=>navigate(`/project-profile?projectId=${project?.itemId?._id}`)}>View Project</button>
                   </div>
               </div>
       }) : <CardLoader/>}

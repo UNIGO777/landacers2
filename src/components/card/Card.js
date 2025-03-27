@@ -1,54 +1,64 @@
+import { ArrowBigRight, ArrowRight } from 'lucide-react';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 
-const Card = ({ card }) => {
+const Card = ({ card , navigatePath }) => {
 
   const Navigate = useNavigate()
   const renderRating = (rating) => {
     let stars = [];
     for (let i = 0; i < 5; i++) {
-      stars.push(i < rating ? '★' : '☆'); 
+      stars.push(i < rating ? '★' : '☆');
     }
     return stars.join('');
   };
 
- 
-  
+
+
   return (
-   
-    <div  className="relative transition-transform duration-500   w-full overflow-hidden flex-shrink-0" >
-                  <img loding="lazy" src={card?.image} loading='lazy' alt={card?.title} className="h-[30vh] sm:min-h-[400px] rounded-t-md  md:min-h-[350px] object-cover  w-full" />
-                  <div className="absolute rounded-b-md w-full bg-black md:h-[50%] bottom-0 bg-opacity-50 flex flex-col justify-center  text-white p-4">
-                      <h3 className="text-sm md:text-xl font-semibold">{card?.title}</h3>
-                      <p className="text-sm md:text-lg">{card?.location}</p>
-                      <p className="text-sm md:text-lg font-bold">{card?.details}</p>
-                      <div className='flex '><p className="text-sm md:text-lg">₹{card?.price} ,</p> 
-                      <p className="text-sm md:text-lg ml-2">{card?.transactionType}</p></div>
-                      <button className="mt-3  bg-blue-500 text-white px-4 py-2 rounded-lg text-sm" onClick={()=> Navigate(`/property/${card?._id}`)}>View Details</button>
-                  </div>
-              </div>
-    // <div className="md:w-[30%] w-[60%] md:h-80 bg-white shrink-0 rounded-lg shadow-lg cursor-pointer">
-    //   <img loding="lazy"
-    //     src={card?.image}
-    //     alt={card?.title}
-    //     className="w-full md:h-[70%] rounded-t-lg object-cover"
-    //   />
-    //   <div className="md:p-4 p-2">
-    //     <h3 className="md:text-xl text-lg font-semibold">{card?.title}</h3>
-    //     <p className="text-gray-600 md:mt-2">{card?.description}</p>
 
-    //     {/* Display Rating */}
-    //     <div className="md:mt-2  mt-1 text-yellow-500">
-    //       {renderRating(card?.rating)} {/* Display the stars */}
-    //     </div>
+    <div className="w-full  h-full rounded-xl shadow-lg bg-white mb-5 transform transition-all duration-300 overflow-hidden flex flex-col">
+      <div className="relative h-[200px]">
+        <img
+          loading="lazy"
+          src={card?.image}
+          alt={card?.title}
+          className="w-full h-full bg-black/10 object-cover hover:scale-105 transition-transform duration-500"
+        />
+        <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full shadow-md">
+          <span className="text-[#3a78ff] font-semibold text-sm">{card?.transactionType}</span>
+        </div>
+      </div>
 
-    //     {/* Display Location */}
-    //     <div className="md:mt-2 mt-1 text-gray-500">
-    //       <span>Location: </span>{card?.location}
-    //     </div>
-    //   </div>
-    // </div>
+      <div className="p-6 flex flex-col flex-grow">
+        <h3 className="text-md font-bold text-gray-800 mb-3 hover:text-[#3a78ff] transition-colors duration-300 line-clamp-1">{card?.title}</h3>
+
+        <div className="flex items-center mb-3 space-x-2">
+          <svg className="w-5 h-5 text-[#3a78ff] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+          <p className="text-gray-600 hover:text-gray-800 transition-colors duration-300 line-clamp-1">{card?.location}</p>
+        </div>
+
+        <p className="text-gray-600 mb-5 line-clamp-2 hover:line-clamp-none transition-all duration-300 flex-grow">{card?.details}</p>
+
+        <div className="flex justify-between items-center pt-2 border-t border-gray-100 mt-auto">
+          <div className="group">
+            <p className="text-sm text-gray-500 mb-1">Price</p>
+            <p className="text-xl font-bold text-[#3a78ff] group-hover:scale-105 transition-transform duration-300">₹{card?.price}</p>
+          </div>
+          <button
+            className="bg-[#3a78ff] hover:bg-blue-700 text-white px-3 mt-2 py-3 rounded-full transition-all duration-300 transform hover:scale-105 hover:shadow-lg active:scale-95"
+            onClick={() => Navigate(`${navigatePath || `/property-profile?propertyId=${card?._id}`}`)}
+          >
+            <ArrowRight/>
+          </button>
+        </div>
+      </div>
+    </div>
+
   );
 };
 

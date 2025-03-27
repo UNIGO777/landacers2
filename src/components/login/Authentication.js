@@ -45,9 +45,10 @@ const LoginForm = ({ toggleForm, setIsOpen }) => {
         localStorage.setItem("token", response.data.token)
         localStorage.setItem("user", JSON.stringify(response.data.user))
         setIsOpen(false)
+        window.location.reload()
       }
     } catch (error) {
-      console.log(error)
+      
       setError(error.response?.data?.message || "An error occurred during login")
       toast.error("Login failed. Please try again.")
     } finally {
@@ -67,7 +68,7 @@ const LoginForm = ({ toggleForm, setIsOpen }) => {
           <h1 className="mb-4 text-4xl font-bold">
             Welcome Back
             <br />
-            To LandAcers!
+            To LandAcre!
           </h1>
           <p className="mb-8 text-lg text-blue-100">
             We are so excited to have you here. Login to access exclusive offers, rewards, and discounts.
@@ -222,6 +223,7 @@ const SignUpForm = ({ toggleForm,setIsOpen }) => {
         )
         toast.success(`OTP sent to your mobile number: ${formData.phoneNumber}`)
         setShowOtpForm(true)
+
       }
     } catch (error) {
       setError(error.response?.data?.message || "Registration failed. Please try again.")
@@ -262,7 +264,11 @@ const SignUpForm = ({ toggleForm,setIsOpen }) => {
         if (response.data.token) {
           localStorage.setItem("token", response.data.token)
         }
-        navigate("/") // Redirect to dashboard
+        window.location.reload()
+      } else {
+        setError("OTP verification failed")
+        toast.error("OTP verification failed. Please try again.")
+
       }
     } catch (error) {
       setError(error.response?.data?.message || "Invalid OTP")
@@ -282,7 +288,7 @@ const SignUpForm = ({ toggleForm,setIsOpen }) => {
           className="text-center"
         >
           <h1 className="mb-4 text-4xl font-bold">
-            Join LandAcers
+            Join LandAcre
             <br />
             Today!
           </h1>

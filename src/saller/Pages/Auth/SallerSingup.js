@@ -441,14 +441,14 @@ const SellerSignUpPage = () => {
       <div className="flex flex-col w-full md:w-1/2 bg-[#4285F4] p-8 lg:p-12">
         <div className="flex items-center gap-3 mb-8 md:mb-16">
           <Building2 className="w-8 h-8 text-white" />
-          <span className="text-2xl font-bold text-white">LandsAcers</span>
+          <span className="text-2xl font-bold text-white">Land Acre</span>
         </div>
 
         <div className="flex-grow">
           <h1 className="mb-4 text-3xl font-bold text-white md:text-5xl">
             Welcome back to
             <br />
-            LandsAcers
+            Land Acre
           </h1>
           <p className="mb-8 text-base text-white/90 md:text-xl md:mb-12">
             Manage your properties, tenants, and

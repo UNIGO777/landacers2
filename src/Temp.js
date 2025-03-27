@@ -4,7 +4,7 @@ import { useTheme } from "./context/ThemeContext";
 function Temp() {
   const { theme, toggleTheme } = useTheme();
 
-  console.log(theme);
+  
 
   return (
     <div
