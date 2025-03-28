@@ -146,7 +146,7 @@ const SellerSignUpPage = () => {
         },
       )
 
-      if (response.data.success) {
+      if (response.data) {
         toast.success("Registration successful!")
         localStorage.removeItem("registrationData")
         if (response.data.token) {

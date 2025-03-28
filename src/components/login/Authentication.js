@@ -257,14 +257,11 @@ const SignUpForm = ({ toggleForm,setIsOpen }) => {
         },
       )
 
-      if (response.data.success) {
+      if (response.status === 201) {
         toast.success("Registration successful!")
         localStorage.removeItem("registrationData") // Clean up
         // Store token if provided
-        if (response.data.token) {
-          localStorage.setItem("token", response.data.token)
-        }
-        window.location.reload()
+        toggleForm()
       } else {
         setError("OTP verification failed")
         toast.error("OTP verification failed. Please try again.")
@@ -514,6 +511,10 @@ const Authentication = ({ isOpen, setIsOpen }) => {
     setSignUpForm(!signUpForm)
   }
 
+  const handleClose = ()=>{
+document.body.style.overflow = 'auto'
+setIsOpen(false)
+  }
   
 
   
@@ -534,7 +535,7 @@ const Authentication = ({ isOpen, setIsOpen }) => {
         className="relative w-full max-w-5xl mx-4 overflow-hidden bg-white shadow-2xl rounded-2xl"
       >
         <button
-          onClick={() => setIsOpen(false)}
+          onClick={() => handleClose()}
           className="absolute z-10 p-2 text-gray-500 transition-colors rounded-full right-4 top-4 hover:text-gray-700 hover:bg-gray-100"
         >
           <X className="w-6 h-6" />

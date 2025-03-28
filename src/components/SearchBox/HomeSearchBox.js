@@ -232,7 +232,7 @@ const PropertySearch = () => {
         }
     }, []);
 
-    // Animation variants - optimized for performance
+    // Animation variants - optimized for performance and smoothness
     const containerVariants = {
         hidden: { opacity: 0, y: 20 },
         visible: {
@@ -240,17 +240,17 @@ const PropertySearch = () => {
             y: 0,
             transition: {
                 duration: 0.3,
-                ease: "easeOut",
+                ease: [0.25, 0.1, 0.25, 1], // Custom cubic-bezier for smoother motion
                 when: "beforeChildren",
-                staggerChildren: 0.03
+                staggerChildren: 0.04
             }
         },
         exit: {
             opacity: 0,
             y: 0,
             transition: {
-                duration: 0.3,
-                ease: "easeOut"
+                duration: 0.2,
+                ease: [0.25, 0.1, 0.25, 1]
             }
         }
     };
@@ -261,8 +261,8 @@ const PropertySearch = () => {
             opacity: 1, 
             y: 0,
             transition: {
-                duration: 0.1,
-                ease: "easeOut"
+                duration: 0.2,
+                ease: [0.25, 0.1, 0.25, 1] // Custom cubic-bezier for smoother motion
             }
         }
     };
@@ -273,16 +273,16 @@ const PropertySearch = () => {
             opacity: 1,
             scaleY: 1,
             transition: { 
-                duration: 0.15,
-                ease: "easeOut" 
+                duration: 0.2,
+                ease: [0.25, 0.1, 0.25, 1] // Custom cubic-bezier for smoother motion
             }
         },
         exit: {
             opacity: 0,
             scaleY: 0,
             transition: { 
-                duration: 0.25,
-                ease: "easeOut" 
+                duration: 0.15,
+                ease: [0.25, 0.1, 0.25, 1] 
             }
         }
     };
@@ -294,8 +294,9 @@ const PropertySearch = () => {
             scale: 0.98,
             opacity: 1,
             transition: {
-                duration: 0.35,
-                ease: "easeInOut"
+                duration: 0.3,
+                ease: [0.25, 0.1, 0.25, 1], // Improved cubic-bezier for smoother animation
+                type: "tween"
             }
         },
         open: {
@@ -304,9 +305,11 @@ const PropertySearch = () => {
             scale: 1,
             opacity: 1,
             transition: { 
-                duration: 0.35,
-                ease: "easeInOut",
-                when: "beforeChildren"
+                duration: 0.3,
+                ease: [0.25, 0.1, 0.25, 1], // Improved cubic-bezier for smoother animation
+                type: "tween",
+                when: "beforeChildren",
+                staggerChildren: 0.05
             }
         }
     };
@@ -316,11 +319,11 @@ const PropertySearch = () => {
         hidden: { opacity: 0 },
         visible: { 
             opacity: 1,
-            transition: { duration: 0.25 }
+            transition: { duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }
         },
         exit: { 
             opacity: 0,
-            transition: { duration: 0.4, ease: "easeOut" }
+            transition: { duration: 0.2, ease: [0.25, 0.1, 0.25, 1] }
         }
     };
 
@@ -331,16 +334,16 @@ const PropertySearch = () => {
             opacity: 1, 
             y: 0,
             transition: { 
-                duration: 0.15,
-                ease: "easeOut" 
+                duration: 0.2,
+                ease: [0.25, 0.1, 0.25, 1] 
             }
         },
         exit: { 
             opacity: 0, 
             y: 0,
             transition: { 
-                duration: 0.25,
-                ease: "easeOut" 
+                duration: 0.15,
+                ease: [0.25, 0.1, 0.25, 1] 
             }
         }
     };
@@ -355,7 +358,7 @@ const PropertySearch = () => {
                         animate="visible"
                         exit="exit"
                         variants={overlayVariants}
-                        className="fixed inset-0 bg-black bg-opacity-50 z-[999]"
+                        className="fixed inset-0 bg-black bg-opacity-50 z-50"
                         onClick={toggleSearchBox}
                         style={{ willChange: "opacity" }}
                     />
@@ -364,7 +367,7 @@ const PropertySearch = () => {
 
             <motion.div
                 ref={searchBoxRef}
-                className={` relative max-w-5xl mx-auto  transform -translate-x-1/2 ${isSearchBoxOpen ? 'z-[999] fixed top-1/2 -translate-y-1/2 px-4 md:px-0' : 'z-50 translate-y-1/2'}`}
+                className={`relative max-w-5xl mx-auto transform ${isSearchBoxOpen ? 'z-[999] fixed -mt-24 md:mt-0 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[95%] sm:w-[90%] md:w-[85%] lg:w-[75%] xl:w-[65%] px-4 sm:px-6 md:px-0' : 'z-50 -translate-x-1/2 translate-y-1/2'}`}
                 initial="hidden"
                 animate="visible"
                 variants={containerVariants}
@@ -373,7 +376,7 @@ const PropertySearch = () => {
             >
                 {/* Responsive Search Box */}
                 <motion.div
-                    className={`bg-gradient-to-r absolute left-[10%] w-[80%]   from-white to-blue-50 shadow-xl border border-blue-100/50 overflow-hidden ${isSearchBoxOpen && ' -top-32 md:-top-20' }`}
+                    className={`bg-gradient-to-r from-white to-blue-50 shadow-xl border border-blue-100/50 overflow-hidden w-full backdrop-blur-sm`}
                     variants={searchBoxVariants}
                     initial="closed"
                     animate={isSearchBoxOpen ? "open" : "closed"}
@@ -382,10 +385,10 @@ const PropertySearch = () => {
                 >
                     {/* Simple Search Bar when closed */}
                     {!isSearchBoxOpen && (
-                        <div className="flex items-center justify-between  px-4 h-[60px] cursor-pointer" onClick={toggleSearchBox}>
+                        <div className="flex items-center justify-between px-4 sm:px-6 h-[60px] cursor-pointer hover:bg-blue-50/50 transition-colors duration-300" onClick={toggleSearchBox}>
                             <div className="flex items-center">
-                                <FaSearch className="text-blue-500 mr-2" />
-                                <span className="text-gray-600">Search for properties...</span>
+                                <FaSearch className="text-blue-500 mr-2 text-lg" />
+                                <span className="text-gray-600 font-medium">Search for properties...</span>
                             </div>
                             <div className="flex items-center">
                                 <span className="text-xs text-gray-500 mr-2 hidden sm:inline">Press to search</span>
@@ -479,7 +482,7 @@ const PropertySearch = () => {
 
                             {/* Location Inputs */}
                             <motion.div 
-                                className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6"
+                                className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6"
                                 variants={itemVariants}
                             >
                                 {/* State Input */}
@@ -619,8 +622,9 @@ const PropertySearch = () => {
                             {/* Search Button */}
                             <motion.button
                                 variants={itemVariants}
-                                className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors shadow-md hover:shadow-lg flex items-center justify-center"
+                                className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg flex items-center justify-center transform hover:scale-[1.02] active:scale-[0.98]"
                                 onClick={handleSearch}
+                                whileTap={{ scale: 0.98 }}
                             >
                                 <FaSearch className="mr-2" />
                                 Search Properties
