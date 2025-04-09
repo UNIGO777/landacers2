@@ -170,7 +170,7 @@ const SellerSignUpPage = () => {
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -20 }}
       onSubmit={handleGetOTP}
-      className="space-y-4"
+      className="space-y-4 mt-44 md:mt-0"
     >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
