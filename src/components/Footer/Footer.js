@@ -162,7 +162,7 @@ const Footer = () => {
         <div className="border-t border-gray-200 pt-6 mt-6">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="text-gray-600 text-sm mb-4 md:mb-0">
-              &copy; {new Date().getFullYear()} Property Creators. All rights reserved.
+              &copy; {new Date().getFullYear()} Property Creator. All rights reserved.
             </div>
             <div className="flex space-x-4">
               <Link to={ROUTES_NAME.PRIVACY_POLICY} className="text-gray-600 hover:text-blue-600 text-sm">Privacy Policy</Link>

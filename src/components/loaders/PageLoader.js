@@ -4,7 +4,7 @@ import logo from '../../media/LandsAcers Icon LOGO.png';
 
 const PageLoader = () => {
   const [loadingText, setLoadingText] = useState('');
-  const fullText = 'LAND ACRES';
+  const fullText = 'LAND ACRE';
   
   // Typewriter effect for the text
   useEffect(() => {

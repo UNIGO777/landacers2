@@ -190,75 +190,75 @@ const AddPropertyPage = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  
+  if (!showConfirmation) {
+    setShowConfirmation(true);
+    return;
+  }
+  setLoading(true);
+
+  try {
+    const formDataToSend = new FormData();
     
-    if (!showConfirmation) {
-      setShowConfirmation(true);
-      return;
-    }
-    setLoading(true);
-
-    try {
-
-      const formDataToSend = new FormData();
-      
-      // Add basic form fields
-      Object.keys(formData).forEach(key => {
-        if (key !== 'video' && formData[key] !== null) {
-          if (typeof formData[key] === 'object') {
-            formDataToSend.append(key, JSON.stringify(formData[key]));
-          } else {
-            formDataToSend.append(key, formData[key]);
-          }
+    // Add basic form fields
+    Object.keys(formData).forEach(key => {
+      if (key !== 'video' && formData[key] !== null) {
+        if (typeof formData[key] === 'object') {
+          formDataToSend.append(key, JSON.stringify(formData[key]));
+        } else {
+          formDataToSend.append(key, formData[key]);
         }
+      }
+    });
+
+    if (formData.photos && formData.photos.length > 0) {
+      formData.photos.forEach(photo => {
+        formDataToSend.append('photos', photo);
       });
-      if (formData.photos && formData.photos.length > 0) {
-        formData.photos.forEach(photo => {
-          formDataToSend.append('photos', photo);
-        });
-      }
-
-      // Add images if present
-      if (formData.images && formData.images.length > 0) {
-        formData.images.forEach(image => {
-          formDataToSend.append('images', image);
-        });
-      }
-
-      // Add video if present 
-      if (formData.video) {
-        formDataToSend.append('video', formData.video);
-      }
-
-      const response = await axios.post(
-        `${process.env.REACT_APP_backendUrl}/api/properties/create`,
-        formDataToSend,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            "Authorization": `Bearer ${localStorage.getItem("sellerToken")}`,
-          },
-        }
-      );
-
-      if (response) {
-        setMassageType("success");
-        setShowMassage(true);
-        setMassageRedirect("/saller/properties");
-        setShowConfirmation(false);
-      } else {
-        throw new Error(response.data.message || "Failed to add property");
-      }
-    } catch (error) {
-      setShowMassage(true);
-      setMassageType(error.response.data.message);
-      setMassageRedirect("/saller/dashboard");
-      console.error("Error adding property:", error);
-    } finally {
-      setLoading(false);
     }
-  };
+
+    // Add images if present
+    if (formData.images && formData.images.length > 0) {
+      formData.images.forEach(image => {
+        formDataToSend.append('images', image);
+      });
+    }
+
+    // Add video if present 
+    if (formData.video) {
+      formDataToSend.append('video', formData.video);
+    }
+
+    const response = await axios.post(
+      `${process.env.REACT_APP_backendUrl}/api/properties/create`,
+      formDataToSend,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          "Authorization": `Bearer ${localStorage.getItem("sellerToken")}`,
+        },
+      }
+    );
+
+    if (response.status === 201) {
+      setMassageType("success");
+      setShowMassage(true);
+      setMassageMessage("Property added successfully!");
+      setMassageRedirect("/saller/properties");
+      setShowConfirmation(false);
+    } else {
+      throw new Error(response.data.message || "Failed to add property");
+    }
+  } catch (error) {
+    setShowMassage(true);
+    setMassageMessage(error.response?.data?.message || "An error occurred while adding the property");
+    setMassageType("error");
+  } finally {
+    setLoading(false);
+  }
+};
 
   const renderStepIndicator = () => (
     <div className="flex flex-col md:flex-row items-center justify-between mb-8 gap-4">

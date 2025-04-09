@@ -255,44 +255,7 @@ function HomePage() {
         
       </motion.div>
 
-      <motion.div
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
-        variants={staggerContainer}
-        className="py-16 bg-white"
-      >
-        <div className="container mx-auto px-4">
-          <motion.div variants={fadeInUp} className="text-center mb-12">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">Current Market Trends</h2>
-            <p className="text-gray-600 max-w-3xl mx-auto">Stay informed with the latest real estate market insights and trends to make better investment decisions</p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {marketTrends.map((trend, index) => (
-              <motion.div
-                key={index}
-                variants={fadeInUp}
-                className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow duration-300 border border-gray-100"
-              >
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-xl font-bold text-gray-800">{trend.title}</h3>
-                  <trend.icon className={`w-8 h-8 ${trend.color}`} />
-                </div>
-                <p className={`text-3xl font-bold mb-2 ${trend.color}`}>{trend.percentage}</p>
-                <p className="text-gray-600">{trend.description}</p>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* <motion.div variants={fadeInUp} className="text-center mt-10">
-            <a href="/market-insights" className="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors font-medium">
-              <span className="mr-2">View detailed market analysis</span>
-              <ArrowRight size={16} />
-            </a>
-          </motion.div> */}
-        </div>
-      </motion.div>
+      
 
       {/* Featured Neighborhoods Section */}
       <motion.div
@@ -581,6 +544,45 @@ function HomePage() {
         
         <div className="w-full overflow-x-auto">
           <Services />
+        </div>
+      </motion.div>
+
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+        variants={staggerContainer}
+        className="py-16 bg-white"
+      >
+        <div className="container mx-auto px-4">
+          <motion.div variants={fadeInUp} className="text-center mb-12">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">Current Market Trends</h2>
+            <p className="text-gray-600 max-w-3xl mx-auto">Stay informed with the latest real estate market insights and trends to make better investment decisions</p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {marketTrends.map((trend, index) => (
+              <motion.div
+                key={index}
+                variants={fadeInUp}
+                className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow duration-300 border border-gray-100"
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-xl font-bold text-gray-800">{trend.title}</h3>
+                  <trend.icon className={`w-8 h-8 ${trend.color}`} />
+                </div>
+                <p className={`text-3xl font-bold mb-2 ${trend.color}`}>{trend.percentage}</p>
+                <p className="text-gray-600">{trend.description}</p>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* <motion.div variants={fadeInUp} className="text-center mt-10">
+            <a href="/market-insights" className="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors font-medium">
+              <span className="mr-2">View detailed market analysis</span>
+              <ArrowRight size={16} />
+            </a>
+          </motion.div> */}
         </div>
       </motion.div>
 
