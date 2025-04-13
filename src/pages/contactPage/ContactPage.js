@@ -129,7 +129,7 @@ function ContactPage() {
                 </div>
                 <div className="ml-4">
                   <h3 className="text-lg font-medium text-gray-900">Email</h3>
-                  <p className="mt-1 text-gray-600">contact@landacre.in</p>
+                  <p className="mt-1 text-gray-600">contact@landAcre.in</p>
                 </div>
               </div>
               

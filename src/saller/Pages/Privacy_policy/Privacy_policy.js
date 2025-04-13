@@ -198,7 +198,7 @@ const Privacy_policy = () => {
                 If you have any questions, concerns, or requests regarding this Privacy Policy or our privacy practices, please contact us at:
               </p>
               <div className="mt-3 text-gray-600">
-                <p><strong>Email:</strong> contact@landacre.in</p>
+                <p><strong>Email:</strong> contact@landAcre.in</p>
                 <p><strong>Phone:</strong> +91 7224048054</p>
                 <p><strong>Address:</strong> A-89, Airport Rd, Vijay Nagar, Lalghati, Bhopal, Madhya Pradesh 462030</p>
               </div>

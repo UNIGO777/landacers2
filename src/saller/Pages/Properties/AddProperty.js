@@ -550,14 +550,44 @@ const handleSubmit = async (e) => {
                 ))}
               </select>
             ) : field.type === "checkbox" ? (
-              <input
-                type="checkbox"
-                name={field.name}
-                checked={step === 3 ? formData.amenities[field.amenityType]?.includes(field.name) : formData[field.name] || false}
-                onChange={handleCheckboxChange}
-                data-type={field.amenityType}
-                className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 transition-colors"
-              />
+              <div className="flex space-x-2">
+                <button
+                  type="button"
+                  name={field.name}
+                  data-type={field.amenityType}
+                  onClick={(e) => {
+                    e.target.name = field.name;
+                    e.target.checked = true;
+                    e.target.setAttribute('data-type', field.amenityType);
+                    handleCheckboxChange(e);
+                  }}
+                  className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${step === 3 
+                    ? formData.amenities[field.amenityType]?.includes(field.name) 
+                    : formData[field.name] 
+                      ? 'bg-green-500 text-white' 
+                      : 'bg-gray-200 text-gray-700'}`}
+                >
+                  Yes
+                </button>
+                <button
+                  type="button"
+                  name={field.name}
+                  data-type={field.amenityType}
+                  onClick={(e) => {
+                    e.target.name = field.name;
+                    e.target.checked = false;
+                    e.target.setAttribute('data-type', field.amenityType);
+                    handleCheckboxChange(e);
+                  }}
+                  className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${step === 3 
+                    ? !formData.amenities[field.amenityType]?.includes(field.name) 
+                    : !formData[field.name] 
+                      ? 'bg-red-500 text-white' 
+                      : 'bg-gray-200 text-gray-700'}`}
+                >
+                  No
+                </button>
+              </div>
             ) : field.type === "date" ? (
               <DatePicker
                 selected={formData[field.name]}
@@ -604,20 +634,7 @@ const handleSubmit = async (e) => {
 
   const renderPropertyDetails = () => {
     let fields = propertyDetailsFields[formData.propertyType] || [];
-    if(formData.isCommercial && (formData.propertyType === "Land" )){
-      fields = [
-        propertyDetailsFields[formData.propertyType][0],
-        { name: "commercialType", label: "Commercial Type", type: "select", options: ['Agricultural / Farm Land', 'Industrial Land', 'Commercial Land'], required: true },
-        ...propertyDetailsFields[formData.propertyType].slice(1)
-      ]
-    }
-    if(formData.isCommercial && (formData.propertyType === "Plot" )){
-      fields = [
-        propertyDetailsFields[formData.propertyType][0],
-        { name: "commercialType", label: "Commercial Type", type: "select", options: ['Industrial Plot', 'Commercial Plot'], required: true },
-        ...propertyDetailsFields[formData.propertyType].slice(1)
-      ]
-    }
+    
    
     return (
       <motion.div
@@ -634,82 +651,136 @@ const handleSubmit = async (e) => {
   };
 
   const renderAmenities = () => {
-    const propertyAmenities = amenitiesFields[formData.propertyType] || {};
+    const propertyAmenities = amenitiesFields[formData.propertyType];
+    if (!propertyAmenities) return null;
+    
     return (
-      <motion.div
-        className="space-y-6"
-        initial={{ opacity: 0, x: -50 }}
-        animate={{ opacity: 1, x: 0 }}
-        exit={{ opacity: 0, x: 50 }}
-        transition={{ duration: 0.3 }}
-      >
-        <h3 className="text-lg font-medium text-gray-900">Amenities</h3>
-        
+      <div className="space-y-6">
         {/* Common Amenities */}
-        {propertyAmenities.commonAmenities?.length > 0 && (
+        {propertyAmenities.commonAmenities && propertyAmenities.commonAmenities.length > 0 && (
           <div className="mb-6">
-            <h4 className="text-md font-medium text-gray-800 mb-3">Common Amenities</h4>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {propertyAmenities.commonAmenities.map(amenity => ({
-                ...amenity,
-                amenityType: 'commonAmenities'
-              })).map(field => renderDynamicFields([field], formData, handleChange, handleCheckboxChange))}
+            <h3 className="text-lg font-medium text-gray-900 mb-3">Common Amenities</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+              {propertyAmenities.commonAmenities.map((amenity) => (
+                <div key={amenity.name} className="flex items-center">
+                  <input
+                    type="checkbox"
+                    id={`common-${amenity.name}`}
+                    name={amenity.name}
+                    data-type="commonAmenities"
+                    checked={formData.amenities.commonAmenities.includes(amenity.name)}
+                    onChange={handleCheckboxChange}
+                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  />
+                  <label htmlFor={`common-${amenity.name}`} className="ml-2 block text-sm text-gray-700">
+                    {amenity.label}
+                  </label>
+                </div>
+              ))}
             </div>
           </div>
         )}
 
         {/* Residential Amenities */}
-        {propertyAmenities.residentialAmenities?.length > 0 && (
+        {propertyAmenities.residentialAmenities && propertyAmenities.residentialAmenities.length > 0 && (
           <div className="mb-6">
-            <h4 className="text-md font-medium text-gray-800 mb-3">Residential Amenities</h4>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {propertyAmenities.residentialAmenities.map(amenity => ({
-                ...amenity,
-                amenityType: 'residentialAmenities'
-              })).map(field => renderDynamicFields([field], formData, handleChange, handleCheckboxChange))}
+            <h3 className="text-lg font-medium text-gray-900 mb-3">Residential Amenities</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+              {propertyAmenities.residentialAmenities.map((amenity) => (
+                <div key={amenity.name} className="flex items-center">
+                  <input
+                    type="checkbox"
+                    id={`residential-${amenity.name}`}
+                    name={amenity.name}
+                    data-type="residentialAmenities"
+                    checked={formData.amenities.residentialAmenities.includes(amenity.name)}
+                    onChange={handleCheckboxChange}
+                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  />
+                  <label htmlFor={`residential-${amenity.name}`} className="ml-2 block text-sm text-gray-700">
+                    {amenity.label}
+                  </label>
+                </div>
+              ))}
             </div>
           </div>
         )}
 
         {/* Commercial Amenities */}
-        {propertyAmenities.commercialAmenities?.length > 0 && (
+        {propertyAmenities.commercialAmenities && propertyAmenities.commercialAmenities.length > 0 && (
           <div className="mb-6">
-            <h4 className="text-md font-medium text-gray-800 mb-3">Commercial Amenities</h4>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {propertyAmenities.commercialAmenities.map(amenity => ({
-                ...amenity,
-                amenityType: 'commercialAmenities'
-              })).map(field => renderDynamicFields([field], formData, handleChange, handleCheckboxChange))}
+            <h3 className="text-lg font-medium text-gray-900 mb-3">Commercial Amenities</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+              {propertyAmenities.commercialAmenities.map((amenity) => (
+                <div key={amenity.name} className="flex items-center">
+                  <input
+                    type="checkbox"
+                    id={`commercial-${amenity.name}`}
+                    name={amenity.name}
+                    data-type="commercialAmenities"
+                    checked={formData.amenities.commercialAmenities.includes(amenity.name)}
+                    onChange={handleCheckboxChange}
+                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  />
+                  <label htmlFor={`commercial-${amenity.name}`} className="ml-2 block text-sm text-gray-700">
+                    {amenity.label}
+                  </label>
+                </div>
+              ))}
             </div>
           </div>
         )}
 
         {/* Industrial Amenities */}
-        {propertyAmenities.industrialAmenities?.length > 0 && (
+        {propertyAmenities.industrialAmenities && propertyAmenities.industrialAmenities.length > 0 && (
           <div className="mb-6">
-            <h4 className="text-md font-medium text-gray-800 mb-3">Industrial Amenities</h4>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {propertyAmenities.industrialAmenities.map(amenity => ({
-                ...amenity,
-                amenityType: 'industrialAmenities'
-              })).map(field => renderDynamicFields([field], formData, handleChange, handleCheckboxChange))}
+            <h3 className="text-lg font-medium text-gray-900 mb-3">Industrial Amenities</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+              {propertyAmenities.industrialAmenities.map((amenity) => (
+                <div key={amenity.name} className="flex items-center">
+                  <input
+                    type="checkbox"
+                    id={`industrial-${amenity.name}`}
+                    name={amenity.name}
+                    data-type="industrialAmenities"
+                    checked={formData.amenities.industrialAmenities.includes(amenity.name)}
+                    onChange={handleCheckboxChange}
+                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  />
+                  <label htmlFor={`industrial-${amenity.name}`} className="ml-2 block text-sm text-gray-700">
+                    {amenity.label}
+                  </label>
+                </div>
+              ))}
             </div>
           </div>
         )}
 
         {/* Hospitality Amenities */}
-        {propertyAmenities.hospitalityAmenities?.length > 0 && (
+        {propertyAmenities.hospitalityAmenities && propertyAmenities.hospitalityAmenities.length > 0 && (
           <div className="mb-6">
-            <h4 className="text-md font-medium text-gray-800 mb-3">Hospitality Amenities</h4>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {propertyAmenities.hospitalityAmenities.map(amenity => ({
-                ...amenity,
-                amenityType: 'hospitalityAmenities'
-              })).map(field => renderDynamicFields([field], formData, handleChange, handleCheckboxChange))}
+            <h3 className="text-lg font-medium text-gray-900 mb-3">Hospitality Amenities</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+              {propertyAmenities.hospitalityAmenities.map((amenity) => (
+                <div key={amenity.name} className="flex items-center">
+                  <input
+                    type="checkbox"
+                    id={`hospitality-${amenity.name}`}
+                    name={amenity.name}
+                    data-type="hospitalityAmenities"
+                    checked={formData.amenities.hospitalityAmenities.includes(amenity.name)}
+                    onChange={handleCheckboxChange}
+                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  />
+                  <label htmlFor={`hospitality-${amenity.name}`} className="ml-2 block text-sm text-gray-700">
+                    {amenity.label}
+                  </label>
+                </div>
+              ))}
             </div>
           </div>
         )}
-      </motion.div>
+      </div>
     );
   };
 

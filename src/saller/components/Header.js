@@ -120,7 +120,7 @@ const Header = ({ isMenuOpen, setIsMenuOpen, sellerDetails }) => {
             >
               <FiMenu className="h-6 w-6" />
             </button>
-            <div className="flex justify-center items-center gap-2 font-bold md:hidden"><img src={logo} alt="Land Acre Logo" className=" h-8 ml-3" />Land Acre</div>
+            <div className="flex justify-center items-center gap-2 font-bold md:hidden"><img src={logo} alt="Land Acre Logo" className=" h-8 ml-3" />Land Acers</div>
           </div>
 
           {/* Desktop Search */}

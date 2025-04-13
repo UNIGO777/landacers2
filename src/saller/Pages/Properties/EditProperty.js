@@ -218,6 +218,25 @@ const EditProperty = ({ property, onClose, onSuccess }) => {
       }));
     }
   };
+  
+  const handleToggleButton = (name, checked, amenityType = null) => {
+    if (step === 3 && amenityType) {
+      setFormData((prev) => ({
+        ...prev,
+        amenities: {
+          ...prev.amenities,
+          [amenityType]: checked
+            ? [...prev.amenities[amenityType], name]
+            : prev.amenities[amenityType].filter(item => item !== name)
+        }
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: checked,
+      }));
+    }
+  };
 
   const handleImageUpload = (e) => {
     if (e.target.files) {
@@ -715,18 +734,22 @@ const EditProperty = ({ property, onClose, onSuccess }) => {
       } else if (field.type === "checkbox") {
         return (
           <div key={field.name} className="mb-4">
-            <div className="flex items-center">
-              <input
-                type="checkbox"
-                id={field.name}
-                name={field.name}
-                checked={formData[field.name] || false}
-                onChange={handleCheckboxChange}
-                className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-              />
-              <label htmlFor={field.name} className="ml-2 block text-sm font-medium text-gray-700">
-                {field.label}
-              </label>
+            <label className="block mb-2 text-sm font-medium text-gray-700">{field.label} {field.required ? <span className="text-gray-700 text-sm">**</span> : <span className="text-blue-700 text-sm">(optional)</span>}</label>
+            <div className="flex space-x-2">
+              <button
+                type="button"
+                onClick={() => handleToggleButton(field.name, true)}
+                className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${formData[field.name] ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-700'}`}
+              >
+                Yes
+              </button>
+              <button
+                type="button"
+                onClick={() => handleToggleButton(field.name, false)}
+                className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${!formData[field.name] ? 'bg-red-500 text-white' : 'bg-gray-200 text-gray-700'}`}
+              >
+                No
+              </button>
             </div>
           </div>
         );

@@ -12,6 +12,7 @@ import axios from 'axios';
 import CardCarosel from '../../components/loaders/CardCarouselLoader';
 import { motion } from 'framer-motion';
 import { ArrowRight, Home, Building, MapPin, TrendingUp, Award, Star, Users, Clock, ChevronDown, ChevronUp, Search, DollarSign, BarChart2, Map, Heart } from 'lucide-react';
+import Rating from '../../components/Rating component/Rating';
 
 const backend_url = process.env.REACT_APP_backendUrl
 
@@ -585,6 +586,8 @@ function HomePage() {
           </motion.div> */}
         </div>
       </motion.div>
+
+      <Rating/>
 
       <ServiceBaner
         demantionChange

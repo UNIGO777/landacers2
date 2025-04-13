@@ -544,7 +544,7 @@ const PropertyManagementPage = () => {
                     <Mail className="w-6 h-6 mr-3 flex-shrink-0" />
                     <div>
                       <p className="font-medium">Email</p>
-                      <p className="mt-1">contact@landacre.in</p>
+                      <p className="mt-1">contact@landAcre.in</p>
                     </div>
                   </div>
                   <div className="flex items-start">

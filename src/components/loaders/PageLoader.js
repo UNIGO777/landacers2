@@ -4,7 +4,7 @@ import logo from '../../media/LandsAcers Icon LOGO.png';
 
 const PageLoader = () => {
   const [loadingText, setLoadingText] = useState('');
-  const fullText = 'LAND ACRE';
+  const fullText = 'LAND Acre';
   
   // Typewriter effect for the text
   useEffect(() => {
@@ -42,7 +42,7 @@ const PageLoader = () => {
           transition={{ duration: 0.5 }}
           className="relative z-10"
         >
-          <img src={logo} alt="Land Acres Logo" className="w-28 h-28 object-contain" />
+          <img src={logo} alt="Land Acre Logo" className="w-28 h-28 object-contain" />
         </motion.div>
         
         {/* Primary spinner */}

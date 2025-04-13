@@ -31,7 +31,7 @@ const projects = [
     },
     {
       _id: "up4",
-      title: "Sobha Dream Acres",
+      title: "Sobha Dream Acerss",
       location: "Panathur Road, Bangalore",
       details: "1, 2 BHK Apartment",
       price: "₹50 L - 1.2 Cr",

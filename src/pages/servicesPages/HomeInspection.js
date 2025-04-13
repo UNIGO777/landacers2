@@ -550,7 +550,7 @@ const HomeInspectionPage = () => {
                     </svg>
                     <div>
                       <p className="font-medium">Email</p>
-                      <p className="mt-1">contact@landacre.in</p>
+                      <p className="mt-1">contact@landAcre.in</p>
                     </div>
                   </div>
                   <div className="flex items-start">

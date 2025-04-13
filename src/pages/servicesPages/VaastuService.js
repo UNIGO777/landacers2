@@ -86,7 +86,7 @@ const VaastuService = () => {
   // Testimonials
   const testimonials = [
     {
-      quote: "After implementing the Vaastu changes recommended by Land Acre's consultant, there was a noticeable improvement in our family's harmony and my business prosperity. The suggestions were practical and didn't require major renovations.",
+      quote: "After implementing the Vaastu changes recommended by Land Acers's consultant, there was a noticeable improvement in our family's harmony and my business prosperity. The suggestions were practical and didn't require major renovations.",
       author: "Suresh & Priya Malhotra",
       position: "Homeowners, Delhi",
       image: "https://images.unsplash.com/photo-1499952127939-9bbf5af6c51c?q=80&w=2076&auto=format&fit=crop"
