@@ -16,7 +16,7 @@ import Rating from '../../components/Rating component/Rating';
 
 const backend_url = process.env.REACT_APP_backendUrl
 
-function HomePage() {
+function HomePage({setLoginOpen}) {
   const [featuredProperties, setFeaturedProperties] = useState([]);
   const [upcomingProjects, setUpcomingProjects] = useState([]);
   const [featuredProjects, setFeaturedProjects] = useState([]);
@@ -587,7 +587,7 @@ function HomePage() {
         </div>
       </motion.div>
 
-      <Rating/>
+      <Rating setLoginOpen={setLoginOpen}/>
 
       <ServiceBaner
         demantionChange

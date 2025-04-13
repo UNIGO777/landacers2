@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import { FiStar, FiUser, FiCalendar, FiMessageSquare } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const Rating = ({ loginOpen }) => {
+const Rating = ({ setLoginOpen }) => {
   // State for feedback form
   const [feedbackFormData, setFeedbackFormData] = useState({
     rating: 5,
@@ -69,7 +69,7 @@ const Rating = ({ loginOpen }) => {
     const token = localStorage.getItem('token');
     if (!token) {
       toast.info('Please login to submit feedback');
-      loginOpen(true); // Open login form
+      setLoginOpen(true); // Open login form
       return;
     }
 
