@@ -21,16 +21,16 @@ const Footer = () => {
             <h3 className="text-lg font-bold mb-4 text-blue-600 border-b pb-2">About Land Acre</h3>
             <p className="text-gray-600 mb-4">Land Acre is a premier real estate platform connecting buyers, sellers, and agents with the perfect properties across India.</p>
             <div className="flex space-x-4">
-              <a href="#" className="text-blue-600 hover:text-blue-800 transition">
+              <a href="https://www.facebook.com/share/18YLB2NA3Y/" className="text-blue-600 hover:text-blue-800 transition">
                 <FaFacebook size={20} />
               </a>
-              <a href="#" className="text-blue-600 hover:text-blue-800 transition">
+              <a href="https://x.com/land_acre75722" className="text-blue-600 hover:text-blue-800 transition">
                 <FaTwitter size={20} />
               </a>
-              <a href="#" className="text-blue-600 hover:text-blue-800 transition">
+              <a href="https://www.instagram.com/landacre.in/" className="text-blue-600 hover:text-blue-800 transition">
                 <FaInstagram size={20} />
               </a>
-              <a href="#" className="text-blue-600 hover:text-blue-800 transition">
+              <a href="https://www.linkedin.com/in/land-acre-a02797360/" className="text-blue-600 hover:text-blue-800 transition">
                 <FaLinkedin size={20} />
               </a>
             </div>
