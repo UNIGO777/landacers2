@@ -1,11 +1,14 @@
 import { useState } from "react"
 import { X } from "lucide-react"
 import axios from "axios"
-import { useNavigate } from "react-router-dom" // Assuming you're using React Router
+import { useNavigate } from "react-router-dom"
+import OTPInput from "../OTPComponents/OTPInput"
+import useOTP from "../../hooks/useOTP"
+import { handleOTPError } from "../../utils/otpErrorHandler"
 
 const SignUpModal = ({ isOpen, onClose, onToggleForm }) => {
-  const navigate = useNavigate() // For navigation after successful registration
-  const [step, setStep] = useState("registration")
+  const navigate = useNavigate()
+  const [step, setStep] = useState("registration") // registration, otp, success
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -14,7 +17,16 @@ const SignUpModal = ({ isOpen, onClose, onToggleForm }) => {
     confirmPassword: "",
   })
   const [error, setError] = useState("")
-  const [phoneNumberForOTP, setPhoneNumberForOTP] = useState("")
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false)
+  const [countdown, setCountdown] = useState(0)
+
+  const {
+    isLoading,
+    isVerifying,
+    sendUserRegistrationOTP,
+    verifyUserRegistrationOTP,
+    resetOTPState
+  } = useOTP()
 
   if (!isOpen) return null
 
@@ -37,43 +49,63 @@ const SignUpModal = ({ isOpen, onClose, onToggleForm }) => {
 
     try {
       const [firstName, ...lastNameParts] = formData.fullName.split(" ")
-      const lastName = lastNameParts.join(" ") || firstName // Fallback if no last name
+      const lastName = lastNameParts.join(" ") || firstName
 
-      const response = await axios.post("/api/user/register", {
+      const userData = {
         firstName,
         lastName,
-        username: formData.email.split("@")[0], // Generate username from email
         email: formData.email,
         phoneNumber: formData.phoneNumber,
         password: formData.password,
-        role: "user",
-      })
-
-      if (response.data.phoneNumber) {
-        setPhoneNumberForOTP(response.data.phoneNumber)
-        setStep("otp")
       }
+
+      // Send OTP for registration
+      await sendUserRegistrationOTP(userData, setIsButtonDisabled, setCountdown)
+      setStep("otp")
     } catch (err) {
+      // Error is handled by the hook, but we can also set local error
       setError(err.response?.data?.message || "Registration failed. Please try again.")
     }
   }
 
   const handleOTPVerification = async (otp) => {
     try {
-      const response = await axios.post("/api/verify-otp", {
-        phoneNumber: phoneNumberForOTP,
-        otp,
-      })
-
-      if (response.status === 201) {
-        // Registration successful
-        alert("Registration successful! Please login.")
-        onClose() // Close modal
-        navigate("/login") // Redirect to login page
-      }
+      await verifyUserRegistrationOTP(formData.phoneNumber, otp)
+      // Registration successful
+      setStep("success")
+      setTimeout(() => {
+        onClose()
+        // Navigate or show success message
+      }, 2000)
     } catch (err) {
-      setError(err.response?.data?.message || "Verification failed. Please try again.")
+      // Error is handled by the hook automatically
+      console.error("OTP verification failed:", err)
     }
+  }
+
+  const handleResendOTP = async () => {
+    try {
+      const [firstName, ...lastNameParts] = formData.fullName.split(" ")
+      const lastName = lastNameParts.join(" ") || firstName
+
+      const userData = {
+        firstName,
+        lastName,
+        email: formData.email,
+        phoneNumber: formData.phoneNumber,
+        password: formData.password,
+      }
+
+      await sendUserRegistrationOTP(userData, setIsButtonDisabled, setCountdown)
+    } catch (err) {
+      console.error("Resend OTP failed:", err)
+    }
+  }
+
+  const handleBackToRegistration = () => {
+    setStep("registration")
+    resetOTPState()
+    setError("")
   }
 
   return (
@@ -162,19 +194,61 @@ const SignUpModal = ({ isOpen, onClose, onToggleForm }) => {
                     className="w-full p-3 bg-gray-100 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
+                {/* Rate Limit Warning */}
+                {countdown > 0 && (
+                  <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                    <p className="text-amber-700 text-sm text-center">
+                      Please wait {Math.floor(countdown / 60)}:{(countdown % 60).toString().padStart(2, '0')} before requesting another OTP
+                    </p>
+                  </div>
+                )}
+
                 <button
                   type="submit"
-                  className="w-full bg-[#4285F4] text-white py-3 rounded-lg hover:bg-blue-600 transition-colors"
+                  disabled={isLoading || isButtonDisabled}
+                  className={`w-full py-3 rounded-lg transition-colors ${
+                    isLoading || isButtonDisabled
+                      ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                      : "bg-[#4285F4] text-white hover:bg-blue-600"
+                  }`}
                 >
-                  Sign Up
+                  {isLoading ? (
+                    <div className="flex items-center justify-center">
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                      Sending OTP...
+                    </div>
+                  ) : (
+                    `Sign Up${countdown > 0 ? ` (${Math.floor(countdown / 60)}:${(countdown % 60).toString().padStart(2, '0')})` : ''}`
+                  )}
                 </button>
               </form>
+            ) : step === "otp" ? (
+              <div className="space-y-4">
+                <OTPInput
+                  length={6}
+                  onComplete={handleOTPVerification}
+                  onResend={handleResendOTP}
+                  phoneNumber={formData.phoneNumber}
+                  isLoading={isVerifying}
+                  title="Verify Your Phone"
+                  subtitle="We've sent a verification code to your WhatsApp"
+                  className="!p-0 !shadow-none !border-none !bg-transparent"
+                />
+                <button
+                  onClick={handleBackToRegistration}
+                  className="w-full py-3 text-gray-700 transition-colors bg-gray-100 rounded-lg hover:bg-gray-200"
+                >
+                  Back to Registration
+                </button>
+              </div>
             ) : (
-              <OTPVerification 
-                phoneNumber={phoneNumberForOTP} 
-                onBack={() => setStep("registration")}
-                onVerify={handleOTPVerification}
-              />
+              <div className="text-center space-y-4">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
+                  <div className="w-8 h-8 text-green-600">✓</div>
+                </div>
+                <h3 className="text-xl font-medium text-green-600">Registration Successful!</h3>
+                <p className="text-gray-600">Your account has been created successfully. Redirecting...</p>
+              </div>
             )}
           </div>
         </div>
@@ -183,59 +257,6 @@ const SignUpModal = ({ isOpen, onClose, onToggleForm }) => {
   )
 }
 
-const OTPVerification = ({ phoneNumber, onBack, onVerify }) => {
-  const [otp, setOtp] = useState("")
-  const [error, setError] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    setError("")
-    setIsLoading(true)
-
-    try {
-      await onVerify(otp)
-    } catch (err) {
-      setError(err.message || "Verification failed. Please try again.")
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  return (
-    <div className="space-y-4">
-      <h3 className="text-xl font-medium">Verify Your Phone Number</h3>
-      <p className="text-gray-600">We've sent a verification code to {phoneNumber}. Please enter it below.</p>
-
-      {error && <div className="p-3 text-red-700 bg-red-100 rounded-lg">{error}</div>}
-
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          type="text"
-          value={otp}
-          onChange={(e) => setOtp(e.target.value)}
-          placeholder="Enter 6-digit OTP"
-          className="w-full p-3 bg-gray-100 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          maxLength={6}
-          required
-        />
-        <button
-          type="submit"
-          disabled={isLoading}
-          className="w-full bg-[#4285F4] text-white py-3 rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50"
-        >
-          {isLoading ? "Verifying..." : "Verify OTP"}
-        </button>
-        <button
-          type="button"
-          onClick={onBack}
-          className="w-full py-3 text-gray-700 transition-colors bg-gray-100 rounded-lg hover:bg-gray-200"
-        >
-          Back to Registration
-        </button>
-      </form>
-    </div>
-  )
-}
 
 export default SignUpModal;

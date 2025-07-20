@@ -1,11 +1,10 @@
 import { useState } from "react"
-import { Building2, User, Mail, Phone, Lock, Image, Shield, Badge, MapPin, Building } from "lucide-react"
+import { Building2, User, Mail, Phone, Lock, Image, Shield, Badge, MapPin, Building, Eye, EyeOff } from "lucide-react"
 import { Link, useNavigate } from "react-router-dom"
 import axios from "axios"
 import { toast, ToastContainer } from "react-toastify"
 import { motion, AnimatePresence } from "framer-motion"
 import "react-toastify/dist/ReactToastify.css"
-
 
 const SellerSignUpPage = () => {
   const navigate = useNavigate()
@@ -24,9 +23,13 @@ const SellerSignUpPage = () => {
   const [otp, setOtp] = useState("")
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
+  // Updated password validation: at least 8 chars, 1 uppercase, 1 lowercase, 1 number, 1 special char
   const validatePassword = (password) => {
-    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+    // At least 8 characters, one uppercase, one lowercase, one number, one special character
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/
     return regex.test(password)
   }
 
@@ -69,7 +72,7 @@ const SellerSignUpPage = () => {
     }
 
     if (!validatePassword(formData.password)) {
-      setError("Password must be at least 8 characters with uppercase, lowercase, number, and special character")
+      setError("Password must be at least 8 characters, include uppercase, lowercase, number, and special character")
       setLoading(false)
       return
     }
@@ -170,10 +173,10 @@ const SellerSignUpPage = () => {
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -20 }}
       onSubmit={handleGetOTP}
-      className="space-y-4 mt-44 md:mt-0"
+      className="space-y-4 mt-20 sm:mt-32 md:mt-0"
     >
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="col-span-1">
           <div className="flex items-center gap-2 mb-2">
             <Badge className="w-4 h-4 text-gray-600" />
             <label className="text-sm font-medium">Seller Type</label>
@@ -194,7 +197,7 @@ const SellerSignUpPage = () => {
           </div>
         </div>
 
-        <div>
+        <div className="col-span-1">
           <div className="flex items-center gap-2 mb-2">
             <User className="w-4 h-4 text-gray-600" />
             <label className="text-sm font-medium">Full Name</label>
@@ -213,7 +216,7 @@ const SellerSignUpPage = () => {
           </div>
         </div>
 
-        <div>
+        <div className="col-span-1">
           <div className="flex items-center gap-2 mb-2">
             <Mail className="w-4 h-4 text-gray-600" />
             <label className="text-sm font-medium">Email</label>
@@ -232,7 +235,7 @@ const SellerSignUpPage = () => {
           </div>
         </div>
 
-        <div>
+        <div className="col-span-1">
           <div className="flex items-center gap-2 mb-2">
             <Phone className="w-4 h-4 text-gray-600" />
             <label className="text-sm font-medium">Phone Number</label>
@@ -254,7 +257,7 @@ const SellerSignUpPage = () => {
           </div>
         </div>
 
-        <div>
+        <div className="col-span-1">
           <div className="flex items-center gap-2 mb-2">
             <Building className="w-4 h-4 text-gray-600" />
             <label className="text-sm font-medium">Company Name</label>
@@ -273,7 +276,7 @@ const SellerSignUpPage = () => {
           </div>
         </div>
 
-        <div className="md:col-span-2">
+        <div className="sm:col-span-2">
           <div className="flex items-center gap-2 mb-2">
             <MapPin className="w-4 h-4 text-gray-600" />
             <label className="text-sm font-medium">Address (Optional)</label>
@@ -291,7 +294,7 @@ const SellerSignUpPage = () => {
           </div>
         </div>
 
-        <div>
+        <div className="col-span-1">
           <div className="flex items-center gap-2 mb-2">
             <Lock className="w-4 h-4 text-gray-600" />
             <label className="text-sm font-medium">Password</label>
@@ -299,18 +302,28 @@ const SellerSignUpPage = () => {
           <div className="relative">
             <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               name="password"
               value={formData.password}
               onChange={handleChange}
-              className="w-full p-4 pl-10 border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full p-4 pl-10 pr-10 border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Create password"
               required
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+            >
+              {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+            </button>
+          </div>
+          <div className="text-xs text-gray-500 mt-1 pl-1">
+            Password must be at least 8 characters, include uppercase, lowercase, number, and special character.
           </div>
         </div>
 
-        <div>
+        <div className="col-span-1">
           <div className="flex items-center gap-2 mb-2">
             <Lock className="w-4 h-4 text-gray-600" />
             <label className="text-sm font-medium">Confirm Password</label>
@@ -318,18 +331,25 @@ const SellerSignUpPage = () => {
           <div className="relative">
             <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
             <input
-              type="password"
+              type={showConfirmPassword ? "text" : "password"}
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleChange}
-              className="w-full p-4 pl-10 border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full p-4 pl-10 pr-10 border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Confirm password"
               required
             />
+            <button
+              type="button"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+            >
+              {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+            </button>
           </div>
         </div>
 
-        <div className="md:col-span-2">
+        <div className="sm:col-span-2">
           <div className="flex items-center gap-2 mb-2">
             <Image className="w-4 h-4 text-gray-600" />
             <label className="text-sm font-medium">Profile Picture</label>
@@ -379,7 +399,7 @@ const SellerSignUpPage = () => {
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -20 }}
       onSubmit={handleVerifyOTP}
-      className="space-y-6 "
+      className="space-y-6"
     >
       <div>
         <div className="flex items-center gap-2 mb-2">
@@ -437,26 +457,29 @@ const SellerSignUpPage = () => {
   )
 
   return (
-    <div className="flex flex-col md:flex-row">
-      <div className="flex flex-col w-full md:w-1/2 bg-[#4285F4] p-8 lg:p-12">
-        <div className="flex items-center gap-3 mb-8 md:mb-16">
-          <Building2 className="w-8 h-8 text-white" />
-          <span className="text-2xl font-bold text-white">Land Acre</span>
-        </div>
-
-        <div className="flex-grow">
-          <h1 className="mb-4 text-3xl font-bold text-white md:text-5xl">
-            Welcome back to
-            <br />
-            Land Acre
-          </h1>
-          <p className="mb-8 text-base text-white/90 md:text-xl md:mb-12">
-            Manage your properties, tenants, and
-            <br />
-            transactions all in one place.
-          </p>
-
-          <div className="p-4 hidden md:block bg-white/10 backdrop-blur-sm rounded-xl">
+    <div className="flex flex-col min-h-screen bg-white">
+      <div className="flex flex-col md:flex-row flex-1 w-full">
+        {/* Left Side (Brand/Info) */}
+        <div className="flex flex-col w-full md:w-1/2 bg-[#4285F4] p-6 sm:p-8 lg:p-12 min-h-[220px] justify-between">
+          <div>
+            <div className="flex items-center gap-3 mb-6 sm:mb-8 md:mb-16">
+              <Building2 className="w-8 h-8 text-white" />
+              <span className="text-2xl font-bold text-white">Land Acre</span>
+            </div>
+            <div>
+              <h1 className="mb-3 sm:mb-4 text-2xl sm:text-3xl font-bold text-white md:text-5xl">
+                Welcome back to
+                <br className="hidden sm:block" />
+                Land Acre
+              </h1>
+              <p className="mb-6 sm:mb-8 text-base text-white/90 md:text-xl md:mb-12">
+                Manage your properties, tenants, and
+                <br className="hidden sm:block" />
+                transactions all in one place.
+              </p>
+            </div>
+          </div>
+          <div className="p-4 hidden md:block bg-white/10 backdrop-blur-sm rounded-xl mt-4">
             <p className="mb-4 text-sm italic text-white/90 md:text-base md:mb-6">
               "This platform has revolutionized how we manage our properties. Everything is streamlined and efficient."
             </p>
@@ -469,30 +492,35 @@ const SellerSignUpPage = () => {
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="w-full p-4 overflow-y-auto bg-white md:w-1/2 md:px-8 md:py-12">
-        <div className="max-w-xl h-screen flex flex-col justify-center mx-auto">
-          <h2 className="mb-4 text-2xl font-bold md:text-3xl">{showOtpForm ? "Enter OTP" : "Create your account"}</h2>
+        {/* Right Side (Form) */}
+        <div className="w-full md:w-1/2 flex items-center justify-center bg-white p-4 sm:px-6 sm:py-8 md:px-8 md:py-12">
+          <div className="w-full max-w-xl flex flex-col justify-center mx-auto py-8 sm:py-12 md:py-0">
+            <h2 className="mb-4 text-2xl font-bold md:text-3xl text-center md:text-left">
+              {showOtpForm ? "Enter OTP" : "Create your account"}
+            </h2>
 
-          <AnimatePresence mode="wait">{showOtpForm ? renderOtpForm() : renderBasicDetailsForm()}</AnimatePresence>
-          
-          {error && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="p-4 mb-4 mt-4 text-sm text-red-700 bg-red-100 rounded-lg md:mb-6"
-            >
-              {error}
-            </motion.div>
-          )}
+            <AnimatePresence mode="wait">
+              {showOtpForm ? renderOtpForm() : renderBasicDetailsForm()}
+            </AnimatePresence>
 
-          <p className="mt-4 text-center text-gray-600 md:mt-6">
-            Already have an account?{" "}
-            <Link to="/saller/login" className="text-[#4285F4] hover:underline">
-              Sign in
-            </Link>
-          </p>
+            {error && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="p-4 mb-4 mt-4 text-sm text-red-700 bg-red-100 rounded-lg md:mb-6"
+              >
+                {error}
+              </motion.div>
+            )}
+
+            <p className="mt-4 text-center text-gray-600 md:mt-6">
+              Already have an account?{" "}
+              <Link to="/saller/login" className="text-[#4285F4] hover:underline">
+                Sign in
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
       <ToastContainer />
