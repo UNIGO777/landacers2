@@ -1,0 +1,41 @@
+/* src/index.css or src/App.css */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+
+
+/* src/index.css or src/App.css */
+* {
+    font-family: 'Outfit', sans-serif;
+    font-size: medium;
+  }
+  
+.inputImg,.selectImg {
+      padding-right: 1.5rem; /* Add padding to the right for the arrow */
+      background-color: rgba(255, 255, 255, 0.2); /* Glass effect background */
+      backdrop-filter: blur(10px); /* Apply blur effect for glass effect */
+        
+      background-repeat: no-repeat; /* Prevent repeating the arrow */
+      appearance: none; /* Remove default arrow */
+      border: 1px solid rgba(255, 255, 255, 0.3); /* Light border for visibility */
+      /* Rounded corners */
+      padding: 0.5rem 1rem; 
+      /* Text color for better contrast */
+      
+  }
+
+  select{
+    padding-right: 1.5rem; /* Add padding to the right for the arrow */
+      background-position: right 0.5rem; /* Adjust position of the arrow */
+      background-repeat: no-repeat; /* Prevent repeating the arrow */
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 30 37" fill="white"><path d="M11.9999 13.1714L16.9497 8.22168L18.3639 9.63589L11.9999 15.9999L5.63599 9.63589L7.0502 8.22168L11.9999 13.1714Z"></path></svg>');
+  }
+
+ 
+
+.option {
+    background-color: rgba(255, 255, 255, 0.2); /* Light background for glass effect */
+    backdrop-filter: blur(10px); /* Apply blur effect for glass effect */
+    border: 1px solid rgba(255, 255, 255, 0.3); /* Optional: border for better visibility */
+    border-radius: 8px; /* Rounded corners */
+}
+
+
