@@ -75,8 +75,8 @@ function HomePage({ setLoginOpen }) {
         setIsLoading(true);
         
         const [upcomingRes, featuredRes] = await Promise.all([
-          fetch(`${process.env.REACT_APP_backendUrl}/api/feature-items?itemType=Project&upcomming=true`).then(res => res.json()),
-          fetch(`${process.env.REACT_APP_backendUrl}/api/feature-items?itemType=Project`).then(res => res.json())
+          fetch(`https://api.landacre.in/api/feature-items?itemType=Project&upcomming=true`).then(res => res.json()),
+          fetch(`https://api.landacre.in/api/feature-items?itemType=Project`).then(res => res.json())
           
         ]);
 

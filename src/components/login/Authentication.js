@@ -34,7 +34,7 @@ const LoginForm = ({ toggleForm, setIsOpen }) => {
     setLoading(true)
 
     try {
-      const response = await axios.post(`${process.env.REACT_APP_backendUrl}/api/users/login`, {
+      const response = await axios.post(`https://api.landacre.in/api/users/login`, {
         email: formData.email,
         password: formData.password,
       })
@@ -199,7 +199,7 @@ const SignUpForm = ({ toggleForm,setIsOpen }) => {
 
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_backendUrl}/api/users/register`,
+        `https://api.landacre.in/api/users/register`,
         {
           firstName: formData.firstName,
           lastName: formData.lastName,
@@ -247,7 +247,7 @@ const SignUpForm = ({ toggleForm,setIsOpen }) => {
 
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_backendUrl}/api/users/register/verify-otp`,
+        `https://api.landacre.in/api/users/register/verify-otp`,
         {
           phoneNumber: registrationData.phoneNumber,
           otp: otp,

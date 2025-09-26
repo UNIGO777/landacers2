@@ -269,7 +269,7 @@ const Header = ({ isMenuOpen, setIsMenuOpen, sellerDetails }) => {
               <div className="flex items-center justify-center w-8 h-8 bg-gray-200 overflow-hidden rounded-full">
                 {sellerDetails?.profilePicture ? (
                   <img
-                    src={`${process.env.REACT_APP_backendUrl}/storage/${sellerDetails.profilePicture}`}
+                    src={`https://api.landacre.in/storage/${sellerDetails.profilePicture}`}
                     alt="Profile"
                     className="w-full h-full rounded-full object-cover"
                   />

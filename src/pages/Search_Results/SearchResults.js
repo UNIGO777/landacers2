@@ -38,8 +38,8 @@ const SearchResults = () => {
             try {
                 const isProjectSearch = transactionType === "Projects" || !!projectType;
                 const apiUrl = isProjectSearch
-                    ? `${process.env.REACT_APP_backendUrl}/api/projects/search`
-                    : `${process.env.REACT_APP_backendUrl}/api/properties/search`;
+                    ? `https://api.landacre.in/api/projects/search`
+                    : `https://api.landacre.in/api/properties/search`;
 
                 const params = {
                     ...(isProjectSearch ? { projectType: projectType || propertyType } : {
@@ -174,7 +174,7 @@ const SearchResults = () => {
                                                         <div className='w-full h-40 sm:h-44 sm:w-36 md:w-40 md:h-40 bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl overflow-hidden flex-shrink-0'>
                                                             {result?.propertyMedia?.photos?.[0] ? (
                                                                 <img
-                                                                    src={`${process.env.REACT_APP_backendUrl}/storage/${result.propertyMedia.photos[0]}`}
+                                                                    src={`https://api.landacre.in/storage/${result.propertyMedia.photos[0]}`}
                                                                     className='w-full h-full object-cover'
                                                                     alt={result?.propertyTitle || 'Property image'}
                                                                 />
@@ -234,7 +234,7 @@ const SearchResults = () => {
                                                         <div className='w-full h-40 sm:h-44 sm:w-36 md:w-40 md:h-40 bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl overflow-hidden flex-shrink-0'>
                                                             {result?.images?.[0] ? (
                                                                 <img
-                                                                    src={`${process.env.REACT_APP_backendUrl}/storage/${result.images[0]}`}
+                                                                    src={`https://api.landacre.in/storage/${result.images[0]}`}
                                                                     className='w-full h-full object-cover'
                                                                     alt={result?.projectName || 'Project image'}
                                                                 />

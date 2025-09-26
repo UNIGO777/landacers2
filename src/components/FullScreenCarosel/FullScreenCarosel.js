@@ -43,7 +43,7 @@ const FullScreenCarosel = ({Title,description,data,className}) => {
           {data.length > 0 ? data?.map((project, index) => {
             
              return <div key={index} className="relative transition-transform duration-500 w-full flex-shrink-0" style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
-                  <img loding="lazy" src={`${process.env.REACT_APP_backendUrl}/storage/${project?.itemId?.images[0]}`} loading='lazy' alt={project?.itemId?.projectName} className="h-[50vh] md:h-[80vh] object-cover rounded-lg w-full" />
+                  <img loding="lazy" src={`https://api.landacre.in/storage/${project?.itemId?.images[0]}`} loading='lazy' alt={project?.itemId?.projectName} className="h-[50vh] md:h-[80vh] object-cover rounded-lg w-full" />
                   <div className="absolute w-full bg-black md:h-1/3 bottom-0 bg-opacity-50 flex flex-col justify-center  text-white p-4">
                       <h3 className="text-xl font-semibold">{project?.itemId?.projectName}</h3>
                       <p className="text-lg">{project?.itemId?.location?.city + ', ' + project?.itemId?.location?.state }</p>

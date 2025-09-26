@@ -422,7 +422,7 @@ const Layout = ({ children }) => {
                   setLoading(true)
                   setError("")
                   
-                  axios.post(`${process.env.REACT_APP_backendUrl}${ADMIN_API_ROUTES.CHANGE_PASSWORD}`, {
+                  axios.post(`https://api.landacre.in${ADMIN_API_ROUTES.CHANGE_PASSWORD}`, {
                     phoneNumber: passwordData.phoneNumber
                   })
                   .then(response => {
@@ -539,7 +539,7 @@ const Layout = ({ children }) => {
                   setLoading(true)
                   setError("")
                   
-                  axios.post(`${process.env.REACT_APP_backendUrl}${ADMIN_API_ROUTES.VERIFY_PASSWORD_OTP}`, {
+                  axios.post(`https://api.landacre.in${ADMIN_API_ROUTES.VERIFY_PASSWORD_OTP}`, {
                     phoneNumber: passwordData.phoneNumber,
                     otp: passwordData.otp,
                     newPassword: passwordData.newPassword

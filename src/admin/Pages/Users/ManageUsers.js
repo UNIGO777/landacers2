@@ -28,7 +28,7 @@ const ManageUsers = () => {
       setLoading(true);
       const token = localStorage.getItem("adminToken");
       const response = await axios.get(
-        `${process.env.REACT_APP_backendUrl}${ADMIN_API_ROUTES.GET_USERS}?status=${filterStatus}&page=${currentPage}&limit=${usersPerPage}&sort=${sortConfig.key}&order=${sortConfig.direction}`,
+        `https://api.landacre.in${ADMIN_API_ROUTES.GET_USERS}?status=${filterStatus}&page=${currentPage}&limit=${usersPerPage}&sort=${sortConfig.key}&order=${sortConfig.direction}`,
         {
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -56,7 +56,7 @@ const ManageUsers = () => {
       setLoading(true);
       const token = localStorage.getItem("adminToken");
       const response = await axios.get(
-        `${process.env.REACT_APP_backendUrl}${ADMIN_API_ROUTES.SEARCH_USERS(searchQuery)}`,
+        `https://api.landacre.in${ADMIN_API_ROUTES.SEARCH_USERS(searchQuery)}`,
         {
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -156,7 +156,7 @@ const ManageUsers = () => {
         ADMIN_API_ROUTES.UNBLOCK_USER(userId);
       
       const response = await axios.put(
-        `${process.env.REACT_APP_backendUrl}${endpoint}`,
+        `https://api.landacre.in${endpoint}`,
         {},
         {
           headers: { Authorization: `Bearer ${token}` }
@@ -378,7 +378,7 @@ const ManageUsers = () => {
                             {user.profilePicture ? (
                               <img
                                 className="object-cover w-10 h-10 rounded-full"
-                                src={`${process.env.REACT_APP_backendUrl}/storage/${user.profilePicture}`}
+                                src={`https://api.landacre.in/storage/${user.profilePicture}`}
                                 alt={user.name}
                               />
                             ) : (

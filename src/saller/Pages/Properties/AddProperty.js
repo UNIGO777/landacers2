@@ -232,7 +232,7 @@ const handleSubmit = async (e) => {
     }
 
     const response = await axios.post(
-      `${process.env.REACT_APP_backendUrl}/api/properties/create`,
+      `https://api.landacre.in/api/properties/create`,
       formDataToSend,
       {
         headers: {

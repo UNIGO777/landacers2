@@ -21,7 +21,7 @@ const Notifications = ({ isOpen, onClose }) => {
       setLoading(true)
       const token = localStorage.getItem('adminToken')
       const response = await axios.get(
-        `${process.env.REACT_APP_backendUrl}${ADMIN_API_ROUTES.GET_NOTIFICATIONS}`,
+        `https://api.landacre.in${ADMIN_API_ROUTES.GET_NOTIFICATIONS}`,
         {
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -44,7 +44,7 @@ const Notifications = ({ isOpen, onClose }) => {
       setMarkingAsRead(true)
       const token = localStorage.getItem('adminToken')
       await axios.put(
-        `${process.env.REACT_APP_backendUrl}${ADMIN_API_ROUTES.MARK_ALL_NOTIFICATIONS_READ}`,
+        `https://api.landacre.in${ADMIN_API_ROUTES.MARK_ALL_NOTIFICATIONS_READ}`,
         {},
         {
           headers: { Authorization: `Bearer ${token}` }

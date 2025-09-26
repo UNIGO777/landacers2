@@ -37,7 +37,7 @@ const AdminRoute = () => {
             if (adminToken) {
                 try {
                     const response = await axios.post(
-                        `${process.env.REACT_APP_backendUrl}/api/admin/verify-admin-token`,
+                        `https://api.landacre.in/api/admin/verify-admin-token`,
                         {},
                         {
                             headers: {

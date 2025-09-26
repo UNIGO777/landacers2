@@ -330,7 +330,7 @@ const EditProperty = ({ property, onClose, onSuccess }) => {
       }
 
       const response = await axios.put(
-        `${process.env.REACT_APP_backendUrl}/api/properties/update/${property._id}`,
+        `https://api.landacre.in/api/properties/update/${property._id}`,
         formDataToSend,
         {
           headers: {
@@ -565,7 +565,7 @@ const EditProperty = ({ property, onClose, onSuccess }) => {
                   {formData.existingPhotos.map((photo, index) => (
                     <div key={index} className="relative group">
                       <img 
-                        src={`${process.env.REACT_APP_backendUrl}/storage/${photo}`} 
+                        src={`https://api.landacre.in/storage/${photo}`} 
                         alt={`Existing ${index}`}
                         className="w-full h-24 object-cover rounded-lg shadow-sm"
                       />
@@ -640,7 +640,7 @@ const EditProperty = ({ property, onClose, onSuccess }) => {
                 <h4 className="text-sm font-medium text-gray-700 mb-2">Existing Video</h4>
                 <div className="relative rounded-lg overflow-hidden shadow-lg">
                   <video 
-                    src={`${process.env.REACT_APP_backendUrl}/storage/${
+                    src={`https://api.landacre.in/storage/${
                     formData.existingVideo}`} 
                     controls
                     className="w-full max-h-48"

@@ -45,7 +45,7 @@ const AllProjects = () => {
   const fetchProjects = async () => {
     try {
       setLoading(true)
-      const response = await axios.get(`${process.env.REACT_APP_backendUrl}/api/projects/projectsbyseller`, {
+      const response = await axios.get(`https://api.landacre.in/api/projects/projectsbyseller`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('sellerToken')}`
         },
@@ -84,7 +84,7 @@ const AllProjects = () => {
     if (window.confirm("Are you sure you want to delete this project? This action cannot be undone.")) {
       try {
         setProcessLoader(true)
-        await axios.delete(`${process.env.REACT_APP_backendUrl}/api/projects/delete/${projectId}`, {
+        await axios.delete(`https://api.landacre.in/api/projects/delete/${projectId}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('sellerToken')}`
           }
@@ -109,7 +109,7 @@ const AllProjects = () => {
 
     try {
       setProcessLoader(true)
-      await axios.put(`${process.env.REACT_APP_backendUrl}/api/projects/complete/${projectToComplete}`, {}, {
+      await axios.put(`https://api.landacre.in/api/projects/complete/${projectToComplete}`, {}, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('sellerToken')}`
         }
@@ -244,7 +244,7 @@ const AllProjects = () => {
                       <td className="px-6 py-4">
                         <div className="flex items-center">
                           <img 
-                            src={`${process.env.REACT_APP_backendUrl}/storage/${project.images[0]}`}
+                            src={`https://api.landacre.in/storage/${project.images[0]}`}
                             alt={project.projectName}
                             className="h-10 w-10 rounded-full object-cover mr-3"
                           />
@@ -395,7 +395,7 @@ const AllProjects = () => {
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ delay: index * 0.1 }}
-                        src={`${process.env.REACT_APP_backendUrl}/storage/${image}`}
+                        src={`https://api.landacre.in/storage/${image}`}
                         alt={`Project image ${index + 1}`}
                         className="w-full h-40 object-cover rounded-lg"
                       />

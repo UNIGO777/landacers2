@@ -94,7 +94,7 @@ const ProfilePage = () => {
 
                     // Set profile image if available
                     if (user.profilePicture) {
-                        setProfileImage(`${process.env.REACT_APP_backendUrl}/storage/${user.profilePicture}`);
+                        setProfileImage(`https://api.landacre.in/storage/${user.profilePicture}`);
                     }
                 }
             } catch (error) {
@@ -119,7 +119,7 @@ const ProfilePage = () => {
             // Example API call to fetch notifications
             // In a real app, replace with actual API endpoint
             const response = await axios.get(
-                `${process.env.REACT_APP_backendUrl}/api/notifications`,
+                `https://api.landacre.in/api/notifications`,
                 {
                     headers: { Authorization: `Bearer ${token}` }
                 }
@@ -214,7 +214,7 @@ const ProfilePage = () => {
 
             // Send update request to backend API
             const response = await axios.post(
-                `${process.env.REACT_APP_backendUrl}/api/users/update`,
+                `https://api.landacre.in/api/users/update`,
                 formDataToSend,
                 {
                     headers: {
@@ -269,7 +269,7 @@ const ProfilePage = () => {
             // Example API call to send OTP
             // In a real app, replace with actual API endpoint
             const response = await axios.post(
-                `${process.env.REACT_APP_backendUrl}/api/users/send-password-otp`,
+                `https://api.landacre.in/api/users/send-password-otp`,
                 { phoneNumber: passwordData.phoneNumber }
             );
 
@@ -339,7 +339,7 @@ const ProfilePage = () => {
             // Example API call to change password
             // In a real app, replace with actual API endpoint
             const response = await axios.post(
-                `${process.env.REACT_APP_backendUrl}/api/users/change-password`,
+                `https://api.landacre.in/api/users/change-password`,
                 {
                     phoneNumber: passwordData.phoneNumber,
                     otp: passwordData.otp,

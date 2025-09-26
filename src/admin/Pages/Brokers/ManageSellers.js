@@ -28,7 +28,7 @@ export default function BrokerManagement() {
       setLoading(true)
       const token = localStorage.getItem("adminToken")
       const response = await axios.get(
-        `${process.env.REACT_APP_backendUrl}${searchQuery !== '' ? ADMIN_API_ROUTES.SEARCH_SALLERS(filterStatus, filterType , currentPage, sellersPerPage, searchQuery)  : ADMIN_API_ROUTES.GET_SALLERS_BY_STATUS(filterStatus, filterType , currentPage, sellersPerPage)}`,
+        `https://api.landacre.in${searchQuery !== '' ? ADMIN_API_ROUTES.SEARCH_SALLERS(filterStatus, filterType , currentPage, sellersPerPage, searchQuery)  : ADMIN_API_ROUTES.GET_SALLERS_BY_STATUS(filterStatus, filterType , currentPage, sellersPerPage)}`,
         {
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -89,7 +89,7 @@ export default function BrokerManagement() {
         ADMIN_API_ROUTES.UNBLOCK_SELLER(sellerId)
       
       const response = await axios.put(
-        `${process.env.REACT_APP_backendUrl}${endpoint}`,
+        `https://api.landacre.in${endpoint}`,
         { status: currentStatus === "active" ? "blocked" : "active" },
         {
           headers: { Authorization: `Bearer ${token}` }
@@ -317,7 +317,7 @@ export default function BrokerManagement() {
                             {seller?.sellerDetails?.profilePicture && seller?.sellerDetails?.profilePicture !== "" ? (
                               <img
                                 className="object-cover w-10 h-10 rounded-full"
-                                src={`${process.env.REACT_APP_backendUrl}/storage/${seller?.sellerDetails?.profilePicture}`}
+                                src={`https://api.landacre.in/storage/${seller?.sellerDetails?.profilePicture}`}
                                 alt={`${seller?.sellerDetails?.name}`}
                               />
                             ) : (
@@ -474,7 +474,7 @@ export default function BrokerManagement() {
                       {selectedSeller?.sellerDetails?.profilePicture ? (
                         <img
                           className="object-cover w-20 h-20 rounded-full"
-                          src={`${process.env.REACT_APP_backendUrl}/storage/${selectedSeller?.sellerDetails?.profilePicture}`}
+                          src={`https://api.landacre.in/storage/${selectedSeller?.sellerDetails?.profilePicture}`}
                           alt={selectedSeller?.sellerDetails?.name}
                         />
                       ) : (

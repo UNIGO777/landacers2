@@ -111,7 +111,7 @@ const ManageProperties = () => {
       }
 
       const response = await axios.get(
-        `${process.env.REACT_APP_backendUrl}${ADMIN_API_ROUTES.SEARCH_PROPERTIES(params)}`,
+        `https://api.landacre.in${ADMIN_API_ROUTES.SEARCH_PROPERTIES(params)}`,
         {
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -254,7 +254,7 @@ const ManageProperties = () => {
       setActionLoading(true)
       const token = localStorage.getItem("adminToken")
       await axios.put(
-        `${process.env.REACT_APP_backendUrl}${ADMIN_API_ROUTES.APPROVE_PROPERTY(propertyToAction._id)}`,
+        `https://api.landacre.in${ADMIN_API_ROUTES.APPROVE_PROPERTY(propertyToAction._id)}`,
         {},
         {
           headers: { Authorization: `Bearer ${token}` }
@@ -280,7 +280,7 @@ const ManageProperties = () => {
       setActionLoading(true)
       const token = localStorage.getItem("adminToken")
       await axios.delete(
-        `${process.env.REACT_APP_backendUrl}${ADMIN_API_ROUTES.DELETE_PROPERTY(propertyToAction._id)}`,
+        `https://api.landacre.in${ADMIN_API_ROUTES.DELETE_PROPERTY(propertyToAction._id)}`,
         {
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -330,7 +330,7 @@ const ManageProperties = () => {
       const token = localStorage.getItem("adminToken");
       
       const response = await axios.post(
-        `${process.env.REACT_APP_backendUrl}${ADMIN_API_ROUTES.CREATE_FEATURED_ITEM}`,
+        `https://api.landacre.in${ADMIN_API_ROUTES.CREATE_FEATURED_ITEM}`,
         {
           itemType: 'Property',
           itemId: propertyToAction._id,
@@ -579,7 +579,7 @@ const ManageProperties = () => {
                             {property?.propertyMedia?.photos && property.propertyMedia.photos.length > 0 ? (
                               <img
                                 className="h-10 w-10 rounded-full object-cover"
-                                src={`${process.env.REACT_APP_backendUrl}/storage/${property.propertyMedia.photos[0]}`}
+                                src={`https://api.landacre.in/storage/${property.propertyMedia.photos[0]}`}
                                 alt={property.propertyTitle}
                               />
                             ) : (
@@ -731,7 +731,7 @@ const ManageProperties = () => {
                   <div>
                     {selectedProperty.propertyMedia?.photos && selectedProperty.propertyMedia.photos.length > 0 ? (
                       <img
-                        src={`${process.env.REACT_APP_backendUrl}/storage/${selectedProperty.propertyMedia.photos[0]}`}
+                        src={`https://api.landacre.in/storage/${selectedProperty.propertyMedia.photos[0]}`}
                         alt={selectedProperty.propertyTitle}
                         className="object-cover w-full h-64 mb-4 rounded-lg"
                       />
@@ -746,7 +746,7 @@ const ManageProperties = () => {
                         {selectedProperty.propertyMedia.photos.slice(1, 4).map((photo, index) => (
                           <img
                             key={index}
-                            src={`${process.env.REACT_APP_backendUrl}/storage/${photo}`}
+                            src={`https://api.landacre.in/storage/${photo}`}
                             alt={`${selectedProperty.propertyTitle} - Image ${index + 2}`}
                             className="object-cover w-full h-20 rounded-lg"
                           />

@@ -16,7 +16,7 @@ const fetchSellerAnalytics = async (year) => {
     }
 
     analyticsPromise = axios.get(
-      `${process.env.REACT_APP_backendUrl}/api/sellers/myanalytics${year ? `?year=${year}` : ''}`,
+      `https://api.landacre.in/api/sellers/myanalytics${year ? `?year=${year}` : ''}`,
       {
         headers: {
           Authorization: `Bearer ${token}`

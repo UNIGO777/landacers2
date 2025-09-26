@@ -18,7 +18,7 @@ const ChangePassword = () => {
     setLoading(true)
 
     try {
-      const response = await axios.post(`${process.env.REACT_APP_backendUrl}/api/sellers/send-change-password-otp`, {
+      const response = await axios.post(`https://api.landacre.in/api/sellers/send-change-password-otp`, {
         phone,
       })
       if (response.data) {
@@ -74,7 +74,7 @@ const ChangePassword = () => {
 
     try {
       
-      const response = await axios.post(`${process.env.REACT_APP_backendUrl}/api/sellers/change-password`, {
+      const response = await axios.post(`https://api.landacre.in/api/sellers/change-password`, {
         phone,
         otp,
         newPassword,

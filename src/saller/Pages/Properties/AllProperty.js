@@ -48,7 +48,7 @@ const AllProperties = () => {
     const fetchProperties = async () => {
       setLoading(true)
       try {
-        let url = `${process.env.REACT_APP_backendUrl}/api/properties/propertiesbyseller?page=${filters.page}&status=${filters.status || 'active'}`
+        let url = `https://api.landacre.in/api/properties/propertiesbyseller?page=${filters.page}&status=${filters.status || 'active'}`
         if (filters.type) {
           url += `&type=${filters.type}`
         }
@@ -113,7 +113,7 @@ const AllProperties = () => {
     if (window.confirm("Are you sure you want to mark this property as sold?")) {
       try {
         setLoading(true)
-        await axios.put(`${process.env.REACT_APP_backendUrl}/api/properties/${propertyId}/mark-sold`, {}, {
+        await axios.put(`https://api.landacre.in/api/properties/${propertyId}/mark-sold`, {}, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('sellerToken')}`
           }
@@ -131,7 +131,7 @@ const AllProperties = () => {
     if (window.confirm("Are you sure you want to delete this property? This action cannot be undone.")) {
       try {
         setLoading(true)
-        await axios.delete(`${process.env.REACT_APP_backendUrl}/api/properties/${propertyId}`, {
+        await axios.delete(`https://api.landacre.in/api/properties/${propertyId}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('sellerToken')}`
           }
@@ -155,7 +155,7 @@ const AllProperties = () => {
     const fetchProperties = async () => {
       setLoading(true);
       try {
-        let url = `${process.env.REACT_APP_backendUrl}/api/properties/propertiesbyseller?page=${filters.page}&status=${filters.status || 'active'}`;
+        let url = `https://api.landacre.in/api/properties/propertiesbyseller?page=${filters.page}&status=${filters.status || 'active'}`;
         if (filters.type) {
           url += `&type=${filters.type}`;
         }
@@ -262,7 +262,7 @@ const AllProperties = () => {
                     <td className="px-4 md:px-6 py-4">
                       <div className="flex items-center">
                         <img 
-                          src={`${process.env.REACT_APP_backendUrl}/storage/${property?.propertyMedia?.photos?.[0]}` || "/placeholder.svg"}
+                          src={`https://api.landacre.in/storage/${property?.propertyMedia?.photos?.[0]}` || "/placeholder.svg"}
                           alt={property?.propertyTitle}
                           className="h-12 w-12 md:h-16 md:w-16 object-cover rounded-lg mr-4"
                         />
@@ -412,7 +412,7 @@ const AllProperties = () => {
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div>
                   <img
-                    src={`${process.env.REACT_APP_backendUrl}/storage/${selectedProperty?.propertyMedia?.photos?.[0]}` || "/placeholder.svg"}
+                    src={`https://api.landacre.in/storage/${selectedProperty?.propertyMedia?.photos?.[0]}` || "/placeholder.svg"}
                     alt={selectedProperty?.propertyTitle}
                     className="object-cover w-full h-48 md:h-64 mb-4 rounded-lg"
                   />
@@ -420,7 +420,7 @@ const AllProperties = () => {
                     {selectedProperty?.propertyMedia?.photos?.slice(0, 4).map((image, index) => (
                       <img
                         key={index}
-                        src={`${process.env.REACT_APP_backendUrl}/storage/${image}` || "/placeholder.svg"}
+                        src={`https://api.landacre.in/storage/${image}` || "/placeholder.svg"}
                         alt={`${selectedProperty?.propertyTitle} - Image ${index + 1}`}
                         className="object-cover w-full h-16 md:h-20 rounded-lg"
                       />

@@ -42,7 +42,7 @@ const UpdateProfile = ({ sellerDetails }) => {
 
         // Set profile image if exists
         if (data.profilePicture) {
-          setProfileImage(`${process.env.REACT_APP_backendUrl}/storage/${data.profilePicture}`);
+          setProfileImage(`https://api.landacre.in/storage/${data.profilePicture}`);
         }
       });
     }
@@ -90,7 +90,7 @@ const handleSubmit = async (e) => {
     }
 
     const response = await axios.post(
-      `${process.env.REACT_APP_backendUrl}/api/sellers/update`,
+      `https://api.landacre.in/api/sellers/update`,
       formDataToSend,
       {
         headers: {
@@ -133,7 +133,7 @@ const handleSubmit = async (e) => {
       setVerifyLoading(true);
       const token = localStorage.getItem('sellerToken');
       await axios.get(
-        `${process.env.REACT_APP_backendUrl}/api/sellers/send-email-verification-otp`,
+        `https://api.landacre.in/api/sellers/send-email-verification-otp`,
         {
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -152,7 +152,7 @@ const handleSubmit = async (e) => {
       setVerifyLoading(true);
       const token = localStorage.getItem('sellerToken');
       await axios.post(
-        `${process.env.REACT_APP_backendUrl}/api/sellers/confirm-email-verification-otp`,
+        `https://api.landacre.in/api/sellers/confirm-email-verification-otp`,
         { otp },
         {
           headers: { Authorization: `Bearer ${token}` }

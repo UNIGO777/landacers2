@@ -80,7 +80,7 @@ const ManageProjects = () => {
 
 
       const response = await axios.get(
-        `${process.env.REACT_APP_backendUrl}${ADMIN_API_ROUTES.SEARCH_PROJECTS(params)}`,
+        `https://api.landacre.in${ADMIN_API_ROUTES.SEARCH_PROJECTS(params)}`,
         {
           headers: { Authorization: `Bearer ${token}` },
 
@@ -115,7 +115,7 @@ const ManageProjects = () => {
       setLoading(true);
       const token = localStorage.getItem("adminToken");
       const response = await axios.get(
-        `${process.env.REACT_APP_backendUrl}${ADMIN_API_ROUTES.SEARCH_PROJECTS}?query=${searchQuery}`,
+        `https://api.landacre.in${ADMIN_API_ROUTES.SEARCH_PROJECTS}?query=${searchQuery}`,
         {
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -246,7 +246,7 @@ const ManageProjects = () => {
       setActionLoading(true);
       const token = localStorage.getItem("adminToken");
       const response = await axios.put(
-        `${process.env.REACT_APP_backendUrl}/api/admin/project/${projectId}`,
+        `https://api.landacre.in/api/admin/project/${projectId}`,
         { status: newStatus },
         {
           headers: { Authorization: `Bearer ${token}` }
@@ -275,7 +275,7 @@ const ManageProjects = () => {
       setActionLoading(true);
       const token = localStorage.getItem("adminToken");
       const response = await axios.delete(
-        `${process.env.REACT_APP_backendUrl}${ADMIN_API_ROUTES.BLOCK_PROJECT(projectId)}`,
+        `https://api.landacre.in${ADMIN_API_ROUTES.BLOCK_PROJECT(projectId)}`,
         {
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -346,7 +346,7 @@ const ManageProjects = () => {
       const token = localStorage.getItem("adminToken");
       
       const response = await axios.post(
-        `${process.env.REACT_APP_backendUrl}${ADMIN_API_ROUTES.CREATE_FEATURED_ITEM}`,
+        `https://api.landacre.in${ADMIN_API_ROUTES.CREATE_FEATURED_ITEM}`,
         {
           itemType: 'Project',
           itemId: projectToAction._id,
@@ -624,7 +624,7 @@ const ManageProjects = () => {
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
                           <img
-                            src={`${process.env.REACT_APP_backendUrl}/storage/${project.images?.[0] }`}
+                            src={`https://api.landacre.in/storage/${project.images?.[0] }`}
                             alt={project.projectName}
                             className="h-10 w-10 rounded-full object-cover mr-3"
                            
@@ -822,7 +822,7 @@ const ManageProjects = () => {
                               transition={{ delay: index * 0.1 }}
                             >
                               <img
-                                src={`${process.env.REACT_APP_backendUrl}/storage/${image}`}
+                                src={`https://api.landacre.in/storage/${image}`}
                                 alt={`Project ${index + 1}`}
                                 className="w-full h-48 object-cover transform group-hover:scale-110 transition-transform duration-300"
                               />

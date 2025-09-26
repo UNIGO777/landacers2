@@ -37,7 +37,7 @@ const FeaturedItem = () => {
       }
       
       const response = await axios.get(
-        `${process.env.REACT_APP_backendUrl}${ADMIN_API_ROUTES.GET_FEATURED_ITEMS(params)}`,
+        `https://api.landacre.in${ADMIN_API_ROUTES.GET_FEATURED_ITEMS(params)}`,
         {
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -72,7 +72,7 @@ const FeaturedItem = () => {
       setSubmitting(true);
       const token = localStorage.getItem('adminToken');
       await axios.delete(
-        `${process.env.REACT_APP_backendUrl}${ADMIN_API_ROUTES.DELETE_FEATURED_ITEM(itemToDelete._id)}`,
+        `https://api.landacre.in${ADMIN_API_ROUTES.DELETE_FEATURED_ITEM(itemToDelete._id)}`,
         {
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -95,7 +95,7 @@ const FeaturedItem = () => {
       setLoadingDetails(true);
       const token = localStorage.getItem('adminToken');
       const response = await axios.get(
-        `${process.env.REACT_APP_backendUrl}/api/properties/${propertyId}`,
+        `https://api.landacre.in/api/properties/${propertyId}`,
         {
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -409,7 +409,7 @@ const FeaturedItem = () => {
                         <div>
                           {propertyDetails.propertyMedia?.photos && propertyDetails.propertyMedia.photos.length > 0 ? (
                             <img
-                              src={`${process.env.REACT_APP_backendUrl}/storage/${propertyDetails.propertyMedia.photos[0]}`}
+                              src={`https://api.landacre.in/storage/${propertyDetails.propertyMedia.photos[0]}`}
                               alt={propertyDetails.propertyTitle}
                               className="object-cover w-full h-64 mb-4 rounded-lg"
                             />
@@ -496,7 +496,7 @@ const FeaturedItem = () => {
                       <div>
                         {selectedItem.itemId.images && selectedItem.itemId.images.length > 0 ? (
                           <img
-                            src={`${process.env.REACT_APP_backendUrl}/storage/${selectedItem.itemId.images[0]}`}
+                            src={`https://api.landacre.in/storage/${selectedItem.itemId.images[0]}`}
                             alt={selectedItem.itemId.projectName}
                             className="object-cover w-full h-64 mb-4 rounded-lg"
                           />

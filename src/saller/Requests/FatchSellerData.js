@@ -14,7 +14,7 @@ const fetchSellerData = async () => {
 
   try {
     sellerDetailsPromise = axios.get( // Store the promise immediately
-      `${process.env.REACT_APP_backendUrl}/api/sellers/me`,
+      `https://api.landacre.in/api/sellers/me`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("sellerToken")}`,

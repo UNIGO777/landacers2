@@ -29,7 +29,7 @@ const Dashboard = () => {
       setLoadingProperties((true))
       const token = localStorage.getItem('adminToken');
       const response = await axios.get(
-        `${process.env.REACT_APP_backendUrl}${ADMIN_API_ROUTES.GET_ANALYTICS}`,
+        `https://api.landacre.in${ADMIN_API_ROUTES.GET_ANALYTICS}`,
         {
           headers: { Authorization: `Bearer ${token}` }
         }

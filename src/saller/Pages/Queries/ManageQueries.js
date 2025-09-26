@@ -58,7 +58,7 @@ const itemId = searchParams.get('itemId');
       setDetailLoading(true)
       const token = localStorage.getItem("sellerToken")
       const response = await axios.get(
-        `${process.env.REACT_APP_backendUrl}/api/quary/${queryId}`,
+        `https://api.landacre.in/api/quary/${queryId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`
@@ -83,12 +83,12 @@ const itemId = searchParams.get('itemId');
     try {
       setLoading(true)
       const token = localStorage.getItem("sellerToken")
-      let url = `${process.env.REACT_APP_backendUrl}/api/quary/seller`
+      let url = `https://api.landacre.in/api/quary/seller`
       
       if (itemtype === "property" && itemId) {
-        url = `${process.env.REACT_APP_backendUrl}/api/quary/property/${itemId}`
+        url = `https://api.landacre.in/api/quary/property/${itemId}`
       } else if (itemtype === "project" && itemId) {
-        url = `${process.env.REACT_APP_backendUrl}/api/quary/project/${itemId}`
+        url = `https://api.landacre.in/api/quary/project/${itemId}`
       }
       const response = await axios.get(url, {
         headers: {
@@ -415,7 +415,7 @@ const itemId = searchParams.get('itemId');
                           ).map((image, index) => (
                             <img 
                               key={index}
-                              src={`${process.env.REACT_APP_backendUrl}/storage/${image}`}
+                              src={`https://api.landacre.in/storage/${image}`}
                               alt={`${queryDetails.item.Itemtype.toLowerCase()} image ${index + 1}`}
                               className="w-full h-40 object-cover rounded"
                             />
@@ -429,7 +429,7 @@ const itemId = searchParams.get('itemId');
                       <div className="col-span-2">
                         <p className="font-semibold mb-2">Property Video</p>
                         <video className="w-full rounded-lg" controls>
-                          <source src={`${process.env.REACT_APP_backendUrl}/storage/${queryDetails.item.details.propertyMedia.video}`} type="video/mp4" />
+                          <source src={`https://api.landacre.in/storage/${queryDetails.item.details.propertyMedia.video}`} type="video/mp4" />
                           Your browser does not support the video tag.
                         </video>
                       </div>

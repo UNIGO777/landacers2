@@ -48,13 +48,13 @@ const ProjectProfile = ({ setLoginOpen }) => {
 
             try {
                 setLoading(true);
-                const response = await axios.get(`${process.env.REACT_APP_backendUrl}/api/projects/projectDetails/${projectId}`);
+                const response = await axios.get(`https://api.landacre.in/api/projects/projectDetails/${projectId}`);
                 setProject(response.data.projectDetail);
                
 
                 // Fetch related projects
                 try {
-                    const relatedResponse = await axios.get(`${process.env.REACT_APP_backendUrl}/api/projects/related/${projectId}`);
+                    const relatedResponse = await axios.get(`https://api.landacre.in/api/projects/related/${projectId}`);
                     setRelatedProjects(relatedResponse.data.data);
                 } catch (err) {
                     console.error('Error fetching related projects:', err);
@@ -80,7 +80,7 @@ const ProjectProfile = ({ setLoginOpen }) => {
             try {
                 setFeedbackLoading(true);
                 const response = await axios.get(
-                    `${process.env.REACT_APP_backendUrl}/api/feedback/project/${projectId}?page=${feedbackPage}`
+                    `https://api.landacre.in/api/feedback/project/${projectId}?page=${feedbackPage}`
                 );
 
                 if (response.data) {
@@ -115,7 +115,7 @@ const ProjectProfile = ({ setLoginOpen }) => {
             const token = localStorage.getItem('token');
 
             const response = await axios.get(
-                `${process.env.REACT_APP_backendUrl}/api/quary/project/create/${projectId}`,
+                `https://api.landacre.in/api/quary/project/create/${projectId}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -176,7 +176,7 @@ const ProjectProfile = ({ setLoginOpen }) => {
             setFeedbackSubmitting(true);
 
             const response = await axios.post(
-                `${process.env.REACT_APP_backendUrl}/api/feedback`,
+                `https://api.landacre.in/api/feedback`,
                 {
                     feedbackType: 'project',
                     projectId,
@@ -376,7 +376,7 @@ const ProjectProfile = ({ setLoginOpen }) => {
 
     // Prepare project data
     const projectImages = project.images?.map(photo =>
-        `${process.env.REACT_APP_backendUrl}/storage/${photo}`
+        `https://api.landacre.in/storage/${photo}`
     ) || [];
 
     return (
@@ -746,7 +746,7 @@ const ProjectProfile = ({ setLoginOpen }) => {
                                 <Card
                                     card={{
                                         image: relatedProject.images && relatedProject.images.length > 0 
-                                            ? `${process.env.REACT_APP_backendUrl}/storage/${relatedProject.images[0]}` 
+                                            ? `https://api.landacre.in/storage/${relatedProject.images[0]}` 
                                             : 'https://via.placeholder.com/400x300',
                                         title: relatedProject.projectName,
                                         price: relatedProject.price || "Price on request",

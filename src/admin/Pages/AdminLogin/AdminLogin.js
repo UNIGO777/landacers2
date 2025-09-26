@@ -30,7 +30,7 @@ const AdminLogin = () => {
     setLoading(true)
 
     try {
-      const response = await axios.post(`${process.env.REACT_APP_backendUrl}/api/admin/login`, {
+      const response = await axios.post(`https://api.landacre.in/api/admin/login`, {
         email: formData.email,
         password: formData.password,
       })
@@ -55,7 +55,7 @@ const AdminLogin = () => {
     setLoading(true)
 
     try {
-      const response = await axios.post(`${process.env.REACT_APP_backendUrl}/api/admin/verify`, {
+      const response = await axios.post(`https://api.landacre.in/api/admin/verify`, {
         email: formData.email,
         otp: formData.otp,
       })
