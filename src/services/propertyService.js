@@ -25,7 +25,7 @@ const propertyService = {
    */
   getProperties: async (page = 1) => {
     try {
-      const response = await api.get(`/api/properties?page=${page}`);
+      const response = await api.get(`https://api.landacre.in/api/properties?page=${page}`);
       return response.data;
     } catch (error) {
       throw error;
@@ -39,7 +39,7 @@ const propertyService = {
    */
   getPropertyById: async (id) => {
     try {
-      const response = await api.get(`/api/properties/${id}`);
+      const response = await api.get(`https://api.landacre.in/api/properties/${id}`);
       return response.data;
     } catch (error) {
       throw error;
@@ -68,7 +68,7 @@ const propertyService = {
    */
   getSimilarProperties: async (id) => {
     try {
-      const response = await api.get(`/api/properties/similar/${id}`);
+      const response = await api.get(`https://api.landacre.in/api/properties/similar/${id}`);
       return response.data;
     } catch (error) {
       throw error;
