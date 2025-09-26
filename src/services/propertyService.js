@@ -11,7 +11,7 @@ const propertyService = {
    */
   getFeaturedProperties: async () => {
     try {
-      const response = await api.get(`https://api.landacre.in/api/feature-items?itemType=Property'); //my commit 
+      const response = await api.get('https://api.landacre.in/api/feature-items?itemType=Property'); //my commit 
       return response.data;
     } catch (error) {
       throw error;

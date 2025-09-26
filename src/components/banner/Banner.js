@@ -25,11 +25,11 @@ function Banner() {
     }, [images.length]);
 
     return (
-        <div className='md:min-h-[90vh] lg:min-h-[60vh] flex items-center'>
+        <div className='md:min-h-[90vh]  lg:min-h-[60vh] flex items-center'>
             <div className="mx-auto w-full">
                 <div className="flex flex-col w-full px-4 md:px-8 lg:px-10 items-center">
                     {/* Left Side - Hero Content */}
-                    <div className="h-auto md:h-auto  w-full mb-6  md:mb-10 flex flex-col lg:flex-row justify-between">
+                    <div className="h-auto md:h-auto  w-full mt-8 md:mt-0 mb-6  md:mb-10 flex flex-col lg:flex-row justify-between">
                         <h1 className="text-3xl md:text-5xl md:-mt-4 lg:text-[4rem] xl:text-[5rem] mb-4 md:mb-0 edu-nsw-act-cursive text-gray-800" style={{lineHeight: '1.2'}}>
                             Find a home you'll <span className="italic font-light text-xl md:text-2xl">love</span>
                         </h1>
