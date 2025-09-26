@@ -1,16 +1,16 @@
 const ADMIN_API_ROUTES = {
     // Authentication routes
-    LOGIN: '/api/admin/login',
-    VERIFY_OTP: '/api/admin/verify',
+    LOGIN: 'https://api.landacre.in/api/admin/login',
+    VERIFY_OTP: 'https://api.landacre.in/api/admin/verify',
 
     // Analytics
-    GET_ANALYTICS: '/api/admin/my-analytics',
+    GET_ANALYTICS: 'https://api.landacre.in/api/admin/my-analytics',
 
     // Notifications
-    GET_NOTIFICATIONS: '/api/notifications',
-    MARK_ALL_NOTIFICATIONS_READ: '/api/notifications/mark-all-read',
+    GET_NOTIFICATIONS: 'https://api.landacre.in/api/notifications',
+    MARK_ALL_NOTIFICATIONS_READ: 'https://api.landacre.in/api/notifications/mark-all-read',
 
-    GET_USERS: '/api/admin/get-users',
+    GET_USERS: 'https://api.landacre.in/api/admin/get-users',
     BLOCK_USER: (userId) => `/api/admin/block/user/${userId}`,
     UNBLOCK_USER: (userId) => `/api/admin/unblock/user/${userId}`,
     
@@ -32,7 +32,7 @@ const ADMIN_API_ROUTES = {
     SEARCH_SALLERS: (status, type, currentPage, SellerPerPage,searchQuery) => `/api/admin/search-sellers?query=${searchQuery}&status=${status}&type=${type}&page=${currentPage}&perPage=${SellerPerPage}`,
     
     // Featured items
-    CREATE_FEATURED_ITEM: '/api/admin/featured-item',
+    CREATE_FEATURED_ITEM: 'https://api.landacre.in/api/admin/featured-item',
     GET_FEATURED_ITEMS: (params) => {
         const queryParams = new URLSearchParams();
         
@@ -95,8 +95,8 @@ const ADMIN_API_ROUTES = {
     DELETE_FEEDBACK: (feedbackId) => `/api/feedback/LandAcre/${feedbackId}`,
 
     // Password management
-    CHANGE_PASSWORD: '/api/users/changePassword',
-    VERIFY_PASSWORD_OTP: '/api/users/changePassword/verify',
+    CHANGE_PASSWORD: 'https://api.landacre.in/api/users/changePassword',
+    VERIFY_PASSWORD_OTP: 'https://api.landacre.in/api/users/changePassword/verify',
 };
 
 export default ADMIN_API_ROUTES;

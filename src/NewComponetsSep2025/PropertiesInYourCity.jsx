@@ -35,7 +35,7 @@ const PropertiesInYourCity = () => {
       variants={staggerContainer}
       className="pb-16 " // Blue theme background
     >
-      <div className=" mx-auto px-10">
+      <div className=" mx-auto px-5 md:px-10">
         
 
         <div className="flex justify-between items-center mb-8">

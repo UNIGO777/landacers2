@@ -264,7 +264,7 @@ const ServicesSection = () => {
       {/* Dark overlay */}
       <div className="absolute inset-0 bg-black opacity-35"></div>
       
-      <div className="relative px-10 mx-auto z-10">
+      <div className="relative px-5 md:px-10 mx-auto z-10">
         {/* Header */}
         <div className="mb-12">
           <div className="text-sm text-gray-300 mb-2 edu-nsw-act-cursive">Land Acres</div>

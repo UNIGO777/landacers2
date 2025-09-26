@@ -81,7 +81,7 @@ const PropertyLinks = () => {
 
   return (
     <section className="py-12 bg-white">
-      <div className="px-10 container mx-auto  sm:px-6 lg:px-10">
+      <div className="px-5 container mx-auto  sm:px-6 lg:px-10">
         {/* Header */}
         <div className="text-center mb-14">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
