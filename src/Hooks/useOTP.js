@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import axios from 'axios';
 import { handleOTPError, showOTPSentSuccess, showOTPVerifiedSuccess } from '../utils/otpErrorHandler';
 
-const useOTP = (baseURL = process.env.REACT_APP_backendUrl || 'http://localhost:5000') => {
+const useOTP = (baseURL = process.env.REACT_APP_backendUrl || 'https://api.landacre.in') => {
     const [isLoading, setIsLoading] = useState(false);
     const [isVerifying, setIsVerifying] = useState(false);
     const [error, setError] = useState(null);
