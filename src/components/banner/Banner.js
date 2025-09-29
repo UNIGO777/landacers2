@@ -25,7 +25,7 @@ function Banner() {
     }, [images.length]);
 
     return (
-        <div className='md:min-h-[90vh]  lg:min-h-[60vh] flex items-center'>
+        <div className='flex items-center md:mt-20'>
             <div className="mx-auto w-full">
                 <div className="flex flex-col w-full px-4 md:px-8 lg:px-10 items-center">
                     {/* Left Side - Hero Content */}

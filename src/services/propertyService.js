@@ -54,7 +54,7 @@ const propertyService = {
   searchProperties: async (params) => {
     try {
       const queryString = new URLSearchParams(params).toString();
-      const response = await api.get(`/api/properties/search?${queryString}`);
+      const response = await api.get(`https://api.landacre.in/api/properties/search?${queryString}`);
       return response.data;
     } catch (error) {
       throw error;

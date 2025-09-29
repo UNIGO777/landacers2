@@ -2,7 +2,7 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 
 module.exports = function(app) {
   app.use(
-    '/api',
+    'https://api.landacre.in/api',
     createProxyMiddleware({
       target: 'https://api.landacre.in',
       changeOrigin: true,

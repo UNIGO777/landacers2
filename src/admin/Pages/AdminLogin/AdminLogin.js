@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Building2, Lock, Mail, Phone } from "lucide-react"
+import { Building2, Lock, Mail, Phone, Eye, EyeOff } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
 import { toast, ToastContainer } from "react-toastify"
@@ -9,6 +9,7 @@ import "react-toastify/dist/ReactToastify.css"
 const AdminLogin = () => {
   const navigate = useNavigate()
   const [showOtpForm, setShowOtpForm] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -113,13 +114,20 @@ const AdminLogin = () => {
           <input
             id="password"
             name="password"
-            type="password"
+            type={showPassword ? "text" : "password"}
             value={formData.password}
             onChange={handleChange}
-            className="w-full py-3 pl-10 pr-4 transition duration-200 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full py-3 pl-10 pr-12 transition duration-200 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             placeholder="Enter your password"
             required
           />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute w-5 h-5 text-gray-400 -translate-y-1/2 right-3 top-1/2 hover:text-gray-600 focus:outline-none"
+          >
+            {showPassword ? <EyeOff /> : <Eye />}
+          </button>
         </div>
       </div>
 
