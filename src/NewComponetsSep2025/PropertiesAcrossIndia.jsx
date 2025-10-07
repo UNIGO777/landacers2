@@ -87,6 +87,15 @@ const PropertiesAcrossIndia = ({ loading = false }) => {
       gradient: 'from-black/10 to-black/30',
       avgPrice: '₹50 Lakh',
       link: generateSearchURL('FlatApartment', 'Buy', 'Ahmedabad', 'Gujarat')
+    },
+    {
+      id: 9,
+      name: 'Agra',
+      city: 'Agra',
+      bgImage: 'https://images.unsplash.com/photo-1605640840605-14ac1855827b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
+      gradient: 'from-black/10 to-black/30',
+      avgPrice: '₹50 Lakh',
+      link: generateSearchURL('FlatApartment', 'Buy', 'Agra', 'Uttar Pradesh')
     }
   ]
 
