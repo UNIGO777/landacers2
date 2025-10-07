@@ -92,7 +92,7 @@ const PropertiesAcrossIndia = ({ loading = false }) => {
       id: 9,
       name: 'Agra',
       city: 'Agra',
-      bgImage: 'https://images.unsplash.com/photo-1605640840605-14ac1855827b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
+      bgImage: 'https://images.unsplash.com/photo-1548013146-72479768bada?q=80&w=2352&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
       gradient: 'from-black/10 to-black/30',
       avgPrice: '₹50 Lakh',
       link: generateSearchURL('FlatApartment', 'Buy', 'Agra', 'Uttar Pradesh')
