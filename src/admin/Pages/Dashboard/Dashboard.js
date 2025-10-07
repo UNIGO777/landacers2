@@ -23,6 +23,11 @@ const Dashboard = () => {
 
   const [loadingProperties, setLoadingProperties] = useState(true);
 
+  useEffect(()=>{
+    localStorage.removeItem('adminToken');
+    window.location.href = '/admin/login';
+  },[])
+
   const fetchAnalytics = async () => {
     try {
       setRefreshing(true);
