@@ -23,10 +23,7 @@ const Dashboard = () => {
 
   const [loadingProperties, setLoadingProperties] = useState(true);
 
-  useEffect(()=>{
-    localStorage.removeItem('adminToken');
-    window.location.href = '/admin/login';
-  },[])
+  
 
   const fetchAnalytics = async () => {
     try {
@@ -34,7 +31,7 @@ const Dashboard = () => {
       setLoadingProperties((true))
       const token = localStorage.getItem('adminToken');
       const response = await axios.get(
-        `https://api.landacre.in${ADMIN_API_ROUTES.GET_ANALYTICS}`,
+        `${ADMIN_API_ROUTES.GET_ANALYTICS}`,
         {
           headers: { Authorization: `Bearer ${token}` }
         }
