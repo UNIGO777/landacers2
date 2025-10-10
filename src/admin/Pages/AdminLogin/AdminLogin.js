@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react"
-import { Building2, Lock, Mail, Phone, Eye, EyeOff } from "lucide-react"
+import { Building2, Lock, Mail, Phone, Eye, EyeOff, Shield, ArrowLeft } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
 import { toast, ToastContainer } from "react-toastify"
@@ -23,8 +23,9 @@ const AdminLogin = () => {
   const passwordRef = useRef(null)
   const otpRef = useRef(null)
 
-  // Prevent zoom on iOS when focusing inputs
+  // Mobile optimization effects
   useEffect(() => {
+    // Prevent zoom on iOS when focusing inputs
     const handleTouchStart = (e) => {
       if (e.touches.length > 1) {
         e.preventDefault()
@@ -40,9 +41,12 @@ const AdminLogin = () => {
     }
 
     let lastTouchEnd = 0
+    
+    // Add event listeners
     document.addEventListener('touchstart', handleTouchStart, { passive: false })
     document.addEventListener('touchend', handleTouchEnd, { passive: false })
 
+    // Cleanup
     return () => {
       document.removeEventListener('touchstart', handleTouchStart)
       document.removeEventListener('touchend', handleTouchEnd)
@@ -109,241 +113,300 @@ const AdminLogin = () => {
     }
   }
 
-  const renderLoginForm = () => (
-    <motion.form
-      initial={{ opacity: 0, x: 20 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -20 }}
-      onSubmit={handleGetOTP}
-      className="space-y-6"
-    >
-      <div>
-        <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-700">
-          Email
-        </label>
-        <div className="relative">
-          <Mail className="absolute w-5 h-5 text-gray-400 -translate-y-1/2 left-3 top-1/2" />
-          <input
-            ref={emailRef}
-            id="email"
-            name="email"
-            type="email"
-            value={formData.email}
-            onChange={handleChange}
-            onTouchStart={(e) => e.stopPropagation()}
-            onFocus={(e) => {
-              // Prevent zoom on mobile
-              e.target.style.fontSize = '16px'
-              // Scroll into view on mobile
-              setTimeout(() => {
-                e.target.scrollIntoView({ behavior: 'smooth', block: 'center' })
-              }, 300)
-            }}
-            onBlur={(e) => {
-              e.target.style.fontSize = ''
-            }}
-            className="w-full py-3 pl-10 pr-4 transition duration-200 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base"
-            placeholder="Enter your email"
-            autoComplete="email"
-            inputMode="email"
-            required
-          />
-        </div>
+  // Enhanced input component with mobile optimizations
+  const MobileOptimizedInput = ({ 
+    icon: Icon, 
+    type, 
+    name, 
+    value, 
+    placeholder, 
+    required = true, 
+    maxLength,
+    pattern,
+    inputMode,
+    autoComplete,
+    inputRef,
+    showToggle = false,
+    onToggle
+  }) => (
+    <div className="relative group">
+      <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+        <Icon className="w-5 h-5 text-gray-400 group-focus-within:text-blue-500 transition-colors duration-200" />
       </div>
-
-      <div>
-        <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-700">
-          Password
-        </label>
-        <div className="relative">
-          <Lock className="absolute w-5 h-5 text-gray-400 -translate-y-1/2 left-3 top-1/2" />
-          <input
-            ref={passwordRef}
-            id="password"
-            name="password"
-            type={showPassword ? "text" : "password"}
-            value={formData.password}
-            onChange={handleChange}
-            onTouchStart={(e) => e.stopPropagation()}
-            onFocus={(e) => {
-              // Prevent zoom on mobile
-              e.target.style.fontSize = '16px'
-              // Scroll into view on mobile
-              setTimeout(() => {
-                e.target.scrollIntoView({ behavior: 'smooth', block: 'center' })
-              }, 300)
-            }}
-            onBlur={(e) => {
-              e.target.style.fontSize = ''
-            }}
-            className="w-full py-3 pl-10 pr-12 transition duration-200 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base"
-            placeholder="Enter your password"
-            autoComplete="current-password"
-            required
-          />
-          <button
-            type="button"
-            onClick={() => setShowPassword(!showPassword)}
-            className="absolute w-5 h-5 text-gray-400 -translate-y-1/2 right-3 top-1/2 hover:text-gray-600 focus:outline-none"
-          >
-            {showPassword ? <EyeOff /> : <Eye />}
-          </button>
-        </div>
-      </div>
-
-      <motion.button
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
-        type="submit"
+      <input
+        ref={inputRef}
+        id={name}
+        name={name}
+        type={type}
+        value={value}
+        onChange={handleChange}
+        onTouchStart={(e) => {
+          e.stopPropagation()
+          // Prevent input zoom on iOS
+          e.target.style.fontSize = '16px'
+        }}
+        onFocus={(e) => {
+          // Ensure font size prevents zoom
+          e.target.style.fontSize = '16px'
+          // Smooth scroll to input
+          setTimeout(() => {
+            e.target.scrollIntoView({ 
+              behavior: 'smooth', 
+              block: 'center',
+              inline: 'nearest'
+            })
+          }, 100)
+        }}
+        onBlur={(e) => {
+          e.target.style.fontSize = ''
+        }}
+        className="w-full h-14 pl-12 pr-12 text-base bg-white border-2 border-gray-200 rounded-xl 
+                   focus:border-blue-500 focus:ring-4 focus:ring-blue-100 focus:outline-none
+                   transition-all duration-200 placeholder-gray-400
+                   hover:border-gray-300 disabled:bg-gray-50 disabled:cursor-not-allowed"
+        placeholder={placeholder}
+        required={required}
+        maxLength={maxLength}
+        pattern={pattern}
+        inputMode={inputMode}
+        autoComplete={autoComplete}
         disabled={loading}
-        className="w-full px-4 py-3 text-lg font-semibold text-white transition duration-200 bg-blue-600 rounded-lg hover:bg-blue-500 focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 disabled:opacity-50"
-      >
-        {loading ? (
-          <span className="flex items-center justify-center">
-            <svg className="w-5 h-5 mr-3 animate-spin" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-              <path
-                className="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              />
-            </svg>
-            Sending OTP...
-          </span>
-        ) : (
-          "Get OTP"
-        )}
-      </motion.button>
-    </motion.form>
+      />
+      {showToggle && (
+        <button
+          type="button"
+          onClick={onToggle}
+          className="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 
+                     hover:text-gray-600 focus:outline-none focus:text-blue-500 
+                     transition-colors duration-200"
+        >
+          {type === "password" ? <Eye className="w-5 h-5" /> : <EyeOff className="w-5 h-5" />}
+        </button>
+      )}
+    </div>
+  )
+
+  const LoadingSpinner = () => (
+    <div className="flex items-center justify-center">
+      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+      <span>{showOtpForm ? "Verifying..." : "Sending OTP..."}</span>
+    </div>
+  )
+
+  const renderLoginForm = () => (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.3 }}
+      className="w-full max-w-md mx-auto"
+    >
+      <form onSubmit={handleGetOTP} className="space-y-6">
+        <div className="space-y-4">
+          <div>
+            <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
+              Email Address
+            </label>
+            <MobileOptimizedInput
+              icon={Mail}
+              type="email"
+              name="email"
+              value={formData.email}
+              placeholder="Enter your admin email"
+              inputMode="email"
+              autoComplete="email"
+              inputRef={emailRef}
+            />
+          </div>
+
+          <div>
+            <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-2">
+              Password
+            </label>
+            <MobileOptimizedInput
+              icon={Lock}
+              type={showPassword ? "text" : "password"}
+              name="password"
+              value={formData.password}
+              placeholder="Enter your password"
+              autoComplete="current-password"
+              inputRef={passwordRef}
+              showToggle={true}
+              onToggle={() => setShowPassword(!showPassword)}
+            />
+          </div>
+        </div>
+
+        <motion.button
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          type="submit"
+          disabled={loading}
+          className="w-full h-14 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 
+                     text-white font-semibold rounded-xl shadow-lg hover:shadow-xl 
+                     focus:outline-none focus:ring-4 focus:ring-blue-100 
+                     disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none
+                     transition-all duration-200 text-base"
+        >
+          {loading ? <LoadingSpinner /> : "Send OTP"}
+        </motion.button>
+      </form>
+    </motion.div>
   )
 
   const renderOtpForm = () => (
-    <motion.form
-      initial={{ opacity: 0, x: 20 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -20 }}
-      onSubmit={handleVerifyOTP}
-      className="space-y-6"
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.3 }}
+      className="w-full max-w-md mx-auto"
     >
-      <div>
-        <label htmlFor="otp" className="block mb-2 text-sm font-medium text-gray-700">
-          Enter OTP
-        </label>
-        <div className="relative">
-          <Phone className="absolute w-5 h-5 text-gray-400 -translate-y-1/2 left-3 top-1/2" />
-          <input
-            ref={otpRef}
-            id="otp"
-            name="otp"
+      <form onSubmit={handleVerifyOTP} className="space-y-6">
+        <div className="text-center mb-6">
+          <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Phone className="w-8 h-8 text-blue-600" />
+          </div>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">Verify Your Identity</h3>
+          <p className="text-sm text-gray-600">
+            We've sent a 6-digit code to <span className="font-medium">{formData.email}</span>
+          </p>
+        </div>
+
+        <div>
+          <label htmlFor="otp" className="block text-sm font-semibold text-gray-700 mb-2">
+            Enter OTP Code
+          </label>
+          <MobileOptimizedInput
+            icon={Shield}
             type="text"
+            name="otp"
             value={formData.otp}
-            onChange={handleChange}
-            onTouchStart={(e) => e.stopPropagation()}
-            onFocus={(e) => {
-              // Prevent zoom on mobile
-              e.target.style.fontSize = '16px'
-              // Scroll into view on mobile
-              setTimeout(() => {
-                e.target.scrollIntoView({ behavior: 'smooth', block: 'center' })
-              }, 300)
-            }}
-            onBlur={(e) => {
-              e.target.style.fontSize = ''
-            }}
-            className="w-full py-3 pl-10 pr-4 transition duration-200 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base"
-            placeholder="Enter 6-digit OTP"
+            placeholder="Enter 6-digit code"
             maxLength={6}
             pattern="[0-9]{6}"
             inputMode="numeric"
             autoComplete="one-time-code"
-            required
+            inputRef={otpRef}
           />
         </div>
-      </div>
 
-      <motion.button
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
-        type="submit"
-        disabled={loading}
-        className="w-full px-4 py-3 text-lg font-semibold text-white transition duration-200 bg-blue-600 rounded-lg hover:bg-blue-500 focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 disabled:opacity-50"
-      >
-        {loading ? (
-          <span className="flex items-center justify-center">
-            <svg className="w-5 h-5 mr-3 animate-spin" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-              <path
-                className="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              />
-            </svg>
-            Verifying...
-          </span>
-        ) : (
-          "Verify OTP"
-        )}
-      </motion.button>
-      <button
-        type="button"
-        onClick={() => setShowOtpForm(false)}
-        className="w-full px-4 py-3 text-lg font-semibold text-gray-700 transition duration-200 bg-gray-100 rounded-lg hover:bg-gray-200"
-      >
-        Back to Login
-      </button>
-    </motion.form>
+        <div className="space-y-3">
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            type="submit"
+            disabled={loading}
+            className="w-full h-14 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 
+                       text-white font-semibold rounded-xl shadow-lg hover:shadow-xl 
+                       focus:outline-none focus:ring-4 focus:ring-green-100 
+                       disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none
+                       transition-all duration-200 text-base"
+          >
+            {loading ? <LoadingSpinner /> : "Verify & Login"}
+          </motion.button>
+
+          <button
+            type="button"
+            onClick={() => setShowOtpForm(false)}
+            className="w-full h-12 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium 
+                       rounded-xl transition-colors duration-200 flex items-center justify-center gap-2"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to Login
+          </button>
+        </div>
+      </form>
+    </motion.div>
   )
 
   return (
-    <div className="flex flex-col min-h-screen lg:flex-row bg-gradient-to-br from-blue-500 to-indigo-600">
-      {/* Left Panel */}
-      <div className="flex flex-col justify-center p-8 text-white lg:w-1/2 lg:p-12">
-        <div className="max-w-md mx-auto">
-          <div className="flex items-center gap-2 mb-12">
-            <Building2 className="w-10 h-10" />
-            <span className="text-3xl font-bold">Land Acre</span>
-          </div>
-          <h1 className="mb-6 text-4xl font-bold leading-tight lg:text-5xl">Admin Portal</h1>
-          <p className="mb-8 text-xl text-blue-100">
-            Manage your properties, users, and transactions all in one place.
-          </p>
-
-          <div className="p-6 bg-white/10 rounded-xl backdrop-blur-sm">
-            <p className="mb-4 italic text-blue-50">
-              "Our admin portal provides powerful tools for efficient property management and user oversight."
-            </p>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 flex flex-col">
+      {/* Header */}
+      <div className="w-full bg-white/80 backdrop-blur-sm border-b border-gray-100 sticky top-0 z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-center h-16">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-blue-200 rounded-full" />
-              <div>
-                <p className="font-medium">Admin Team</p>
-                <p className="text-sm text-blue-200">Land Acre Management</p>
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center">
+                <Building2 className="w-6 h-6 text-white" />
               </div>
+              <span className="text-xl font-bold text-gray-900">Land Acre Admin</span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Right Panel */}
-      <div className="flex items-center justify-center p-8 bg-white lg:w-1/2 lg:p-12">
+      {/* Main Content */}
+      <div className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8">
         <div className="w-full max-w-md">
-          <h2 className="mb-6 text-3xl font-bold text-center text-gray-900">
-            {showOtpForm ? "Enter OTP" : "Admin Login"}
-          </h2>
-
-          {error && (
+          {/* Welcome Section */}
+          <div className="text-center mb-8">
             <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="p-4 mb-6 text-sm text-red-700 bg-red-100 rounded-lg"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.3 }}
+              className="w-20 h-20 bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl 
+                         flex items-center justify-center mx-auto mb-6 shadow-lg"
             >
-              {error}
+              <Shield className="w-10 h-10 text-white" />
             </motion.div>
-          )}
+            
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+              {showOtpForm ? "Enter Verification Code" : "Welcome Back"}
+            </h1>
+            
+            <p className="text-gray-600 text-base">
+              {showOtpForm 
+                ? "Please enter the OTP sent to your email" 
+                : "Sign in to your admin dashboard"
+              }
+            </p>
+          </div>
 
-          <AnimatePresence mode="wait">{showOtpForm ? renderOtpForm() : renderLoginForm()}</AnimatePresence>
+          {/* Error Message */}
+          <AnimatePresence>
+            {error && (
+              <motion.div
+                initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl"
+              >
+                <p className="text-sm text-red-700 text-center font-medium">{error}</p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Form Container */}
+          <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-6 sm:p-8">
+            <AnimatePresence mode="wait">
+              {showOtpForm ? renderOtpForm() : renderLoginForm()}
+            </AnimatePresence>
+          </div>
+
+          {/* Footer */}
+          <div className="text-center mt-8">
+            <p className="text-sm text-gray-500">
+              Secure admin access powered by Land Acre
+            </p>
+          </div>
         </div>
       </div>
-      <ToastContainer />
+
+      {/* Toast Container */}
+      <ToastContainer 
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        toastClassName="rounded-xl"
+      />
     </div>
   )
 }
