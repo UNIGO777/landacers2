@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Building2, Lock, Mail, Phone, Eye, EyeOff } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
@@ -17,6 +17,37 @@ const AdminLogin = () => {
   })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
+  
+  // Refs for input fields to handle mobile focus
+  const emailRef = useRef(null)
+  const passwordRef = useRef(null)
+  const otpRef = useRef(null)
+
+  // Prevent zoom on iOS when focusing inputs
+  useEffect(() => {
+    const handleTouchStart = (e) => {
+      if (e.touches.length > 1) {
+        e.preventDefault()
+      }
+    }
+
+    const handleTouchEnd = (e) => {
+      const now = new Date().getTime()
+      if (now - lastTouchEnd <= 300) {
+        e.preventDefault()
+      }
+      lastTouchEnd = now
+    }
+
+    let lastTouchEnd = 0
+    document.addEventListener('touchstart', handleTouchStart, { passive: false })
+    document.addEventListener('touchend', handleTouchEnd, { passive: false })
+
+    return () => {
+      document.removeEventListener('touchstart', handleTouchStart)
+      document.removeEventListener('touchend', handleTouchEnd)
+    }
+  }, [])
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -93,13 +124,28 @@ const AdminLogin = () => {
         <div className="relative">
           <Mail className="absolute w-5 h-5 text-gray-400 -translate-y-1/2 left-3 top-1/2" />
           <input
+            ref={emailRef}
             id="email"
             name="email"
             type="email"
             value={formData.email}
             onChange={handleChange}
-            className="w-full py-3 pl-10 pr-4 transition duration-200 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            onTouchStart={(e) => e.stopPropagation()}
+            onFocus={(e) => {
+              // Prevent zoom on mobile
+              e.target.style.fontSize = '16px'
+              // Scroll into view on mobile
+              setTimeout(() => {
+                e.target.scrollIntoView({ behavior: 'smooth', block: 'center' })
+              }, 300)
+            }}
+            onBlur={(e) => {
+              e.target.style.fontSize = ''
+            }}
+            className="w-full py-3 pl-10 pr-4 transition duration-200 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base"
             placeholder="Enter your email"
+            autoComplete="email"
+            inputMode="email"
             required
           />
         </div>
@@ -112,13 +158,27 @@ const AdminLogin = () => {
         <div className="relative">
           <Lock className="absolute w-5 h-5 text-gray-400 -translate-y-1/2 left-3 top-1/2" />
           <input
+            ref={passwordRef}
             id="password"
             name="password"
             type={showPassword ? "text" : "password"}
             value={formData.password}
             onChange={handleChange}
-            className="w-full py-3 pl-10 pr-12 transition duration-200 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            onTouchStart={(e) => e.stopPropagation()}
+            onFocus={(e) => {
+              // Prevent zoom on mobile
+              e.target.style.fontSize = '16px'
+              // Scroll into view on mobile
+              setTimeout(() => {
+                e.target.scrollIntoView({ behavior: 'smooth', block: 'center' })
+              }, 300)
+            }}
+            onBlur={(e) => {
+              e.target.style.fontSize = ''
+            }}
+            className="w-full py-3 pl-10 pr-12 transition duration-200 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base"
             placeholder="Enter your password"
+            autoComplete="current-password"
             required
           />
           <button
@@ -172,15 +232,30 @@ const AdminLogin = () => {
         <div className="relative">
           <Phone className="absolute w-5 h-5 text-gray-400 -translate-y-1/2 left-3 top-1/2" />
           <input
+            ref={otpRef}
             id="otp"
             name="otp"
             type="text"
             value={formData.otp}
             onChange={handleChange}
-            className="w-full py-3 pl-10 pr-4 transition duration-200 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            onTouchStart={(e) => e.stopPropagation()}
+            onFocus={(e) => {
+              // Prevent zoom on mobile
+              e.target.style.fontSize = '16px'
+              // Scroll into view on mobile
+              setTimeout(() => {
+                e.target.scrollIntoView({ behavior: 'smooth', block: 'center' })
+              }, 300)
+            }}
+            onBlur={(e) => {
+              e.target.style.fontSize = ''
+            }}
+            className="w-full py-3 pl-10 pr-4 transition duration-200 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base"
             placeholder="Enter 6-digit OTP"
             maxLength={6}
             pattern="[0-9]{6}"
+            inputMode="numeric"
+            autoComplete="one-time-code"
             required
           />
         </div>
