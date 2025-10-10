@@ -6,6 +6,84 @@ import { toast, ToastContainer } from "react-toastify"
 import { motion, AnimatePresence } from "framer-motion"
 import "react-toastify/dist/ReactToastify.css"
 
+// Enhanced input component with mobile optimizations - moved outside to prevent re-creation
+const MobileOptimizedInput = ({ 
+  icon: Icon, 
+  type, 
+  name, 
+  value, 
+  placeholder, 
+  required = true, 
+  maxLength,
+  pattern,
+  inputMode,
+  autoComplete,
+  inputRef,
+  showToggle = false,
+  onToggle,
+  handleChange,
+  loading
+}) => (
+  <div className="relative group">
+    <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+      <Icon className="w-5 h-5 text-gray-400 group-focus-within:text-blue-500 transition-colors duration-200" />
+    </div>
+    <input
+      ref={inputRef}
+      id={name}
+      name={name}
+      type={type}
+      value={value}
+      onChange={handleChange}
+      onTouchStart={(e) => {
+        // Only set font size to prevent zoom, don't stop propagation
+        e.target.style.fontSize = '16px'
+      }}
+      onFocus={(e) => {
+        // Ensure font size prevents zoom
+        e.target.style.fontSize = '16px'
+        // Gentle scroll to input with delay to allow keyboard to open
+        setTimeout(() => {
+          e.target.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'nearest',
+            inline: 'nearest'
+          })
+        }, 300)
+      }}
+      onBlur={(e) => {
+        e.target.style.fontSize = ''
+      }}
+      className="w-full h-14 pl-12 pr-12 text-base bg-white border-2 border-gray-200 rounded-xl 
+                 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 focus:outline-none
+                 transition-all duration-200 placeholder-gray-400
+                 hover:border-gray-300 disabled:bg-gray-50 disabled:cursor-not-allowed"
+      placeholder={placeholder}
+      required={required}
+      maxLength={maxLength}
+      pattern={pattern}
+      inputMode={inputMode}
+      autoComplete={autoComplete}
+      enterKeyHint={name === 'otp' ? 'done' : 'next'}
+      spellCheck="false"
+      autoCorrect="off"
+      autoCapitalize="none"
+      disabled={loading}
+    />
+    {showToggle && (
+      <button
+        type="button"
+        onClick={onToggle}
+        className="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 
+                   hover:text-gray-600 focus:outline-none focus:text-blue-500 
+                   transition-colors duration-200"
+      >
+        {type === "password" ? <Eye className="w-5 h-5" /> : <EyeOff className="w-5 h-5" />}
+      </button>
+    )}
+  </div>
+)
+
 const AdminLogin = () => {
   const navigate = useNavigate()
   const [showOtpForm, setShowOtpForm] = useState(false)
@@ -25,31 +103,20 @@ const AdminLogin = () => {
 
   // Mobile optimization effects
   useEffect(() => {
-    // Prevent zoom on iOS when focusing inputs
+    // Only prevent multi-touch zoom, don't interfere with single touch events
     const handleTouchStart = (e) => {
+      // Only prevent if more than one finger (pinch zoom)
       if (e.touches.length > 1) {
         e.preventDefault()
       }
     }
 
-    const handleTouchEnd = (e) => {
-      const now = new Date().getTime()
-      if (now - lastTouchEnd <= 300) {
-        e.preventDefault()
-      }
-      lastTouchEnd = now
-    }
-
-    let lastTouchEnd = 0
-    
-    // Add event listeners
+    // Add event listener only for multi-touch prevention
     document.addEventListener('touchstart', handleTouchStart, { passive: false })
-    document.addEventListener('touchend', handleTouchEnd, { passive: false })
 
     // Cleanup
     return () => {
       document.removeEventListener('touchstart', handleTouchStart)
-      document.removeEventListener('touchend', handleTouchEnd)
     }
   }, [])
 
@@ -113,78 +180,7 @@ const AdminLogin = () => {
     }
   }
 
-  // Enhanced input component with mobile optimizations
-  const MobileOptimizedInput = ({ 
-    icon: Icon, 
-    type, 
-    name, 
-    value, 
-    placeholder, 
-    required = true, 
-    maxLength,
-    pattern,
-    inputMode,
-    autoComplete,
-    inputRef,
-    showToggle = false,
-    onToggle
-  }) => (
-    <div className="relative group">
-      <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-        <Icon className="w-5 h-5 text-gray-400 group-focus-within:text-blue-500 transition-colors duration-200" />
-      </div>
-      <input
-        ref={inputRef}
-        id={name}
-        name={name}
-        type={type}
-        value={value}
-        onChange={handleChange}
-        onTouchStart={(e) => {
-          e.stopPropagation()
-          // Prevent input zoom on iOS
-          e.target.style.fontSize = '16px'
-        }}
-        onFocus={(e) => {
-          // Ensure font size prevents zoom
-          e.target.style.fontSize = '16px'
-          // Smooth scroll to input
-          setTimeout(() => {
-            e.target.scrollIntoView({ 
-              behavior: 'smooth', 
-              block: 'center',
-              inline: 'nearest'
-            })
-          }, 100)
-        }}
-        onBlur={(e) => {
-          e.target.style.fontSize = ''
-        }}
-        className="w-full h-14 pl-12 pr-12 text-base bg-white border-2 border-gray-200 rounded-xl 
-                   focus:border-blue-500 focus:ring-4 focus:ring-blue-100 focus:outline-none
-                   transition-all duration-200 placeholder-gray-400
-                   hover:border-gray-300 disabled:bg-gray-50 disabled:cursor-not-allowed"
-        placeholder={placeholder}
-        required={required}
-        maxLength={maxLength}
-        pattern={pattern}
-        inputMode={inputMode}
-        autoComplete={autoComplete}
-        disabled={loading}
-      />
-      {showToggle && (
-        <button
-          type="button"
-          onClick={onToggle}
-          className="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 
-                     hover:text-gray-600 focus:outline-none focus:text-blue-500 
-                     transition-colors duration-200"
-        >
-          {type === "password" ? <Eye className="w-5 h-5" /> : <EyeOff className="w-5 h-5" />}
-        </button>
-      )}
-    </div>
-  )
+
 
   const LoadingSpinner = () => (
     <div className="flex items-center justify-center">
@@ -216,6 +212,8 @@ const AdminLogin = () => {
               inputMode="email"
               autoComplete="email"
               inputRef={emailRef}
+              handleChange={handleChange}
+              loading={loading}
             />
           </div>
 
@@ -233,6 +231,8 @@ const AdminLogin = () => {
               inputRef={passwordRef}
               showToggle={true}
               onToggle={() => setShowPassword(!showPassword)}
+              handleChange={handleChange}
+              loading={loading}
             />
           </div>
         </div>
@@ -288,6 +288,8 @@ const AdminLogin = () => {
             inputMode="numeric"
             autoComplete="one-time-code"
             inputRef={otpRef}
+            handleChange={handleChange}
+            loading={loading}
           />
         </div>
 

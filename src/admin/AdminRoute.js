@@ -15,18 +15,29 @@ import FeaturedItem from './Pages/FeaturedItems/FeaturedItem';
 import Feedback from './Pages/Feedbacks/Feedback';
 import axios from 'axios';
 
+// Protected Route Component - moved outside to prevent re-creation
+const ProtectedRoute = ({ children }) => {
+    const adminToken = localStorage.getItem('adminToken');
+
+    if (!adminToken) {
+        return <Navigate to="/admin/login" replace />;
+    }
+
+    return children;
+};
+
+// Public Route Component - moved outside to prevent re-creation
+const PublicRoute = ({ children }) => {
+    const adminToken = localStorage.getItem('adminToken');
+
+    if (adminToken) {
+        return <Navigate to="/admin/dashboard" replace />;
+    }
+
+    return children;
+};
 
 const AdminRoute = () => {
-    // Protected Route Component
-    const ProtectedRoute = ({ children }) => {
-        const adminToken = localStorage.getItem('adminToken');
-
-        if (!adminToken) {
-            return <Navigate to="/admin/login" replace />;
-        }
-
-        return children;
-    };
 
     // Verify admin token on component mount
     useEffect(() => {
@@ -64,17 +75,6 @@ const AdminRoute = () => {
 
         verifyAdminToken();
     }, []);
-
-    // Public Route Component
-    const PublicRoute = ({ children }) => {
-        const adminToken = localStorage.getItem('adminToken');
-
-        if (adminToken) {
-            return <Navigate to="/admin/dashboard" replace />;
-        }
-
-        return children;
-    };
 
     return (
         <Routes>
