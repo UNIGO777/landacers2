@@ -111,7 +111,7 @@ const ManageProperties = () => {
       }
 
       const response = await axios.get(
-        `https://api.landacre.in${ADMIN_API_ROUTES.SEARCH_PROPERTIES(params)}`,
+        `${ADMIN_API_ROUTES.SEARCH_PROPERTIES(params)}`,
         {
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -254,7 +254,7 @@ const ManageProperties = () => {
       setActionLoading(true)
       const token = localStorage.getItem("adminToken")
       await axios.put(
-        `https://api.landacre.in${ADMIN_API_ROUTES.APPROVE_PROPERTY(propertyToAction._id)}`,
+        `${ADMIN_API_ROUTES.APPROVE_PROPERTY(propertyToAction._id)}`,
         {},
         {
           headers: { Authorization: `Bearer ${token}` }
@@ -280,7 +280,7 @@ const ManageProperties = () => {
       setActionLoading(true)
       const token = localStorage.getItem("adminToken")
       await axios.delete(
-        `https://api.landacre.in${ADMIN_API_ROUTES.DELETE_PROPERTY(propertyToAction._id)}`,
+        `${ADMIN_API_ROUTES.DELETE_PROPERTY(propertyToAction._id)}`,
         {
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -330,7 +330,7 @@ const ManageProperties = () => {
       const token = localStorage.getItem("adminToken");
       
       const response = await axios.post(
-        `https://api.landacre.in${ADMIN_API_ROUTES.CREATE_FEATURED_ITEM}`,
+        `${ADMIN_API_ROUTES.CREATE_FEATURED_ITEM}`,
         {
           itemType: 'Property',
           itemId: propertyToAction._id,

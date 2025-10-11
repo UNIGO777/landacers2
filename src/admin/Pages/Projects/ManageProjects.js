@@ -80,7 +80,7 @@ const ManageProjects = () => {
 
 
       const response = await axios.get(
-        `https://api.landacre.in${ADMIN_API_ROUTES.SEARCH_PROJECTS(params)}`,
+        `${ADMIN_API_ROUTES.SEARCH_PROJECTS(params)}`,
         {
           headers: { Authorization: `Bearer ${token}` },
 
@@ -115,7 +115,7 @@ const ManageProjects = () => {
       setLoading(true);
       const token = localStorage.getItem("adminToken");
       const response = await axios.get(
-        `https://api.landacre.in${ADMIN_API_ROUTES.SEARCH_PROJECTS}?query=${searchQuery}`,
+        `${ADMIN_API_ROUTES.SEARCH_PROJECTS}?query=${searchQuery}`,
         {
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -275,7 +275,7 @@ const ManageProjects = () => {
       setActionLoading(true);
       const token = localStorage.getItem("adminToken");
       const response = await axios.delete(
-        `https://api.landacre.in${ADMIN_API_ROUTES.BLOCK_PROJECT(projectId)}`,
+        `${ADMIN_API_ROUTES.BLOCK_PROJECT(projectId)}`,
         {
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -346,7 +346,7 @@ const ManageProjects = () => {
       const token = localStorage.getItem("adminToken");
       
       const response = await axios.post(
-        `https://api.landacre.in${ADMIN_API_ROUTES.CREATE_FEATURED_ITEM}`,
+        `${ADMIN_API_ROUTES.CREATE_FEATURED_ITEM}`,
         {
           itemType: 'Project',
           itemId: projectToAction._id,

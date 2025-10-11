@@ -39,7 +39,7 @@ const Feedback = () => {
       const token = localStorage.getItem('adminToken');
       
       const response = await axios.get(
-        `https://api.landacre.in${ADMIN_API_ROUTES.GET_WEBSITE_FEEDBACK(
+        `${ADMIN_API_ROUTES.GET_WEBSITE_FEEDBACK(
           pagination.currentPage,
         )}`,
         {

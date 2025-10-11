@@ -37,7 +37,7 @@ const FeaturedItem = () => {
       }
       
       const response = await axios.get(
-        `https://api.landacre.in${ADMIN_API_ROUTES.GET_FEATURED_ITEMS(params)}`,
+        `${ADMIN_API_ROUTES.GET_FEATURED_ITEMS(params)}`,
         {
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -72,7 +72,7 @@ const FeaturedItem = () => {
       setSubmitting(true);
       const token = localStorage.getItem('adminToken');
       await axios.delete(
-        `https://api.landacre.in${ADMIN_API_ROUTES.DELETE_FEATURED_ITEM(itemToDelete._id)}`,
+        `${ADMIN_API_ROUTES.DELETE_FEATURED_ITEM(itemToDelete._id)}`,
         {
           headers: { Authorization: `Bearer ${token}` }
         }

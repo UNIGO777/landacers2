@@ -28,7 +28,7 @@ const ManageUsers = () => {
       setLoading(true);
       const token = localStorage.getItem("adminToken");
       const response = await axios.get(
-        `https://api.landacre.in${ADMIN_API_ROUTES.GET_USERS}?status=${filterStatus}&page=${currentPage}&limit=${usersPerPage}&sort=${sortConfig.key}&order=${sortConfig.direction}`,
+        `${ADMIN_API_ROUTES.GET_USERS}?status=${filterStatus}&page=${currentPage}&limit=${usersPerPage}&sort=${sortConfig.key}&order=${sortConfig.direction}`,
         {
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -56,7 +56,7 @@ const ManageUsers = () => {
       setLoading(true);
       const token = localStorage.getItem("adminToken");
       const response = await axios.get(
-        `https://api.landacre.in${ADMIN_API_ROUTES.SEARCH_USERS(searchQuery)}`,
+        `${ADMIN_API_ROUTES.SEARCH_USERS(searchQuery)}`,
         {
           headers: { Authorization: `Bearer ${token}` }
         }
