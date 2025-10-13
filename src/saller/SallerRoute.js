@@ -22,7 +22,7 @@ const SubscriptionComingSoon = lazy(() => import('./components/SubscriptionComin
 const SellerNotification = lazy(() => import('./Pages/SellerNotification.js/Notification'));
 const NotFound = lazy(() => import('../pages/NotFound/NotFound'));
 
-
+// Route components moved outside to prevent recreation
 const ProtectedRoute = ({ children }) => {
     const sellerToken = localStorage.getItem('sellerToken');
     if (!sellerToken) {
@@ -30,7 +30,6 @@ const ProtectedRoute = ({ children }) => {
     }
     return children;
 };
-
 
 const PublicRoute = ({ children }) => {
     const sellerToken = localStorage.getItem('sellerToken');
@@ -42,6 +41,25 @@ const PublicRoute = ({ children }) => {
 
     return children;
 };
+
+const Isnotbuilder = ({ children, builderConfirmation, isBuilder }) => {
+    if (!builderConfirmation) {
+        return <SellerConfirmation />
+    }
+    if (!isBuilder && builderConfirmation) {
+        return <NotABuilder />
+    }
+    return children
+};
+
+const LayoutInclude = ({ children, sallerDetails, isBuilder }) => {
+    return (
+        <Layout sellerDetails={sallerDetails} isbuilder={isBuilder}>
+            {children}
+        </Layout>
+    )
+};
+
 
 const SallerRoute = () => {
     const [sallerDetails, setSallerDetails] = useState(null)
@@ -61,23 +79,7 @@ const SallerRoute = () => {
         fetchSallerDetails()
     }, [])
 
-    const Isnotbuilder = ({ children }) => {
-        if (!builderConfirmation) {
-            return <SellerConfirmation />
-        }
-        if (!isBuilder && builderConfirmation) {
-            return <NotABuilder />
-        }
-        return children
-    }
 
-    const LayoutInclude = ({ children }) => {
-        return (
-            <Layout sellerDetails={sallerDetails} isbuilder={isBuilder}>
-                {children}
-            </Layout>
-        )
-    }
 
 
 
@@ -88,52 +90,52 @@ const SallerRoute = () => {
                 <Route path="signup" element={<PublicRoute><SallerSignUpPage /></PublicRoute>} />
                 <Route path="dashboard" element={
                     <ProtectedRoute>
-                        <LayoutInclude><SallerDashboard /></LayoutInclude>
+                        <LayoutInclude sallerDetails={sallerDetails} isBuilder={isBuilder}><SallerDashboard /></LayoutInclude>
                     </ProtectedRoute>
                 } />
                 <Route path="update-profile" element={
                     <ProtectedRoute>
-                        <LayoutInclude><SallerUpdateProfile sellerDetails={sellerDetailsPromise} /></LayoutInclude>
+                        <LayoutInclude sallerDetails={sallerDetails} isBuilder={isBuilder}><SallerUpdateProfile sellerDetails={sellerDetailsPromise} /></LayoutInclude>
                     </ProtectedRoute>
                 } />
                 <Route path="change-password" element={
                     <ProtectedRoute>
-                        <LayoutInclude><SallerChangePassword /></LayoutInclude>
+                        <LayoutInclude sallerDetails={sallerDetails} isBuilder={isBuilder}><SallerChangePassword /></LayoutInclude>
                     </ProtectedRoute>
                 } />
                 <Route path="property/add" element={
                     <ProtectedRoute>
-                        <LayoutInclude><AddProperty /></LayoutInclude>
+                        <LayoutInclude sallerDetails={sallerDetails} isBuilder={isBuilder}><AddProperty /></LayoutInclude>
                     </ProtectedRoute>
                 } />
                 <Route path="project/add" element={
                     <ProtectedRoute>
-                        <Isnotbuilder><LayoutInclude><AddProject /></LayoutInclude></Isnotbuilder>
+                        <Isnotbuilder builderConfirmation={builderConfirmation} isBuilder={isBuilder}><LayoutInclude sallerDetails={sallerDetails} isBuilder={isBuilder}><AddProject /></LayoutInclude></Isnotbuilder>
                     </ProtectedRoute>
                 } />
                 <Route path="queries/manage" element={
                     <ProtectedRoute>
-                        <LayoutInclude><QueriesManagement isBuilder={isBuilder} /></LayoutInclude>
+                        <LayoutInclude sallerDetails={sallerDetails} isBuilder={isBuilder}><QueriesManagement isBuilder={isBuilder} /></LayoutInclude>
                     </ProtectedRoute>
                 } />
                 <Route path="properties" element={
                     <ProtectedRoute>
-                        <LayoutInclude><AllSallerProperties /></LayoutInclude>
+                        <LayoutInclude sallerDetails={sallerDetails} isBuilder={isBuilder}><AllSallerProperties /></LayoutInclude>
                     </ProtectedRoute>
                 } />
                 <Route path="projects" element={
                     <ProtectedRoute>
-                        <Isnotbuilder><LayoutInclude><AllSallerProjects /></LayoutInclude></Isnotbuilder>
+                        <Isnotbuilder builderConfirmation={builderConfirmation} isBuilder={isBuilder}><LayoutInclude sallerDetails={sallerDetails} isBuilder={isBuilder}><AllSallerProjects /></LayoutInclude></Isnotbuilder>
                     </ProtectedRoute>
                 } />
                 <Route path="subscription" element={
                     <ProtectedRoute>
-                        <LayoutInclude><SubscriptionComingSoon /></LayoutInclude>
+                        <LayoutInclude sallerDetails={sallerDetails} isBuilder={isBuilder}><SubscriptionComingSoon /></LayoutInclude>
                     </ProtectedRoute>
                 } />
                 <Route path="notifications" element={
                     <ProtectedRoute>
-                        <LayoutInclude><SellerNotification /></LayoutInclude>
+                        <LayoutInclude sallerDetails={sallerDetails} isBuilder={isBuilder}><SellerNotification /></LayoutInclude>
                     </ProtectedRoute>
                 } />
                 <Route path="*" element={<NotFound />} />
