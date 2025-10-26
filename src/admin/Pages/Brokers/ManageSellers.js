@@ -28,7 +28,7 @@ export default function BrokerManagement() {
       setLoading(true)
       const token = localStorage.getItem("adminToken")
       const response = await axios.get(
-        `https://api.landacre.in${searchQuery !== '' ? ADMIN_API_ROUTES.SEARCH_SALLERS(filterStatus, filterType , currentPage, sellersPerPage, searchQuery)  : ADMIN_API_ROUTES.GET_SALLERS_BY_STATUS(filterStatus, filterType , currentPage, sellersPerPage)}`,
+        `${searchQuery !== '' ? ADMIN_API_ROUTES.SEARCH_SALLERS(filterStatus, filterType , currentPage, sellersPerPage, searchQuery)  : ADMIN_API_ROUTES.GET_SALLERS_BY_STATUS(filterStatus, filterType , currentPage, sellersPerPage)}`,
         {
           headers: { Authorization: `Bearer ${token}` }
         }
