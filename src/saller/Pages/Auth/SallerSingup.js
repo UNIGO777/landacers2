@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css"
 
 const SellerSignUpPage = () => {
   const navigate = useNavigate()
+  const MAX_PROFILE_PICTURE_BYTES = 2 * 1024 * 1024
   const [showOtpForm, setShowOtpForm] = useState(false)
   const [formData, setFormData] = useState({
     sellerType: "Individual",
@@ -51,7 +52,21 @@ const SellerSignUpPage = () => {
   }
 
   const handleFileChange = (e) => {
-    setProfilePicture(e.target.files[0])
+    const file = e.target.files?.[0]
+    if (!file) {
+      setProfilePicture(null)
+      return
+    }
+
+    if (file.size > MAX_PROFILE_PICTURE_BYTES) {
+      setError("Profile picture must be 2MB or smaller")
+      toast.error("Profile picture must be 2MB or smaller")
+      setProfilePicture(null)
+      e.target.value = ""
+      return
+    }
+
+    setProfilePicture(file)
   }
 
   const handleGetOTP = async (e) => {
@@ -85,6 +100,12 @@ const SellerSignUpPage = () => {
 
     if (!profilePicture) {
       setError("Profile picture is required")
+      setLoading(false)
+      return
+    }
+
+    if (profilePicture.size > MAX_PROFILE_PICTURE_BYTES) {
+      setError("Profile picture must be 2MB or smaller")
       setLoading(false)
       return
     }
