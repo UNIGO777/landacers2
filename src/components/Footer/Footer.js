@@ -49,6 +49,14 @@ const Footer = () => {
               </li>
               <li>
                 <Link
+                  to={ROUTES_NAME.BLOG}
+                  className={`text-gray-600 hover:text-blue-600 hover:pl-1 cursor-pointer transition-all flex items-center`}
+                >
+                  <span className="mr-2">›</span> Blog
+                </Link>
+              </li>
+              <li>
+                <Link
                   to={ROUTES_NAME.ABOUT}
                   className={`text-gray-600 hover:text-blue-600 hover:pl-1 cursor-pointer transition-all flex items-center`}
                 >

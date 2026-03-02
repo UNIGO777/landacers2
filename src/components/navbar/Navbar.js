@@ -201,6 +201,7 @@ const Navbar = ({ loginOpen, setLoginOpen }) => {
             "Help": {
               sections: {
                 "SUPPORT": {
+                  "Blog": ROUTES_NAME.BLOG,
                   "Contact Us": ROUTES_NAME.CONTACT,
                   "Privacy Policy": ROUTES_NAME.PRIVACY_POLICY,
                   "Terms & Conditions": ROUTES_NAME.TERMS_CONDITIONS
@@ -570,6 +571,13 @@ const Navbar = ({ loginOpen, setLoginOpen }) => {
                             onClick={() => setNavOpen(false)}
                           >
                             Contact Us
+                          </Link>
+                          <Link
+                            to={ROUTES_NAME.BLOG}
+                            className="block text-gray-600 hover:text-blue-600 py-1"
+                            onClick={() => setNavOpen(false)}
+                          >
+                            Blog
                           </Link>
                           <Link
                             to={ROUTES_NAME.PRIVACY_POLICY}

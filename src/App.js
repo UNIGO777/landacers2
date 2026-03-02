@@ -38,6 +38,7 @@ const VaastuServicePage = lazy(() => import("./pages/servicesPages/VaastuService
 const ContractorsServicePage = lazy(() => import("./pages/servicesPages/ContractorsService"));
 const ConsultantsServicePage = lazy(() => import("./pages/servicesPages/ConsultantsService"));
 const ProfilePage = lazy(() => import("./pages/profilepage/ProfilePage"));
+const BlogPage = lazy(() => import("./pages/blog/Blog"));
 
 // Protected route component that checks if user is logged in
 const ProtectedRoute = ({ children }) => {
@@ -71,6 +72,7 @@ function App() {
             <Route path={ROUTES_NAME.SEARCH_RESULTS} element={<SearchResults/>}/>
             <Route path={ROUTES_NAME.ABOUT} element={<WithNavbarAndFooter WrappedComponent={AboutPage} />} />
             <Route path={ROUTES_NAME.CONTACT} element={<WithNavbarAndFooter WrappedComponent={ContactPage} />} />
+            <Route path={ROUTES_NAME.BLOG} element={<WithNavbarAndFooter WrappedComponent={BlogPage} />} />
             <Route path={ROUTES_NAME.VIEW_PROPERTY} element={<WithNavbarAndFooter WrappedComponent={PropertyProfile} />} />
             <Route path={ROUTES_NAME.VIEW_PROJECT} element={<WithNavbarAndFooter WrappedComponent={ProjectProfile} />} />
             <Route path={ROUTES_NAME.PRIVACY_POLICY} element={<WithNavbarAndFooter WrappedComponent={Privacy_policy} />} />

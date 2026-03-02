@@ -22,6 +22,7 @@ const   ROUTES_NAME = {
   VAASTU_SERVICE: '/services/vaastu',
   CONTRACTORS_SERVICE: '/services/contractors',
   CONSULTANTS_SERVICE: '/services/consultants',
+  BLOG: '/blog',
   POST_A_PROPERTY: '/post-property',
   POST_A_PROJECT: '/post-project',
   POST_PROPERTY: '/post_a_property',
