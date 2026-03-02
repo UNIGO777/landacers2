@@ -27,6 +27,7 @@ const Navbar = ({ loginOpen, setLoginOpen }) => {
   const [subMenuOpen, setSubMenuOpen] = useState({});
   const [contactBoxDropdown, setContactBoxdropdown] = useState(false);
   const [userData, setUserData] = useState()
+  const [openAsSignup, setOpenAsSignup] = useState(false)
 
   
 
@@ -40,6 +41,14 @@ const Navbar = ({ loginOpen, setLoginOpen }) => {
   const openLogin = () => {
     setNavOpen(false);
     document.body.style.overflow = 'hidden'; // Prevent scrolling
+    setOpenAsSignup(false);
+    setLoginOpen(true);
+  };
+  
+  const openSignup = () => {
+    setNavOpen(false);
+    document.body.style.overflow = 'hidden';
+    setOpenAsSignup(true);
     setLoginOpen(true);
   };
 
@@ -395,7 +404,7 @@ const Navbar = ({ loginOpen, setLoginOpen }) => {
                   Login
                 </button>
                 <button
-                  onClick={() => navigate(ROUTES_NAME.SIGNUP)}
+                  onClick={openSignup}
                   className="px-6 py-2 bg-blue-600 text-white w-28 rounded-lg hover:bg-blue-700 transition-colors"
                 >
                   Sign Up
@@ -621,10 +630,7 @@ const Navbar = ({ loginOpen, setLoginOpen }) => {
                       Login
                     </button>
                     <button
-                      onClick={() => {
-                        navigate(ROUTES_NAME.SIGNUP);
-                        setNavOpen(false);
-                      }}
+                      onClick={openSignup}
                       className="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                     >
                       Sign Up
@@ -645,7 +651,7 @@ const Navbar = ({ loginOpen, setLoginOpen }) => {
         )}
       </AnimatePresence>
 
-      <Authentication isOpen={loginOpen} setIsOpen={setLoginOpen} />
+      <Authentication isOpen={loginOpen} setIsOpen={setLoginOpen} defaultSignUp={openAsSignup} />
       {/* {location.pathname !== ROUTES_NAME.HOME && searchbar && (
         <div className='hidden md:block'>
           <SearchBox />
@@ -656,4 +662,3 @@ const Navbar = ({ loginOpen, setLoginOpen }) => {
 };
 
 export default Navbar;
-

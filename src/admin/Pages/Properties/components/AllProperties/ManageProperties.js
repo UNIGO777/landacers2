@@ -51,7 +51,7 @@ const ManageProperties = () => {
   // State for filters
   const [filters, setFilters] = useState({
     propertyType: "",
-    status: "active",
+    status: "all",
     state: "",
     city: "",
     minPrice: "",
@@ -84,6 +84,7 @@ const ManageProperties = () => {
   ]
 
   const statusOptions = [
+    { value: 'all', label: 'All' },
     { value: 'active', label: 'Active' },
     { value: 'sold', label: 'Sold' },
     { value: 'blocked', label: 'Blocked' },
@@ -98,7 +99,7 @@ const ManageProperties = () => {
 
       const params = {
         propertyType: filters.propertyType,
-        status: filters.status,
+        status: (filters.status && filters.status !== 'all') ? filters.status : undefined,
         city: filters.city,
         state: filters.state,
         minPrice: filters.minPrice || undefined,
@@ -119,8 +120,14 @@ const ManageProperties = () => {
 
       if (response.data) {
         setProperties(response.data.data || [])
-        setTotalPages(response.data.pagination?.totalPages || 1)
-        setTotalProperties(response.data.pagination?.totalProperties || 0)
+        const tp = response.data.totalPages ?? response.data.pagination?.totalPages ?? 1
+        const tr = response.data.totalRecords ?? response.data.pagination?.totalProperties ?? (response.data.data?.length || 0)
+        setTotalPages(tp)
+        setTotalProperties(tr)
+      } else {
+        setProperties([])
+        setTotalPages(1)
+        setTotalProperties(0)
       }
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to fetch properties")
@@ -494,10 +501,11 @@ const ManageProperties = () => {
               onClick={() => {
                 setFilters({
                   propertyType: "",
-                  status: "active",
+                  status: "requested",
                   state: "",
                   city: "",
-
+                  minPrice: "",
+                  maxPrice: "",
                 });
                 setStateInput("");
                 setCityInput("");
@@ -579,7 +587,7 @@ const ManageProperties = () => {
                             {property?.propertyMedia?.photos && property.propertyMedia.photos.length > 0 ? (
                               <img
                                 className="h-10 w-10 rounded-full object-cover"
-                                src={`https://api.landacre.in/storage/${property.propertyMedia.photos[0]}`}
+                                src={`${process.env.REACT_APP_backendUrl}/storage/${property.propertyMedia.photos[0]}`}
                                 alt={property.propertyTitle}
                               />
                             ) : (
@@ -731,7 +739,7 @@ const ManageProperties = () => {
                   <div>
                     {selectedProperty.propertyMedia?.photos && selectedProperty.propertyMedia.photos.length > 0 ? (
                       <img
-                        src={`https://api.landacre.in/storage/${selectedProperty.propertyMedia.photos[0]}`}
+                        src={`${process.env.REACT_APP_backendUrl}/storage/${selectedProperty.propertyMedia.photos[0]}`}
                         alt={selectedProperty.propertyTitle}
                         className="object-cover w-full h-64 mb-4 rounded-lg"
                       />
@@ -746,7 +754,7 @@ const ManageProperties = () => {
                         {selectedProperty.propertyMedia.photos.slice(1, 4).map((photo, index) => (
                           <img
                             key={index}
-                            src={`https://api.landacre.in/storage/${photo}`}
+                            src={`${process.env.REACT_APP_backendUrl}/storage/${photo}`}
                             alt={`${selectedProperty.propertyTitle} - Image ${index + 2}`}
                             className="object-cover w-full h-20 rounded-lg"
                           />

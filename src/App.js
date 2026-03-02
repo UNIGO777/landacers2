@@ -59,7 +59,7 @@ function App() {
     const cleanup = initUI();
     return cleanup;
   }, [initUI]);
-  
+
   return (
     <div>
       <BrowserRouter>
@@ -93,7 +93,7 @@ function App() {
                 <WithNavbarAndFooter WrappedComponent={ProfilePage} />
               </ProtectedRoute>
             } />
-
+            <Route path="/admin" element={<Navigate to="/admin/dashboard" />} />
             <Route path="/admin/*" element={<AdminRoute />} />
             <Route path="/saller/*" element={<SallerRoute />} />
             <Route path="*" element={<WithNavbarAndFooter WrappedComponent={NotFound} />} />

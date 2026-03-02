@@ -11,7 +11,7 @@ const propertyService = {
    */
   getFeaturedProperties: async () => {
     try {
-      const response = await api.get('https://api.landacre.in/api/feature-items?itemType=Property'); //my commit 
+      const response = await api.get('/api/feature-items?itemType=Property');
       return response.data;
     } catch (error) {
       throw error;
@@ -25,7 +25,7 @@ const propertyService = {
    */
   getProperties: async (page = 1) => {
     try {
-      const response = await api.get(`https://api.landacre.in/api/properties?page=${page}`);
+      const response = await api.get(`/api/properties?page=${page}`);
       return response.data;
     } catch (error) {
       throw error;
@@ -39,7 +39,7 @@ const propertyService = {
    */
   getPropertyById: async (id) => {
     try {
-      const response = await api.get(`https://api.landacre.in/api/properties/${id}`);
+      const response = await api.get(`/api/properties/${id}`);
       return response.data;
     } catch (error) {
       throw error;
@@ -54,7 +54,7 @@ const propertyService = {
   searchProperties: async (params) => {
     try {
       const queryString = new URLSearchParams(params).toString();
-      const response = await api.get(`https://api.landacre.in/api/properties/search?${queryString}`);
+      const response = await api.get(`/api/properties/search?${queryString}`);
       return response.data;
     } catch (error) {
       throw error;
@@ -68,7 +68,7 @@ const propertyService = {
    */
   getSimilarProperties: async (id) => {
     try {
-      const response = await api.get(`https://api.landacre.in/api/properties/similar/${id}`);
+      const response = await api.get(`/api/properties/similar/${id}`);
       return response.data;
     } catch (error) {
       throw error;
@@ -81,7 +81,7 @@ const propertyService = {
    */
   getCityProperties: async (city) => {
     try {
-      const response = await api.get(`https://api.landacre.in/api/properties/cities/${city}`);
+      const response = await api.get(`/api/properties/cities/${city}`);
       
       return response.data;
     } catch (error) {

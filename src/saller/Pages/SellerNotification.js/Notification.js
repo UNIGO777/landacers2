@@ -21,7 +21,7 @@ const SellerNotification = () => {
     try {
       setIsLoadingMore(true);
       const response = await axios.get(
-        `https://api.landacre.in/api/notifications?page=${page}`,
+        `${process.env.REACT_APP_backendUrl}/api/notifications?page=${page}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('sellerToken')}`,

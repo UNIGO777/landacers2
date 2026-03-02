@@ -22,7 +22,7 @@ const fetchSellerNotifications = async () => {
     const page = queryParams.get('page') || 1;
 
     notificationsPromise = axios.get(
-      `https://api.landacre.in/api/notifications?page=${page}`,
+    `${process.env.REACT_APP_backendUrl}/api/notifications?page=${page}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

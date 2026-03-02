@@ -246,7 +246,7 @@ const ManageProjects = () => {
       setActionLoading(true);
       const token = localStorage.getItem("adminToken");
       const response = await axios.put(
-        `https://api.landacre.in/api/admin/project/${projectId}`,
+        `${process.env.REACT_APP_backendUrl}/api/admin/project/${projectId}`,
         { status: newStatus },
         {
           headers: { Authorization: `Bearer ${token}` }
@@ -624,7 +624,7 @@ const ManageProjects = () => {
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
                           <img
-                            src={`https://api.landacre.in/storage/${project.images?.[0] }`}
+                            src={`${process.env.REACT_APP_backendUrl}/storage/${project.images?.[0] }`}
                             alt={project.projectName}
                             className="h-10 w-10 rounded-full object-cover mr-3"
                            
@@ -822,7 +822,7 @@ const ManageProjects = () => {
                               transition={{ delay: index * 0.1 }}
                             >
                               <img
-                                src={`https://api.landacre.in/storage/${image}`}
+                                src={`${process.env.REACT_APP_backendUrl}/storage/${image}`}
                                 alt={`Project ${index + 1}`}
                                 className="w-full h-48 object-cover transform group-hover:scale-110 transition-transform duration-300"
                               />
@@ -1054,4 +1054,3 @@ const ManageProjects = () => {
 };
 
 export default ManageProjects;
-

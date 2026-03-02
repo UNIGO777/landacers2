@@ -49,12 +49,12 @@ const PropertyProfile = ({ setLoginOpen }) => {
 
             try {
                 setLoading(true);
-                const response = await axios.get(`https://api.landacre.in/api/properties/${propertyId}`);
+                const response = await axios.get(`${process.env.REACT_APP_backendUrl}/api/properties/${propertyId}`);
                 setProperty(response.data);
 
                 // Fetch similar properties
                 try {
-                    const similarResponse = await axios.get(`https://api.landacre.in/api/properties/similar/${propertyId}`);
+                    const similarResponse = await axios.get(`${process.env.REACT_APP_backendUrl}/api/properties/similar/${propertyId}`);
                     setSimilarProperties(similarResponse.data.data);
                    
                 } catch (err) {
@@ -81,7 +81,7 @@ const PropertyProfile = ({ setLoginOpen }) => {
             try {
                 setFeedbackLoading(true);
                 const response = await axios.get(
-                    `https://api.landacre.in/api/feedback/property/${propertyId}?page=${feedbackPage}`
+                    `${process.env.REACT_APP_backendUrl}/api/feedback/property/${propertyId}?page=${feedbackPage}`
                 );
 
                 if (response.data) {
@@ -123,7 +123,7 @@ const PropertyProfile = ({ setLoginOpen }) => {
             const token = localStorage.getItem('token');
 
             const response = await axios.get(
-                `https://api.landacre.in/api/quary/property/create/${propertyId}`,
+                `${process.env.REACT_APP_backendUrl}/api/quary/property/create/${propertyId}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -184,7 +184,7 @@ const PropertyProfile = ({ setLoginOpen }) => {
             setFeedbackSubmitting(true);
 
             const response = await axios.post(
-                `https://api.landacre.in/api/feedback`,
+                `${process.env.REACT_APP_backendUrl}/api/feedback`,
                 {
                     feedbackType: 'property',
                     propertyId,
@@ -374,11 +374,11 @@ const PropertyProfile = ({ setLoginOpen }) => {
 
     // Prepare property data
     const propertyImages = property.propertyMedia?.photos?.map(photo =>
-        `https://api.landacre.in/storage/${photo}`
+        `${process.env.REACT_APP_backendUrl}/storage/${photo}`
     ) || images;
 
     const propertyVideo = property.propertyMedia?.video
-        ? `https://api.landacre.in/storage/${property.propertyMedia.video}`
+        ? `${process.env.REACT_APP_backendUrl}/storage/${property.propertyMedia.video}`
         : null;
 
     // Get property price based on transaction type
@@ -1696,7 +1696,7 @@ const PropertyProfile = ({ setLoginOpen }) => {
                             <div key={index} className="px-2">
                                 <Card
                                     card={{
-                                        image: `https://api.landacre.in/storage/${property.propertyMedia.photos[0]}`,
+                                        image: `${process.env.REACT_APP_backendUrl}/storage/${property.propertyMedia.photos[0]}`,
                                         title: property.propertyTitle,
                                         price: property?.pricingDetails ?
                                             property?.transactionType === "Sell" ?

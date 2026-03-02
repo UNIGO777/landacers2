@@ -13,7 +13,7 @@ const markAllNotificationsRead = async () => {
   if(markAllReadPromise) return markAllReadPromise
   try {
     markAllReadPromise = axios.put(
-      `https://api.landacre.in/api/notifications/mark-all-read`,
+      `${process.env.REACT_APP_backendUrl}/api/notifications/mark-all-read`,
       {},
       {
         headers: {

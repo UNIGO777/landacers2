@@ -155,13 +155,9 @@ const ManageUsers = () => {
         ADMIN_API_ROUTES.BLOCK_USER(userId) : 
         ADMIN_API_ROUTES.UNBLOCK_USER(userId);
       
-      const response = await axios.put(
-        `https://api.landacre.in${endpoint}`,
-        {},
-        {
-          headers: { Authorization: `Bearer ${token}` }
-        }
-      );
+      const response = await axios.put(endpoint, {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
 
       if (response.data) {
         toast.success(`User ${currentStatus === "active" ? "blocked" : "unblocked"} successfully`);
@@ -378,7 +374,7 @@ const ManageUsers = () => {
                             {user.profilePicture ? (
                               <img
                                 className="object-cover w-10 h-10 rounded-full"
-                                src={`https://api.landacre.in/storage/${user.profilePicture}`}
+                                src={`${process.env.REACT_APP_backendUrl}/storage/${user.profilePicture}`}
                                 alt={user.name}
                               />
                             ) : (

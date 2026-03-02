@@ -34,7 +34,7 @@ const LoginForm = ({ toggleForm, setIsOpen }) => {
     setLoading(true)
 
     try {
-      const response = await axios.post(`https://api.landacre.in/api/users/login`, {
+      const response = await axios.post(`${process.env.REACT_APP_backendUrl}/api/users/login`, {
         email: formData.email,
         password: formData.password,
       })
@@ -199,7 +199,7 @@ const SignUpForm = ({ toggleForm,setIsOpen }) => {
 
     try {
       const response = await axios.post(
-        `https://api.landacre.in/api/users/register`,
+        `${process.env.REACT_APP_backendUrl}/api/users/register`,
         {
           firstName: formData.firstName,
           lastName: formData.lastName,
@@ -247,7 +247,7 @@ const SignUpForm = ({ toggleForm,setIsOpen }) => {
 
     try {
       const response = await axios.post(
-        `https://api.landacre.in/api/users/register/verify-otp`,
+        `${process.env.REACT_APP_backendUrl}/api/users/register/verify-otp`,
         {
           phoneNumber: registrationData.phoneNumber,
           otp: otp,
@@ -504,8 +504,8 @@ const SignUpForm = ({ toggleForm,setIsOpen }) => {
   )
 }
 
-const Authentication = ({ isOpen, setIsOpen }) => {
-  const [signUpForm, setSignUpForm] = useState(false)
+const Authentication = ({ isOpen, setIsOpen, defaultSignUp = false }) => {
+  const [signUpForm, setSignUpForm] = useState(defaultSignUp)
 
   const toggleForm = () => {
     setSignUpForm(!signUpForm)
@@ -554,4 +554,3 @@ setIsOpen(false)
 }
 
 export default Authentication
-

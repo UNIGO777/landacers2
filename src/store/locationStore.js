@@ -98,7 +98,7 @@ export const useLocationStore = create((set, get) => ({
   getCityFromCoords: async (lat, lon) => {
     try {
       const res = await fetch(
-        `https://api.landacre.in/api/geolocation/reverse?lat=${lat}&lon=${lon}`
+        `${process.env.REACT_APP_backendUrl}/api/geolocation/reverse?lat=${lat}&lon=${lon}`
       );
       const response = await res.json();
       

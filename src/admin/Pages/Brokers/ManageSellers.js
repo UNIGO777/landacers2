@@ -88,13 +88,9 @@ export default function BrokerManagement() {
         ADMIN_API_ROUTES.BLOCK_SELLER(sellerId) : 
         ADMIN_API_ROUTES.UNBLOCK_SELLER(sellerId)
       
-      const response = await axios.put(
-        `https://api.landacre.in${endpoint}`,
-        { status: currentStatus === "active" ? "blocked" : "active" },
-        {
-          headers: { Authorization: `Bearer ${token}` }
-        }
-      )
+      const response = await axios.put(endpoint, { status: currentStatus === "active" ? "blocked" : "active" }, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
 
       if (response.data) {
         toast.success(`Broker ${currentStatus === "active" ? "blocked" : "activated"} successfully`)
@@ -317,7 +313,7 @@ export default function BrokerManagement() {
                             {seller?.sellerDetails?.profilePicture && seller?.sellerDetails?.profilePicture !== "" ? (
                               <img
                                 className="object-cover w-10 h-10 rounded-full"
-                                src={`https://api.landacre.in/storage/${seller?.sellerDetails?.profilePicture}`}
+                                src={`${process.env.REACT_APP_backendUrl}/storage/${seller?.sellerDetails?.profilePicture}`}
                                 alt={`${seller?.sellerDetails?.name}`}
                               />
                             ) : (
@@ -474,7 +470,7 @@ export default function BrokerManagement() {
                       {selectedSeller?.sellerDetails?.profilePicture ? (
                         <img
                           className="object-cover w-20 h-20 rounded-full"
-                          src={`https://api.landacre.in/storage/${selectedSeller?.sellerDetails?.profilePicture}`}
+                          src={`${process.env.REACT_APP_backendUrl}/storage/${selectedSeller?.sellerDetails?.profilePicture}`}
                           alt={selectedSeller?.sellerDetails?.name}
                         />
                       ) : (
@@ -628,4 +624,3 @@ export default function BrokerManagement() {
     </Layout>
   )
 }
-

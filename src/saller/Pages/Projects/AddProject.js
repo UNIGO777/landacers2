@@ -293,7 +293,7 @@ const AddProject = () => {
 
       const sellerToken = localStorage.getItem('sellerToken');
       const response = await axios.post(
-        `https://api.landacre.in/api/projects`, 
+        `${process.env.REACT_APP_backendUrl}/api/projects`, 
         formDataToSend,
         {
           headers: {
